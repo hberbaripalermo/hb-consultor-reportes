@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estrategia Go-To-Market — Domos del Bosque | HB Consultor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+
+:root{
+  --forest:#0d1f0f;
+  --forest-mid:#1a3a1e;
+  --forest-light:#2d5c33;
+  --forest-pale:#e8f0e9;
+  --gold:#c8963c;
+  --gold-light:#e8c17a;
+  --gold-pale:#fdf6e8;
+  --cream:#faf8f4;
+  --stone:#f2ede6;
+  --ink:#1a1612;
+  --ink2:#3d3528;
+  --ink3:#7a6e62;
+  --red:#8b1f1f;
+  --red-l:#fde8e8;
+  --white:#ffffff;
+  --b:rgba(0,0,0,.08);
+  --bs:rgba(0,0,0,.15);
+  --ff-d:'Playfair Display',Georgia,serif;
+  --ff-b:'DM Sans',system-ui,sans-serif;
+  --ff-m:'DM Mono',monospace;
+}
+
+body{font-family:var(--ff-b);background:var(--cream);color:var(--ink);line-height:1.65;font-size:15px;overflow-x:hidden}
+
+/* ── PROGRESS ── */
+#pbar{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--forest-light),var(--gold));width:0%;z-index:2000;pointer-events:none;transition:width .1s}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:2px;left:0;right:0;z-index:1000;
+  background:rgba(13,31,15,.96);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(200,150,60,.15);
+}
+.nav-in{max-width:1000px;margin:0 auto;padding:.65rem 2rem;display:flex;justify-content:space-between;align-items:center}
+.nav-brand{font-family:var(--ff-d);font-size:.95rem;color:var(--gold);letter-spacing:.04em;text-decoration:none;font-style:italic}
+.nav-title{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(248,246,240,.35);font-weight:300}
+.nav-contact{font-size:10px;color:rgba(248,246,240,.3);text-align:right;line-height:1.5}
+.nav-contact a{color:rgba(248,246,240,.4);text-decoration:none}
+.nav-contact a:hover{color:var(--gold)}
+
+/* ── HERO ── */
+.hero{
+  background:var(--forest);
+  min-height:100vh;
+  display:flex;align-items:center;
+  position:relative;overflow:hidden;
+  padding:6rem 2rem 4rem;
+}
+.hero-texture{
+  position:absolute;inset:0;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 80% 50%, rgba(45,92,51,.25) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 20% 70%, rgba(200,150,60,.08) 0%, transparent 50%);
+  pointer-events:none;
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(200,150,60,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200,150,60,.04) 1px, transparent 1px);
+  background-size:60px 60px;
+  pointer-events:none;
+}
+.hero-content{max-width:1000px;margin:0 auto;width:100%;position:relative;z-index:2}
+.hero-eyebrow{
+  font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--gold);font-weight:400;margin-bottom:1.8rem;
+  display:flex;align-items:center;gap:.8rem;
+  animation:slideUp .8s ease .2s both;
+}
+.hero-eyebrow::before{content:'';width:28px;height:1px;background:var(--gold);opacity:.6}
+.hero-tag{
+  display:inline-block;
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  color:var(--forest);font-size:9px;letter-spacing:.16em;
+  text-transform:uppercase;padding:4px 14px;border-radius:2px;
+  font-weight:600;margin-bottom:1.2rem;
+  animation:slideUp .8s ease .35s both;
+}
+h1.hero-title{
+  font-family:var(--ff-d);
+  font-size:clamp(2.4rem,5.5vw,4rem);
+  font-weight:900;color:#f5f1eb;
+  line-height:1.04;margin-bottom:.4rem;
+  animation:slideUp .9s ease .45s both;
+}
+h1.hero-title em{font-style:italic;color:var(--gold)}
+.hero-sub{
+  font-size:.9rem;color:rgba(245,241,235,.42);
+  font-weight:300;max-width:500px;
+  margin-bottom:2.5rem;line-height:1.7;
+  animation:slideUp .8s ease .6s both;
+}
+.hero-stats{
+  display:flex;gap:2.5rem;flex-wrap:wrap;
+  border-top:1px solid rgba(245,241,235,.08);
+  padding-top:1.5rem;
+  animation:slideUp .8s ease .8s both;
+}
+.hs label{display:block;font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,241,235,.28);margin-bottom:3px}
+.hs span{font-family:var(--ff-d);font-size:1.3rem;font-weight:700;color:var(--gold)}
+.hs small{display:block;font-size:10px;color:rgba(245,241,235,.35);margin-top:1px}
+
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── PHASE ANCHORS ── */
+.phase-strip{
+  background:var(--forest);
+  border-bottom:1px solid rgba(200,150,60,.15);
+}
+.phase-strip-in{
+  max-width:1000px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;background:rgba(200,150,60,.1);
+}
+.phase-pill{
+  background:rgba(13,31,15,.95);
+  padding:1rem .8rem;text-align:center;
+  text-decoration:none;transition:background .2s;
+  cursor:pointer;
+}
+.phase-pill:hover{background:rgba(45,92,51,.4)}
+.phase-pill .pn{font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:rgba(245,241,235,.3);font-weight:500;margin-bottom:3px}
+.phase-pill .pt{font-size:11px;font-weight:500;color:rgba(245,241,235,.7)}
+.phase-pill .pa{font-size:9px;color:var(--gold);margin-top:2px}
+
+/* ── LAYOUT ── */
+.wrap{max-width:1000px;margin:0 auto;padding:0 2rem}
+.sec{padding:4.5rem 0 2rem}
+
+/* ── SECTION HEADER ── */
+.sec-hd{margin-bottom:2.5rem}
+.sec-hd-row{display:flex;align-items:flex-end;gap:1rem;margin-bottom:.4rem;flex-wrap:wrap}
+.sec-phase{
+  font-size:9px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold);font-weight:600;
+  display:flex;align-items:center;gap:.5rem;
+}
+.sec-phase::before{content:'';width:20px;height:1px;background:var(--gold)}
+.sec-num{font-family:var(--ff-d);font-size:4rem;font-weight:900;color:rgba(0,0,0,.05);line-height:1;margin-right:.5rem;flex-shrink:0;position:relative;top:.4rem}
+.sec-title{font-family:var(--ff-d);font-size:1.9rem;font-weight:700;color:var(--ink);line-height:1.15}
+.sec-title em{font-style:italic;color:var(--forest-light)}
+.sec-desc{font-size:.85rem;color:var(--ink3);max-width:600px;line-height:1.75}
+
+/* ── REVEAL ── */
+.rev{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+.rev.vis{opacity:1;transform:translateY(0)}
+
+/* ── CARD BASE ── */
+.card{background:var(--white);border:1px solid var(--b);border-radius:12px;padding:1.4rem 1.6rem;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.card-h{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);font-weight:600;margin-bottom:.9rem;padding-bottom:.5rem;border-bottom:1px solid var(--b)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin:1.4rem 0}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin:1.4rem 0}
+
+/* ── PHASE HEADER DARK ── */
+.phase-header{
+  background:var(--forest);
+  border-radius:14px;overflow:hidden;
+  margin-bottom:2rem;
+}
+.ph-top{padding:2rem 2.2rem;position:relative;overflow:hidden}
+.ph-top::before{
+  content:'';position:absolute;right:-40px;top:-40px;
+  width:200px;height:200px;
+  border:1px solid rgba(200,150,60,.1);border-radius:50%;
+}
+.ph-num{font-family:var(--ff-m);font-size:9px;color:var(--gold);letter-spacing:.2em;margin-bottom:.6rem;text-transform:uppercase}
+.ph-title{font-family:var(--ff-d);font-size:1.5rem;font-weight:700;color:#f5f1eb;margin-bottom:.3rem}
+.ph-sub{font-size:.8rem;color:rgba(245,241,235,.45);font-weight:300;max-width:480px;line-height:1.65}
+.ph-footer{
+  display:flex;gap:1px;background:rgba(200,150,60,.1);
+  border-top:1px solid rgba(200,150,60,.1);
+}
+.ph-kpi{flex:1;padding:.8rem 1rem;text-align:center;background:rgba(13,31,15,.96)}
+.ph-kv{font-family:var(--ff-d);font-size:1.2rem;font-weight:700;color:var(--gold);margin-bottom:2px}
+.ph-kl{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,241,235,.3)}
+
+/* ── STRATEGY BLOCKS ── */
+.strat-block{
+  border-left:3px solid var(--forest-light);
+  background:var(--forest-pale);
+  padding:1.1rem 1.4rem;border-radius:0 8px 8px 0;
+  margin:1.2rem 0;
+}
+.strat-block .sb-label{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--forest-light);font-weight:700;margin-bottom:.5rem}
+.strat-block p{font-size:.84rem;line-height:1.75;color:var(--ink2)}
+.strat-block strong{font-weight:600;color:var(--ink)}
+
+.strat-gold{border-left-color:var(--gold);background:var(--gold-pale)}
+.strat-gold .sb-label{color:var(--gold)}
+
+.strat-red{border-left-color:var(--red);background:var(--red-l)}
+.strat-red .sb-label{color:var(--red)}
+
+/* ── ACTION ITEMS ── */
+.action-grid{display:flex;flex-direction:column;gap:.6rem;margin:1.2rem 0}
+.action{
+  display:grid;grid-template-columns:auto 1fr auto;
+  gap:1rem;align-items:start;
+  background:var(--white);border:1px solid var(--b);border-radius:10px;
+  padding:.9rem 1.1rem;
+  position:relative;overflow:hidden;
+  transition:box-shadow .2s;
+}
+.action:hover{box-shadow:0 4px 24px rgba(0,0,0,.09)}
+.action::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:10px 0 0 10px}
+.action-1w::before{background:var(--red)}
+.action-2w::before{background:var(--gold)}
+.action-1m::before{background:var(--forest-light)}
+.action-q::before{background:var(--ink3)}
+.action-num{
+  width:26px;height:26px;border-radius:50%;
+  font-size:11px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-top:1px;
+}
+.an-1w{background:#fde8e8;color:var(--red)}
+.an-2w{background:var(--gold-pale);color:#7a5a1a}
+.an-1m{background:var(--forest-pale);color:var(--forest-light)}
+.an-q{background:#f1f1f1;color:var(--ink3)}
+.action-body .at{font-size:.84rem;font-weight:500;color:var(--ink);margin-bottom:3px;line-height:1.35}
+.action-body .as{font-size:.76rem;color:var(--ink3);line-height:1.5}
+.action-tag{font-size:8.5px;padding:2px 8px;border-radius:3px;font-weight:600;white-space:nowrap;flex-shrink:0;margin-top:2px;align-self:flex-start}
+.tag-1w{background:#fde8e8;color:var(--red)}
+.tag-2w{background:var(--gold-pale);color:#7a5a1a}
+.tag-1m{background:var(--forest-pale);color:var(--forest-light)}
+.tag-q{background:#f1f1f1;color:var(--ink3)}
+
+/* ── CHANNEL TABLE ── */
+.ch-table{width:100%;border-collapse:collapse;font-size:.81rem;margin:1.2rem 0}
+.ch-table thead th{font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);font-weight:600;padding:7px 10px;text-align:left;border-bottom:1.5px solid var(--bs);background:var(--stone)}
+.ch-table tbody tr{border-bottom:1px solid var(--b);transition:background .12s}
+.ch-table tbody tr:hover{background:var(--stone)}
+.ch-table td{padding:9px 10px;vertical-align:middle}
+.ch-table .tr-hl{background:var(--forest-pale)}
+.badge{display:inline-block;padding:2.5px 8px;border-radius:4px;font-size:9.5px;font-weight:600}
+.b-high{background:#dcfce7;color:#166534}
+.b-med{background:#fef3c7;color:#92400e}
+.b-low{background:#fee2e2;color:#991b1b}
+.b-free{background:var(--forest-pale);color:var(--forest-light)}
+
+/* ── PRICING TABLE ── */
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--b);border:1px solid var(--b);border-radius:12px;overflow:hidden;margin:1.2rem 0}
+.price-col{background:var(--white);padding:1.4rem 1.2rem;text-align:center}
+.price-col.pc-feat{background:var(--forest)}
+.pc-label{font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);font-weight:600;margin-bottom:.5rem}
+.pc-feat .pc-label{color:rgba(245,241,235,.4)}
+.pc-price{font-family:var(--ff-d);font-size:1.6rem;font-weight:700;color:var(--ink);margin-bottom:2px}
+.pc-feat .pc-price{color:var(--gold)}
+.pc-sub{font-size:.75rem;color:var(--ink3)}
+.pc-feat .pc-sub{color:rgba(245,241,235,.4)}
+.pc-items{margin-top:.9rem;padding-top:.9rem;border-top:1px solid var(--b);text-align:left}
+.pc-feat .pc-items{border-color:rgba(245,241,235,.1)}
+.pc-item{font-size:.77rem;color:var(--ink2);padding:.2rem 0;display:flex;align-items:flex-start;gap:.4rem;line-height:1.4}
+.pc-item::before{content:'→';color:var(--forest-light);font-size:.7rem;flex-shrink:0;margin-top:1px}
+.pc-feat .pc-item::before{color:var(--gold)}
+.pc-feat .pc-item{color:rgba(245,241,235,.65)}
+
+/* ── SEGMENT CARDS ── */
+.seg-card{background:var(--white);border:1px solid var(--b);border-radius:12px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,.05)}
+.seg-header{padding:1.1rem 1.4rem;border-bottom:1px solid var(--b)}
+.seg-num{font-family:var(--ff-m);font-size:9px;color:var(--gold);letter-spacing:.15em;margin-bottom:4px}
+.seg-title{font-family:var(--ff-d);font-size:1.15rem;font-weight:700;color:var(--ink)}
+.seg-sub{font-size:.76rem;color:var(--ink3);margin-top:2px}
+.seg-body{padding:1.1rem 1.4rem}
+.seg-row{display:flex;justify-content:space-between;align-items:flex-start;padding:.3rem 0;border-bottom:1px solid var(--b);font-size:.78rem;gap:.5rem}
+.seg-row:last-child{border-bottom:none}
+.seg-row .sk{color:var(--ink3);flex-shrink:0;min-width:90px}
+.seg-row .sv{font-weight:500;color:var(--ink);text-align:right}
+.seg-hook{background:var(--forest-pale);border-top:1px solid rgba(45,92,51,.12);padding:.7rem 1.1rem}
+.seg-hook p{font-size:.76rem;color:var(--forest-mid);line-height:1.6;font-style:italic}
+
+/* ── CHANNEL ICONS ── */
+.channel-row{display:flex;gap:1rem;flex-wrap:wrap;margin:1.2rem 0}
+.ch-pill{
+  display:flex;align-items:center;gap:.55rem;
+  background:var(--white);border:1px solid var(--b);
+  border-radius:8px;padding:.6rem .9rem;
+  font-size:.78rem;font-weight:500;color:var(--ink2);
+  box-shadow:0 1px 8px rgba(0,0,0,.04);
+  flex-shrink:0;
+}
+.ch-icon{font-size:1rem}
+.ch-score{font-size:9px;padding:1.5px 5px;border-radius:3px;font-weight:600;margin-left:4px}
+
+/* ── METRIC STRIP ── */
+.metric-strip{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;background:var(--b);border:1px solid var(--b);
+  border-radius:12px;overflow:hidden;margin:1.2rem 0;
+}
+.metric{background:var(--white);padding:1.1rem;text-align:center}
+.metric.metric-dark{background:var(--forest)}
+.mv{font-family:var(--ff-d);font-size:1.5rem;font-weight:700;color:var(--ink);line-height:1;margin-bottom:3px}
+.metric-dark .mv{color:var(--gold)}
+.ml{font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);line-height:1.3}
+.metric-dark .ml{color:rgba(245,241,235,.35)}
+.mt{font-size:9.5px;color:#22c55e;font-weight:500;margin-top:3px}
+.metric-dark .mt{color:#4ade80}
+
+/* ── CONTENT PILLARS ── */
+.pillar-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.2rem 0}
+.pillar-card{
+  background:var(--white);border:1px solid var(--b);border-radius:10px;
+  overflow:hidden;box-shadow:0 1px 10px rgba(0,0,0,.04);
+}
+.pillar-top{padding:.9rem 1.1rem;border-bottom:1px solid var(--b)}
+.pillar-label{font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:600;margin-bottom:4px}
+.pillar-name{font-family:var(--ff-d);font-size:1.05rem;font-weight:700;color:var(--ink)}
+.pillar-body{padding:.9rem 1.1rem}
+.pillar-item{font-size:.77rem;color:var(--ink2);padding:.18rem 0;display:flex;gap:.45rem;line-height:1.45}
+.pillar-item::before{content:'▸';font-size:.7rem;flex-shrink:0;margin-top:1px}
+
+/* ── COPY EXAMPLES ── */
+.copy-ex{
+  background:var(--stone);border:1px solid var(--b);
+  border-radius:8px;padding:.9rem 1.1rem;margin:.6rem 0;
+  font-size:.82rem;color:var(--ink2);line-height:1.7;
+  font-style:italic;position:relative;
+}
+.copy-ex::before{content:'"';font-family:var(--ff-d);font-size:2.5rem;color:var(--gold);opacity:.3;position:absolute;top:-.3rem;left:.6rem}
+.copy-label{font-size:8px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--ink3);margin-bottom:.4rem;font-style:normal}
+
+/* ── FUNNEL ── */
+.funnel{display:flex;flex-direction:column;gap:2px;margin:1.2rem 0}
+.funnel-step{
+  display:flex;align-items:center;gap:1rem;
+  background:var(--white);border:1px solid var(--b);
+  border-radius:8px;padding:.7rem 1rem;
+  position:relative;overflow:hidden;
+}
+.funnel-step::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+.fs-1::before{background:#e53e3e}.fs-2::before{background:#dd6b20}
+.fs-3::before{background:#d97706}.fs-4::before{background:#38a169}
+.fs-5::before{background:#2d6a4f}
+.fn{width:22px;height:22px;border-radius:50%;font-size:9.5px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ft{font-size:.81rem;font-weight:600;color:var(--ink);flex:1;line-height:1.3}
+.fs{font-size:.72rem;color:var(--ink3);margin-top:1.5px}
+.ftag{font-size:8.5px;padding:2px 7px;border-radius:4px;font-weight:600;white-space:nowrap}
+
+/* ── REVENUE MODEL ── */
+.rev-scenario{
+  background:var(--white);border:1px solid var(--b);border-radius:12px;
+  overflow:hidden;margin:1.2rem 0;box-shadow:0 2px 16px rgba(0,0,0,.05)
+}
+.rs-header{background:var(--forest);padding:1.1rem 1.4rem;display:flex;justify-content:space-between;align-items:center}
+.rs-title{font-family:var(--ff-d);font-size:1.1rem;color:#f5f1eb}
+.rs-label{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold)}
+.rs-body{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--b)}
+.rs-cell{background:var(--white);padding:.9rem .8rem;text-align:center}
+.rs-val{font-family:var(--ff-d);font-size:1.25rem;font-weight:700;color:var(--ink);line-height:1;margin-bottom:2px}
+.rs-lbl{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
+.rs-note{font-size:9.5px;color:#22c55e;font-weight:500;margin-top:2px}
+
+/* ── CALLOUT ── */
+.callout{padding:1rem 1.3rem;border-radius:8px;margin:1.2rem 0;font-size:.83rem;line-height:1.75}
+.callout strong{font-weight:600}
+.c-forest{background:var(--forest-pale);border:1px solid rgba(45,92,51,.2);color:var(--forest-mid)}
+.c-gold{background:var(--gold-pale);border:1px solid rgba(200,150,60,.25);color:#5a3d10}
+.c-red{background:#fff1f2;border:1px solid #fecdd3;color:#7f1d1d}
+.c-dark{background:var(--forest);border:none;color:rgba(245,241,235,.75)}
+.c-dark strong{color:#f5f1eb}
+
+/* ── ORNAMENT ── */
+.ornament{display:flex;align-items:center;gap:12px;margin:3.5rem 0 0}
+.ornament::before,.ornament::after{content:'';flex:1;height:1px;background:var(--b)}
+.od{width:4px;height:4px;border-radius:50%;background:var(--gold)}
+.od2{width:3px;height:3px;border-radius:50%;background:var(--b)}
+
+/* ── TIMELINE ── */
+.timeline{position:relative;padding-left:1.5rem;margin:1.2rem 0}
+.timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1.5px;background:linear-gradient(180deg,var(--forest-light),var(--gold),transparent)}
+.tl-item{position:relative;padding:0 0 1.2rem 1.2rem}
+.tl-item::before{content:'';position:absolute;left:-4.5px;top:4px;width:8px;height:8px;border-radius:50%;background:var(--gold);border:2px solid var(--cream)}
+.tl-week{font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:.3rem}
+.tl-tasks{display:flex;flex-direction:column;gap:.25rem}
+.tl-task{font-size:.8rem;color:var(--ink2);display:flex;align-items:flex-start;gap:.4rem;line-height:1.4}
+.tl-task::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--forest-light);flex-shrink:0;margin-top:5px}
+.tl-kpi{font-size:.72rem;color:var(--ink3);font-style:italic;margin-top:.4rem;padding-top:.4rem;border-top:1px dashed var(--b)}
+
+/* ── CLOSE CTA ── */
+.cta-section{
+  background:var(--forest);
+  padding:5rem 2rem;
+  text-align:center;
+  position:relative;overflow:hidden;
+}
+.cta-section::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 80% at 50% 100%, rgba(200,150,60,.1) 0%, transparent 60%);
+}
+.cta-section h2{font-family:var(--ff-d);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;color:#f5f1eb;margin-bottom:.5rem;position:relative}
+.cta-section h2 em{font-style:italic;color:var(--gold)}
+.cta-section p{font-size:.9rem;color:rgba(245,241,235,.45);max-width:480px;margin:0 auto 2rem;position:relative}
+.cta-contact{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;position:relative}
+.cta-item label{display:block;font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;color:rgba(245,241,235,.3);margin-bottom:4px}
+.cta-item a{font-size:1.05rem;font-weight:500;color:var(--gold);text-decoration:none}
+.cta-item a:hover{color:var(--gold-light)}
+
+/* ── FOOTER ── */
+footer{background:rgba(13,31,15,.97);padding:2rem;text-align:center;border-top:1px solid rgba(200,150,60,.12)}
+footer p{font-size:9.5px;color:rgba(245,241,235,.25);line-height:1.7}
+
+/* ── MOBILE ── */
+@media(max-width:700px){
+  .g2,.g3,.price-grid,.pillar-grid,.metric-strip{grid-template-columns:1fr}
+  .phase-strip-in{grid-template-columns:repeat(2,1fr)}
+  .hero-stats{gap:1.5rem}
+  .nav-contact,.nav-title{display:none}
+  .seg-row .sk{min-width:70px}
+}
+</style>
+</head>
+<body>
+
+<div id="pbar"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-in">
+    <a href="#top" class="nav-brand">HB Consultor</a>
+    <div class="nav-title">Estrategia Go-To-Market</div>
+    <div class="nav-contact">
+      <a href="tel:+541163574750">+54 11 6357 4750</a> · <a href="mailto:hernan@hbconsultor.com.ar">hernan@hbconsultor.com.ar</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-texture"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">HB Consultor · Estrategia Comercial & Revenue</div>
+    <div class="hero-tag">Go-To-Market · Posicionamiento · Ventas · Conversión</div>
+    <h1 class="hero-title">Domos del Bosque<br><em>La estrategia completa</em></h1>
+    <p class="hero-sub">De un producto extraordinario sin sistema comercial a una operación de hospitalidad que se posiciona sola, vende en todos los canales y convierte sistemáticamente.</p>
+    <div class="hero-stats">
+      <div class="hs"><label>Revenue objetivo / año</label><span>$96.120</span><small>USD · Fase 3 · 70% ocupación</small></div>
+      <div class="hs"><label>Desde hoy</label><span>$26.280</span><small>USD · estado actual</small></div>
+      <div class="hs"><label>Upside total</label><span>+265%</span><small>en 12 meses</small></div>
+      <div class="hs"><label>Fases de ejecución</label><span>4</span><small>Activación → Escala → Marca → Mercado</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- PHASE NAV STRIP -->
+<div class="phase-strip">
+  <div class="phase-strip-in">
+    <a href="#fase1" class="phase-pill"><div class="pn">Fase 01</div><div class="pt">Posicionamiento</div><div class="pa">Semana 1–2</div></a>
+    <a href="#fase2" class="phase-pill"><div class="pn">Fase 02</div><div class="pt">Canales & Contenido</div><div class="pa">Mes 1–2</div></a>
+    <a href="#fase3" class="phase-pill"><div class="pn">Fase 03</div><div class="pt">Conversión & Revenue</div><div class="pa">Mes 2–4</div></a>
+    <a href="#fase4" class="phase-pill"><div class="pn">Fase 04</div><div class="pt">Escala & Mercado</div><div class="pa">Mes 4–12</div></a>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     DIAGNÓSTICO ESTRATÉGICO
+══════════════════════════════════════ -->
+<div class="wrap">
+<section class="sec">
+  <div class="sec-hd rev">
+    <div class="sec-phase">Punto de partida</div>
+    <div class="sec-hd-row">
+      <div class="sec-num">00</div>
+      <h2 class="sec-title">El problema real:<br><em>un producto sin sistema</em></h2>
+    </div>
+    <p class="sec-desc">El activo es extraordinario. El 5.0 perfecto con 6 reviews en 3 meses lo confirma. Pero hoy opera como un listing más de Airbnb cuando debería operar como una marca de hospitalidad con múltiples canales, pricing dinámico y un embudo de conversión activo.</p>
+  </div>
+
+  <div class="g2">
+    <div class="card rev">
+      <div class="card-h">Lo que tiene — ventaja competitiva real</div>
+      <div style="display:flex;flex-direction:column;gap:.6rem;margin-top:.3rem">
+        <div style="display:flex;gap:.7rem;align-items:flex-start;font-size:.82rem">
+          <span style="color:#22c55e;font-size:1rem;flex-shrink:0">✦</span>
+          <span><strong>Categoría sin competidor directo</strong> — no hay otro dome geodésico de diseño en Bariloche. Categoría propia = pricing power</span>
+        </div>
+        <div style="display:flex;gap:.7rem;align-items:flex-start;font-size:.82rem">
+          <span style="color:#22c55e;font-size:1rem;flex-shrink:0">✦</span>
+          <span><strong>Rating perfecto de arranque</strong> — 5.0 con 6 reviews demuestra hospitalidad de primer nivel. No es suerte, es sistema</span>
+        </div>
+        <div style="display:flex;gap:.7rem;align-items:flex-start;font-size:.82rem">
+          <span style="color:#22c55e;font-size:1rem;flex-shrink:0">✦</span>
+          <span><strong>Producto con diferenciales técnicos duros</strong> — losa radiante, Starlink, diseño geodésico, bosque del Cerro Otto a 8 cuadras del centro. Combinación imposible de replicar rápidamente</span>
+        </div>
+        <div style="display:flex;gap:.7rem;align-items:flex-start;font-size:.82rem">
+          <span style="color:#22c55e;font-size:1rem;flex-shrink:0">✦</span>
+          <span><strong>Dos segmentos activos espontáneamente</strong> — 3/6 reviews de familias + 3/6 de parejas. Demanda bifurcada sin ningún esfuerzo de segmentación</span>
+        </div>
+        <div style="display:flex;gap:.7rem;align-items:flex-start;font-size:.82rem">
+          <span style="color:#22c55e;font-size:1rem;flex-shrink:0">✦</span>
+          <span><strong>Historia de founders</strong> — Vero y Eric construyeron los domos ellos mismos. Ese es el mayor activo de marca que tienen y todavía no lo usan</span>
+        </div>
+      </div>
+    </div>
+    <div class="card rev">
+      <div class="card-h">El sistema que falta — brechas críticas</div>
+      <div style="display:flex;flex-direction:column;gap:.6rem;margin-top:.3rem">
+        <div style="display:flex;gap:.7rem;align-items:flex-start;font-size:.82rem">
+          <span style="color:#dc2626;font-size:1rem;flex-shrink:0">✗</span>
+          <span><strong>Sin pricing dinámico</strong> — julio tiene el mismo precio que mayo. La temporada más demandada de Argentina sin revenue management activo</span>
+        </div>
+        <div style="display:flex;gap:.7rem;align-items:flex-start;font-size:.82rem">
+          <span style="color:#dc2626;font-size:1rem;flex-shrink:0">✗</span>
+          <span><strong>Sin canal de descubrimiento</strong> — 0 Reels, 5+ semanas sin publicar, 616 seguidores de círculo social. Instagram existe pero no trabaja</span>
+        </div>
+        <div style="display:flex;gap:.7rem;align-items:flex-start;font-size:.82rem">
+          <span style="color:#dc2626;font-size:1rem;flex-shrink:0">✗</span>
+          <span><strong>Sin embudo de conversión</strong> — 4 puntos de fricción consecutivos entre el viajero y la reserva. Conversión cercana a cero desde redes</span>
+        </div>
+        <div style="display:flex;gap:.7rem;align-items:flex-start;font-size:.82rem">
+          <span style="color:#dc2626;font-size:1rem;flex-shrink:0">✗</span>
+          <span><strong>Sin marca</strong> — producto extraordinario con voz genérica. "Noches así no se explican" podría ser de cualquier glamping de Argentina</span>
+        </div>
+        <div style="display:flex;gap:.7rem;align-items:flex-start;font-size:.82rem">
+          <span style="color:#dc2626;font-size:1rem;flex-shrink:0">✗</span>
+          <span><strong>Sin distribución multi-canal</strong> — 100% dependiente de Airbnb con pocas reviews, sin Booking.com, sin canal directo activo</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout c-gold rev">
+    <strong>La tesis estratégica central:</strong> Domos del Bosque no compite con hoteles ni cabañas. Compite con <strong>experiencias</strong>. El sistema comercial debe construirse sobre esa premisa — no optimizar un listing de Airbnb, sino construir una marca de hospitalidad que usa Airbnb como uno de varios canales de distribución.
+  </div>
+</section>
+</div>
+
+<div class="ornament wrap"><span class="od2"></span><span class="od"></span><span class="od2"></span></div>
+
+
+<!-- ══════════════════════════════════════
+     FASE 1 — POSICIONAMIENTO
+══════════════════════════════════════ -->
+<div class="wrap">
+<section class="sec" id="fase1">
+  <div class="sec-hd rev">
+    <div class="sec-phase">Fase 01 · Semana 1–2</div>
+    <div class="sec-hd-row">
+      <div class="sec-num">01</div>
+      <h2 class="sec-title">Posicionamiento:<br><em>construir la categoría</em></h2>
+    </div>
+    <p class="sec-desc">El posicionamiento no es un slogan. Es la decisión de a quién le hablás, qué les prometés y contra qué no competís. Todo lo que viene después — precio, contenido, canales, conversión — deriva de esta decisión.</p>
+  </div>
+
+  <div class="phase-header rev">
+    <div class="ph-top">
+      <div class="ph-num">Fase 01 · Activación inmediata</div>
+      <div class="ph-title">El refugio que no existe en otro lugar de Bariloche</div>
+      <div class="ph-sub">Posicionamiento de categoría propia: no glamping, no cabaña, no hotel. Arquitectura geodésica de autor en el bosque — la única en su tipo en Patagonia.</div>
+    </div>
+    <div class="ph-footer">
+      <div class="ph-kpi"><div class="ph-kv">7</div><div class="ph-kl">acciones esta semana</div></div>
+      <div class="ph-kpi"><div class="ph-kv">$0</div><div class="ph-kl">inversión requerida</div></div>
+      <div class="ph-kpi"><div class="ph-kv">+54%</div><div class="ph-kl">revenue jul. proyectado</div></div>
+      <div class="ph-kpi"><div class="ph-kv">10 días</div><div class="ph-kl">primera reserva nueva</div></div>
+    </div>
+  </div>
+
+  <!-- Estrategia de posicionamiento -->
+  <h3 class="rev" style="font-family:var(--ff-d);font-size:1.2rem;font-weight:700;color:var(--ink);margin:1.8rem 0 .8rem">1.1 — Arquitectura de posicionamiento</h3>
+
+  <div class="g2 rev">
+    <div class="seg-card">
+      <div class="seg-header" style="background:var(--forest-pale)">
+        <div class="seg-num">Segmento A · Principal</div>
+        <div class="seg-title">La Pareja de Diseño</div>
+        <div class="seg-sub">28–45 años · CABA, Córdoba, Rosario · escapada de desconexión</div>
+      </div>
+      <div class="seg-body">
+        <div class="seg-row"><span class="sk">Ticket ideal</span><span class="sv">$95–130/noche</span></div>
+        <div class="seg-row"><span class="sk">Costo p/persona</span><span class="sv">$48–65 USD/noche</span></div>
+        <div class="seg-row"><span class="sk">Ancla mental</span><span class="sv">Hotel boutique de diseño</span></div>
+        <div class="seg-row"><span class="sk">Motivador</span><span class="sv">Estética + privacidad + naturaleza</span></div>
+        <div class="seg-row"><span class="sk">Canal prioritario</span><span class="sv">Instagram → Airbnb</span></div>
+        <div class="seg-row"><span class="sk">Contenido que convierte</span><span class="sv">Atmósfera nocturna, vino, bosque</span></div>
+      </div>
+      <div class="seg-hook"><p>"Lo reservamos porque era literalmente lo único así en Bariloche."</p></div>
+    </div>
+    <div class="seg-card">
+      <div class="seg-header" style="background:#fff8e8">
+        <div class="seg-num">Segmento B · Sin explotar</div>
+        <div class="seg-title">La Familia Aventurera</div>
+        <div class="seg-sub">Familia 4 pax · 32–50 años · vacaciones de invierno/verano</div>
+      </div>
+      <div class="seg-body">
+        <div class="seg-row"><span class="sk">Ticket ideal</span><span class="sv">$140–175/noche total</span></div>
+        <div class="seg-row"><span class="sk">Costo p/persona</span><span class="sv" style="color:#166534;font-weight:700">$35–44 USD ← muy competitivo</span></div>
+        <div class="seg-row"><span class="sk">Ancla mental</span><span class="sv">Cabaña familiar premium</span></div>
+        <div class="seg-row"><span class="sk">Motivador</span><span class="sv">Experiencia única para los chicos</span></div>
+        <div class="seg-row"><span class="sk">Canal prioritario</span><span class="sv">Airbnb búsqueda + Word of mouth</span></div>
+        <div class="seg-row"><span class="sk">Contenido que convierte</span><span class="sv">Niños en jardín, desayuno familiar</span></div>
+      </div>
+      <div class="seg-hook"><p>"Mis hijos todavía hablan del domo. Fue lo más memorable de Bariloche." — Anabel, review real</p></div>
+    </div>
+  </div>
+
+  <div class="g3 rev" style="margin-top:1rem">
+    <div class="seg-card">
+      <div class="seg-header" style="background:var(--stone)">
+        <div class="seg-num">Segmento C · Futuro</div>
+        <div class="seg-title">El Viajero Internacional</div>
+        <div class="seg-sub">USA, Europa, Brasil · turismo premium Patagonia</div>
+      </div>
+      <div class="seg-body">
+        <div class="seg-row"><span class="sk">Ticket ideal</span><span class="sv">$150–230/noche</span></div>
+        <div class="seg-row"><span class="sk">Canal</span><span class="sv">Booking.com + Airbnb</span></div>
+        <div class="seg-row"><span class="sk">Habilitador</span><span class="sv">30+ reviews + Superhost</span></div>
+        <div class="seg-row"><span class="sk">Diferencial</span><span class="sv">Única experiencia geodésica Patagonia</span></div>
+      </div>
+    </div>
+    <div class="seg-card">
+      <div class="seg-header" style="background:var(--stone)">
+        <div class="seg-num">Segmento D · Premium</div>
+        <div class="seg-title">El Nómade Digital</div>
+        <div class="seg-sub">Freelancers, creadores, work-from-anywhere</div>
+      </div>
+      <div class="seg-body">
+        <div class="seg-row"><span class="sk">Ticket ideal</span><span class="sv">$80–110/noche · estancias largas</span></div>
+        <div class="seg-row"><span class="sk">Diferencial clave</span><span class="sv" style="color:#166534">Starlink ← único</span></div>
+        <div class="seg-row"><span class="sk">Estancia promedio</span><span class="sv">7–21 días</span></div>
+        <div class="seg-row"><span class="sk">Ocupación impacto</span><span class="sv">Llena temporada baja</span></div>
+      </div>
+    </div>
+    <div class="seg-card">
+      <div class="seg-header" style="background:var(--stone)">
+        <div class="seg-num">Segmento E · Corporate</div>
+        <div class="seg-title">Retiro Corporativo</div>
+        <div class="seg-sub">Equipos pequeños, agencias, startups</div>
+      </div>
+      <div class="seg-body">
+        <div class="seg-row"><span class="sk">Formato</span><span class="sv">3 domos enteros · 6–10 pax</span></div>
+        <div class="seg-row"><span class="sk">Ticket total</span><span class="sv">$400–600/noche × 3 domos</span></div>
+        <div class="seg-row"><span class="sk">Canal</span><span class="sv">LinkedIn + contacto directo</span></div>
+        <div class="seg-row"><span class="sk">Diferencial</span><span class="sv">Desconexión garantizada</span></div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="rev" style="font-family:var(--ff-d);font-size:1.2rem;font-weight:700;color:var(--ink);margin:1.8rem 0 .8rem">1.2 — Brand Positioning Statement</h3>
+
+  <div class="callout c-dark rev" style="padding:1.6rem 1.8rem">
+    <strong style="display:block;font-family:var(--ff-d);font-size:1.15rem;color:#f5f1eb;margin-bottom:.8rem;font-style:italic">"El único refugio de diseño arquitectónico en Bariloche para quienes buscan sentir la Patagonia sin renunciar al confort — para parejas que escapan y familias que descubren."</strong>
+    <p style="font-size:.8rem;color:rgba(245,241,235,.5);line-height:1.65">Para quién: parejas 28–45 que valoran diseño + naturaleza, y familias que quieren algo diferente a la cabaña de siempre. · Qué prometemos: arquitectura geodésica de autor, bosque real, losa radiante, Starlink — una experiencia que no existe en ningún otro lugar de Bariloche. · La emoción: la sensación de haber vivido algo genuinamente único que contás cuando te preguntan "¿qué hiciste en Bariloche?"</p>
+  </div>
+
+  <h3 class="rev" style="font-family:var(--ff-d);font-size:1.2rem;font-weight:700;color:var(--ink);margin:1.8rem 0 .8rem">1.3 — Los 3 pilares de marca</h3>
+
+  <div class="g3 rev">
+    <div class="card">
+      <div style="font-size:1.6rem;margin-bottom:.6rem">◈</div>
+      <div style="font-weight:700;font-size:.92rem;margin-bottom:.35rem">Arquitectura intencional</div>
+      <div style="font-size:.77rem;color:var(--ink3);line-height:1.55">No glamping. No cabaña. Diseño geodésico pensado para la experiencia Patagonia. Cada detalle existe por una razón — el domo es la experiencia, no el contenedor.</div>
+    </div>
+    <div class="card">
+      <div style="font-size:1.6rem;margin-bottom:.6rem">◉</div>
+      <div style="font-weight:700;font-size:.92rem;margin-bottom:.35rem">Bosque que es ciudad</div>
+      <div style="font-size:.77rem;color:var(--ink3);line-height:1.55">Inmerso en el bosque del Cerro Otto, a 8 cuadras de todo. No sacrificás la ciudad para tener naturaleza. El dome resolvió ese falso dilema.</div>
+    </div>
+    <div class="card">
+      <div style="font-size:1.6rem;margin-bottom:.6rem">◎</div>
+      <div style="font-weight:700;font-size:.92rem;margin-bottom:.35rem">Hospitalidad de autor</div>
+      <div style="font-size:.77rem;color:var(--ink3);line-height:1.55">Vero y Eric no son property managers — son los creadores. El dome lo construyeron ellos. Esa historia no se puede copiar y vale más que cualquier amenity.</div>
+    </div>
+  </div>
+
+  <h3 class="rev" style="font-family:var(--ff-d);font-size:1.2rem;font-weight:700;color:var(--ink);margin:1.8rem 0 .8rem">1.4 — Voz de marca: de genérico a específico</h3>
+
+  <div class="g2 rev">
+    <div>
+      <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);font-weight:600;margin-bottom:.7rem">Tono actual — podrían ser de cualquier glamping</div>
+      <div class="copy-ex" style="background:#fff8f8;border-color:#fecdd3">
+        <div class="copy-label" style="color:#991b1b">✗ Evitar</div>
+        "Noches así no se explican... se viven."<br>
+        "Rincones que invitan a vivir la experiencia completa."<br>
+        "Consultanos fechas!"<br>
+        "Tardes de pausa... Animate a algo nuevo!"
+      </div>
+    </div>
+    <div>
+      <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);font-weight:600;margin-bottom:.7rem">Tono propuesto — específico, memorable, inimitable</div>
+      <div class="copy-ex" style="background:#f0fdf4;border-color:#bbf7d0">
+        <div class="copy-label" style="color:#166534">✓ Usar</div>
+        "Afuera -2°C. Adentro, losa radiante y el olor del bosque por las ventanas del domo."<br>
+        "Lo diseñamos así a propósito. Por eso no se parece a nada en Bariloche."<br>
+        "3 domos. Esta semana quedan 2 disponibles para julio."<br>
+        "Vero diseñó cada rincón pensando en esto: que no quieras irte."
+      </div>
+    </div>
+  </div>
+
+  <h3 class="rev" style="font-family:var(--ff-d);font-size:1.2rem;font-weight:700;color:var(--ink);margin:1.8rem 0 .8rem">1.5 — Pricing strategy: activar estacionalidad esta semana</h3>
+
+  <div class="price-grid rev">
+    <div class="price-col">
+      <div class="pc-label">Temporada baja<br>May–Jun · Sep</div>
+      <div class="pc-price">$75–85</div>
+      <div class="pc-sub">USD/noche · 2 pax</div>
+      <div class="pc-items">
+        <div class="pc-item">Bajar ahora: genera reviews y ocupación</div>
+        <div class="pc-item">Objetivo: 20+ reviews antes de julio</div>
+        <div class="pc-item">4 pax: $100–110/noche</div>
+        <div class="pc-item">Instant Book activado</div>
+        <div class="pc-item">Mínimo 2 noches</div>
+      </div>
+    </div>
+    <div class="price-col pc-feat">
+      <div class="pc-label">Pico invierno<br>JULIO ★ — activar urgente</div>
+      <div class="pc-price">$185–230</div>
+      <div class="pc-sub">USD/noche según pax</div>
+      <div class="pc-items">
+        <div class="pc-item">Julio vale 3–4× más que mayo</div>
+        <div class="pc-item">Hoy cobra $120 — dinero perdido</div>
+        <div class="pc-item">Semana pico: $3.885–4.830 USD total</div>
+        <div class="pc-item">vs. $2.520 actual (+54–92%)</div>
+        <div class="pc-item">Cargo 3er pax: $15–20/noche</div>
+      </div>
+    </div>
+    <div class="price-col">
+      <div class="pc-label">Alta temporada<br>Ene–Feb · Nov–Dic</div>
+      <div class="pc-price">$115–165</div>
+      <div class="pc-sub">USD/noche según pax</div>
+      <div class="pc-items">
+        <div class="pc-item">Verano patagónico: alta demanda</div>
+        <div class="pc-item">2 pax: $115–130/noche</div>
+        <div class="pc-item">4 pax: $150–165/noche</div>
+        <div class="pc-item">Fines de semana: +15–20%</div>
+        <div class="pc-item">Feriados largos: precio pico</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout c-forest rev">
+    <strong>Julio es la urgencia #1.</strong> Con pricing plano hoy, están dejando $1.365–2.310 USD sobre la mesa en una sola semana de vacaciones de invierno. Activar pricing dinámico en el panel de Airbnb → Calendario → Precios personalizados tarda 20 minutos y genera el mayor impacto de revenue de toda la estrategia.
+  </div>
+</section>
+</div>
+
+<div class="ornament wrap"><span class="od2"></span><span class="od"></span><span class="od2"></span></div>
+
+
+<!-- ══════════════════════════════════════
+     FASE 2 — CANALES & CONTENIDO
+══════════════════════════════════════ -->
+<div class="wrap">
+<section class="sec" id="fase2">
+  <div class="sec-hd rev">
+    <div class="sec-phase">Fase 02 · Mes 1–2</div>
+    <div class="sec-hd-row">
+      <div class="sec-num">02</div>
+      <h2 class="sec-title">Canales & Contenido:<br><em>construir el discovery</em></h2>
+    </div>
+    <p class="sec-desc">Un producto extraordinario que nadie encuentra no existe comercialmente. La estrategia de canales define dónde aparece el dome, cómo, para quién y con qué mensaje. Cada canal tiene un trabajo específico.</p>
+  </div>
+
+  <div class="phase-header rev">
+    <div class="ph-top">
+      <div class="ph-num">Fase 02 · Canales, contenido y distribución</div>
+      <div class="ph-title">Del círculo social al viajero real</div>
+      <div class="ph-sub">Hoy el 100% de la audiencia son conocidos de Vero y Eric. En 60 días tiene que ser mayoritariamente viajeros reales que nunca oyeron hablar del dome y llegaron por contenido orgánico o búsqueda.</div>
+    </div>
+    <div class="ph-footer">
+      <div class="ph-kpi"><div class="ph-kv">5</div><div class="ph-kl">canales activos</div></div>
+      <div class="ph-kpi"><div class="ph-kv">900+</div><div class="ph-kl">seguidores objetivo mes 2</div></div>
+      <div class="ph-kpi"><div class="ph-kv">10+</div><div class="ph-kl">reviews objetivo julio</div></div>
+      <div class="ph-kpi"><div class="ph-kv">3</div><div class="ph-kl">Reels semanales</div></div>
+    </div>
+  </div>
+
+  <h3 class="rev" style="font-family:var(--ff-d);font-size:1.2rem;font-weight:700;color:var(--ink);margin:1.8rem 0 .8rem">2.1 — Arquitectura de canales</h3>
+
+  <table class="ch-table rev">
+    <thead>
+      <tr><th>Canal</th><th>Trabajo principal</th><th>Audiencia objetivo</th><th>Frecuencia</th><th>Prioridad</th><th>Inversión</th></tr>
+    </thead>
+    <tbody>
+      <tr class="tr-hl"><td><strong>Instagram Reels</strong></td><td>Discovery orgánico masivo</td><td>Viajeros 25–45 CABA/CBA</td><td>3–4 Reels/semana</td><td><span class="badge b-high">Crítica</span></td><td><span class="badge b-free">$0</span></td></tr>
+      <tr class="tr-hl"><td><strong>Airbnb listing</strong></td><td>Conversión + social proof</td><td>Viajeros con intención de reserva</td><td>Optimización continua</td><td><span class="badge b-high">Crítica</span></td><td><span class="badge b-free">$0</span></td></tr>
+      <tr><td>Instagram Feed + Stories</td><td>Construcción de audiencia + CRM</td><td>Seguidores actuales + nuevos</td><td>4 posts/sem + 5 stories/sem</td><td><span class="badge b-high">Alta</span></td><td><span class="badge b-free">$0</span></td></tr>
+      <tr><td>WhatsApp directo</td><td>Conversión 1:1 + CRM post-checkout</td><td>Interesados + ex-huéspedes</td><td>Respuesta inmediata</td><td><span class="badge b-high">Alta</span></td><td><span class="badge b-free">$0</span></td></tr>
+      <tr><td>Linktree / Mini landing</td><td>Puente IG → reserva</td><td>Viajeros desde Instagram</td><td>Setup único, actualizar mensual</td><td><span class="badge b-high">Alta</span></td><td><span class="badge b-free">$0</span></td></tr>
+      <tr><td>Google Business Profile</td><td>SEO local + reviews Google</td><td>Búsquedas "dome bariloche" "glamping bariloche"</td><td>Setup + post mensual</td><td><span class="badge b-med">Media</span></td><td><span class="badge b-free">$0</span></td></tr>
+      <tr><td>Meta Ads (Instagram)</td><td>Escala de audiencia calificada</td><td>CABA/CBA/Rosario 28–45</td><td>Campaña continua desde mes 2</td><td><span class="badge b-med">Media</span></td><td><span class="badge" style="background:#dbeafe;color:#1e40af">$30–50/sem</span></td></tr>
+      <tr><td>Booking.com</td><td>Canal internacional + diversificación</td><td>Turista extranjero + no-Airbnb users</td><td>Setup + sinc. calendario</td><td><span class="badge b-med">Media</span></td><td><span class="badge b-free">Comisión %</span></td></tr>
+      <tr><td>Travel creators (canje)</td><td>Alcance masivo a audiencia correcta</td><td>Seguidores del creator</td><td>1–2 estadías julio/agosto</td><td><span class="badge b-med">Media</span></td><td><span class="badge b-free">Canje estadía</span></td></tr>
+      <tr><td>TikTok</td><td>Discovery Gen-Z y millennials</td><td>Viajeros jóvenes 20–30</td><td>Reutilizar contenido de Reels</td><td><span class="badge b-low">Baja</span></td><td><span class="badge b-free">$0</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="rev" style="font-family:var(--ff-d);font-size:1.2rem;font-weight:700;color:var(--ink);margin:1.8rem 0 .8rem">2.2 — Estrategia de contenido Instagram</h3>
+
+  <div class="pillar-grid rev">
+    <div class="pillar-card">
+      <div class="pillar-top" style="border-top:3px solid var(--forest-light)">
+        <div class="pillar-label" style="color:var(--forest-light)">Pilar 1 · 30% del contenido</div>
+        <div class="pillar-name">Arquitectura & Diseño</div>
+      </div>
+      <div class="pillar-body">
+        <div class="pillar-item">El interior del dome — detalles que no se ven en las fotos</div>
+        <div class="pillar-item">La estructura geodésica desde afuera: ángulos, luz, sombras</div>
+        <div class="pillar-item">"Por qué construimos así" — la decisión de diseño</div>
+        <div class="pillar-item">Comparativa: dome vs. cabaña tradicional</div>
+        <div class="pillar-item">Cada material tiene una historia — contarla</div>
+      </div>
+    </div>
+    <div class="pillar-card">
+      <div class="pillar-top" style="border-top:3px solid var(--gold)">
+        <div class="pillar-label" style="color:#7a5a1a">Pilar 2 · 25% del contenido</div>
+        <div class="pillar-name">Momentos Emocionales</div>
+      </div>
+      <div class="pillar-body">
+        <div class="pillar-item">Amanecer desde la cama del dome (foto más importante)</div>
+        <div class="pillar-item">Fogón nocturno en el jardín con estrellas</div>
+        <div class="pillar-item">Desayuno en el deck con nieve afuera</div>
+        <div class="pillar-item">El momento del café + vista al bosque</div>
+        <div class="pillar-item">Niños corriendo en el jardín — captura espontánea</div>
+      </div>
+    </div>
+    <div class="pillar-card">
+      <div class="pillar-top" style="border-top:3px solid #3b82f6">
+        <div class="pillar-label" style="color:#1e3a5f">Pilar 3 · 25% del contenido</div>
+        <div class="pillar-name">Bariloche Vivido</div>
+      </div>
+      <div class="pillar-body">
+        <div class="pillar-item">La diferencia: bosque vs. centro en 8 cuadras</div>
+        <div class="pillar-item">Cerro Otto desde el dome vs. desde el teleférico</div>
+        <div class="pillar-item">"Qué hacer en 3 días desde el dome"</div>
+        <div class="pillar-item">Bariloche en invierno: el secreto que no se cuenta</div>
+        <div class="pillar-item">Restaurantes que merecen la caminata desde el bosque</div>
+      </div>
+    </div>
+    <div class="pillar-card">
+      <div class="pillar-top" style="border-top:3px solid #8b5cf6">
+        <div class="pillar-label" style="color:#4c1d95">Pilar 4 · 20% del contenido</div>
+        <div class="pillar-name">Historia de los Founders</div>
+      </div>
+      <div class="pillar-body">
+        <div class="pillar-item">"Por qué construimos tres domos geodésicos en el bosque"</div>
+        <div class="pillar-item">El proceso de construcción (fotos y videos del antes)</div>
+        <div class="pillar-item">Vero y Eric en el dome: la historia cotidiana</div>
+        <div class="pillar-item">El error que cambió el diseño del domo 3</div>
+        <div class="pillar-item">El review que nos hizo llorar — contar la historia</div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="rev" style="font-family:var(--ff-d);font-size:1.2rem;font-weight:700;color:var(--ink);margin:1.8rem 0 .8rem">2.3 — Plan de Reels: los primeros 8 (próximas 2 semanas)</h3>
+
+  <div class="action-grid rev">
+    <div class="action action-1w">
+      <div class="action-num an-1w">R1</div>
+      <div class="action-body">
+        <div class="at">Morning in the dome — el video que tiene que ir primero</div>
+        <div class="as">Amanecer. Despertarse. La cama con la vista al bosque. Café en el deck. Losa radiante caliente mientras afuera hay niebla. Sin texto, solo música. 30–40 seg. Este es el Reel que va a viralizar.</div>
+      </div>
+      <div class="action-tag tag-1w">Esta semana</div>
+    </div>
+    <div class="action action-1w">
+      <div class="action-num an-1w">R2</div>
+      <div class="action-body">
+        <div class="at">Tour del dome en 60 segundos — el que responde las preguntas</div>
+        <div class="as">Interior → exterior → jardín → bosque → de vuelta adentro. Mostrar: la geometría, los techos, la cama tipo "hobbit hole", el baño, el Starlink. Texto: "Por qué esto no es glamping."</div>
+      </div>
+      <div class="action-tag tag-1w">Esta semana</div>
+    </div>
+    <div class="action action-1w">
+      <div class="action-num an-1w">R3</div>
+      <div class="action-body">
+        <div class="at">El domo con nieve — el content de mayor CTR en invierno</div>
+        <div class="as">Si hay nieve: cámara al bosque nevado desde adentro del dome con fuego encendido o losa caliente. Si no hay todavía: grabar prep para julio. Texto: "Así se ve Bariloche desde un dome geodésico en julio."</div>
+      </div>
+      <div class="action-tag tag-1w">Esta semana</div>
+    </div>
+    <div class="action action-2w">
+      <div class="action-num an-2w">R4</div>
+      <div class="action-body">
+        <div class="at">5 razones para quedarte en el bosque en vez del centro</div>
+        <div class="as">Formato lista. Punto por punto con imágenes. Cierre: "Y estamos a 8 cuadras del centro." Alto potencial de guardados — el tipo de contenido que se comparte entre parejas planificando viaje.</div>
+      </div>
+      <div class="action-tag tag-2w">Semana 2</div>
+    </div>
+    <div class="action action-2w">
+      <div class="action-num an-2w">R5</div>
+      <div class="action-body">
+        <div class="at">Un día en familia en el dome — para el segmento sin explotar</div>
+        <div class="as">Mañana en el jardín, los chicos explorando el dome, desayuno afuera, tarde en el bosque. Directo a los padres de 30–45 años que no saben que el dome es perfecto para cuatro. Texto: "¿Familia grande en Bariloche? Hicimos esto para ustedes."</div>
+      </div>
+      <div class="action-tag tag-2w">Semana 2</div>
+    </div>
+    <div class="action action-2w">
+      <div class="action-num an-2w">R6</div>
+      <div class="action-body">
+        <div class="at">La historia de cómo construimos los domos — el más poderoso</div>
+        <div class="as">Vero o Eric a cámara (o voice over + fotos del proceso). "Hace X años decidimos construir tres domos geodésicos en el bosque del Cerro Otto. Por esto." Alto engagement, alta viralidad, construye marca de founders. Este video distingue a Domos del Bosque de todo lo que existe.</div>
+      </div>
+      <div class="action-tag tag-2w">Semana 2</div>
+    </div>
+    <div class="action action-1m">
+      <div class="action-num an-1m">R7</div>
+      <div class="action-body">
+        <div class="at">Qué hace diferente al dome — el Starlink en el bosque</div>
+        <div class="as">Para el nómade digital y el trabajador remoto. Mostrar la conexión, la pantalla funcionando, el bosque de fondo. "Trabajé una semana entera desde el bosque de Bariloche. Con Starlink en el dome." Este Reel puede viralizarse en comunidades de remote work.</div>
+      </div>
+      <div class="action-tag tag-1m">Semana 3</div>
+    </div>
+    <div class="action action-1m">
+      <div class="action-num an-1m">R8</div>
+      <div class="action-body">
+        <div class="at">Testimonio real en video — el review que más convierte</div>
+        <div class="as">Pedir a un ex-huésped que grabe 20–30 segundos contando su experiencia. Compartir como Reel con subtítulos. El UGC convierte 3× más que el contenido propio. Priorizar: familias con hijos o parejas que hayan mencionado que fue "lo más memorable del viaje".</div>
+      </div>
+      <div class="action-tag tag-1m">Semana 3–4</div>
+    </div>
+  </div>
+
+  <h3 class="rev" style="font-family:var(--ff-d);font-size:1.2rem;font-weight:700;color:var(--ink);margin:1.8rem 0 .8rem">2.4 — Optimización del listing Airbnb</h3>
+
+  <div class="g2 rev">
+    <div>
+      <div class="strat-block strat-red">
+        <div class="sb-label">Título actual — cambiar urgente</div>
+        <p>"Dome in the Forest | Privacy and comfort" — descriptivo pero sin diferenciales técnicos ni ancla cognitiva. No comunica nada que justifique $120 sobre el apartamento a $61.</p>
+      </div>
+      <div class="strat-block strat-gold">
+        <div class="sb-label">Título propuesto — activar ahora</div>
+        <p><strong>"Geodesic Dome | Patagonian Forest · Heated Floors · Starlink · Design"</strong><br>Los diferenciales técnicos en los primeros caracteres. El viajero premium los busca específicamente.</p>
+      </div>
+    </div>
+    <div>
+      <div class="strat-block">
+        <div class="sb-label">Los 5 cambios al listing que van hoy</div>
+        <p>
+          <strong>1. Título:</strong> incluir diferenciales técnicos (Heated Floors, Starlink, Geodesic).<br>
+          <strong>2. Descripción:</strong> primeros 3 párrafos deben construir la ancla comparativa — "no hotel, no cabaña, no glamping".<br>
+          <strong>3. Detectores CO/Humo:</strong> instalar ($20 USD) y marcar en el listing — barrera visible para viajero internacional.<br>
+          <strong>4. Cargo por huésped adicional:</strong> subir de $7.56 a $15–20 USD/noche desde el 3er pax.<br>
+          <strong>5. Fotos:</strong> la foto #1 tiene que ser el pico emocional máximo — amanecer o dome con nieve.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="rev" style="font-family:var(--ff-d);font-size:1.2rem;font-weight:700;color:var(--ink);margin:1.8rem 0 .8rem">2.5 — Sistema de reviews: de 6 a 20+ en 60 días</h3>
+
+  <div class="callout c-gold rev">
+    <strong>Las reviews son el activo más importante que no tienen todavía.</strong> No son estrellas — son reducción de ansiedad cognitiva. Con 6 reviews el viajero tiene incertidumbre alta ante un precio premium. Con 20+ la ansiedad cae, la conversión sube y el precio puede subir con ella. El plan: bajar el precio base ahora para generar ocupación y reviews antes de julio, luego subir.
+  </div>
+
+  <div class="g3 rev">
+    <div class="card">
+      <div class="card-h">Palanca 1 — Precio de adquisición</div>
+      <div style="font-size:.8rem;color:var(--ink2);line-height:1.65">Bajar a <strong>$85–89/noche</strong> en temporada baja (abr–jun). El objetivo no es el revenue de estas semanas — es construir las reviews que hacen posible el julio a $185. Activar Instant Book y mínimo de 2 noches.</div>
+    </div>
+    <div class="card">
+      <div class="card-h">Palanca 2 — Mensaje post-checkout</div>
+      <div style="font-size:.8rem;color:var(--ink2);line-height:1.65">WhatsApp 24hs después del checkout: <em>"Fue un placer tenerte 🌲 Si te gustó la estadía, una review en Airbnb nos ayuda muchísimo 🙏 Y si querés compartir una foto etiquetándonos (@domosdelbosque) nos hace súper felices!"</em> — simple, directo, sin presión.</div>
+    </div>
+    <div class="card">
+      <div class="card-h">Palanca 3 — In-stay experience</div>
+      <div style="font-size:.8rem;color:var(--ink2);line-height:1.65">Generar el momento durante la estadía que hace inevitable dejar una review positiva: nota escrita a mano de bienvenida, detalle local (mermelada artesanal, mate, chocolates de Bariloche), un tip secreto de la zona. El review se escribe <em>durante</em> la estadía, no después.</div>
+    </div>
+  </div>
+</section>
+</div>
+
+<div class="ornament wrap"><span class="od2"></span><span class="od"></span><span class="od2"></span></div>
+
+
+<!-- ══════════════════════════════════════
+     FASE 3 — CONVERSIÓN & REVENUE
+══════════════════════════════════════ -->
+<div class="wrap">
+<section class="sec" id="fase3">
+  <div class="sec-hd rev">
+    <div class="sec-phase">Fase 03 · Mes 2–4</div>
+    <div class="sec-hd-row">
+      <div class="sec-num">03</div>
+      <h2 class="sec-title">Conversión & Revenue:<br><em>cerrar la brecha</em></h2>
+    </div>
+    <p class="sec-desc">El discovery sin conversión es vanidad. Esta fase convierte la audiencia en reservas — construyendo el embudo completo desde Instagram hasta el checkout en Airbnb, y activando los canales de revenue más altos.</p>
+  </div>
+
+  <div class="phase-header rev">
+    <div class="ph-top">
+      <div class="ph-num">Fase 03 · Conversión y maximización de revenue</div>
+      <div class="ph-title">Cerrar el funnel, capturar julio, activar julio con precio peak</div>
+      <div class="ph-sub">El objetivo de esta fase es doble: cerrar los 4 puntos de fricción del embudo y maximizar el revenue del pico más importante del año.</div>
+    </div>
+    <div class="ph-footer">
+      <div class="ph-kpi"><div class="ph-kv">$4.830</div><div class="ph-kl">USD potencial semana julio</div></div>
+      <div class="ph-kpi"><div class="ph-kv">60%+</div><div class="ph-kl">ocupación julio objetivo</div></div>
+      <div class="ph-kpi"><div class="ph-kv">20+</div><div class="ph-kl">reviews para agosto</div></div>
+      <div class="ph-kpi"><div class="ph-kv">3×</div><div class="ph-kl">conversión IG→reserva</div></div>
+    </div>
+  </div>
+
+  <h3 class="rev" style="font-family:var(--ff-d);font-size:1.2rem;font-weight:700;color:var(--ink);margin:1.8rem 0 .8rem">3.1 — El embudo de conversión rediseñado</h3>
+
+  <div class="g2 rev">
+    <div>
+      <div style="font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink3);font-weight:600;margin-bottom:.7rem">Estado actual — 4 fugas consecutivas</div>
+      <div class="funnel">
+        <div class="funnel-step fs-1"><div class="fn" style="background:#fee2e2;color:#991b1b">1</div><div><div class="ft">Discovery: 0 Reels</div><div class="fs">Sin alcance orgánico → solo búsqueda directa en Airbnb</div></div><div class="ftag" style="background:#fee2e2;color:#991b1b">✗ Falla</div></div>
+        <div class="funnel-step fs-1"><div class="fn" style="background:#fee2e2;color:#991b1b">2</div><div><div class="ft">Perfil IG: bio cortada, sin precio</div><div class="fs">Viajero no sabe cuánto cuesta → abandona</div></div><div class="ftag" style="background:#fee2e2;color:#991b1b">✗ Falla</div></div>
+        <div class="funnel-step fs-2"><div class="fn" style="background:#fed7aa;color:#9a3412">3</div><div><div class="ft">Link bio → Airbnb directo</div><div class="fs">Sin contexto de valor → viajero sin ancla cognitiva</div></div><div class="ftag" style="background:#fed7aa;color:#9a3412">✗ Fricción</div></div>
+        <div class="funnel-step fs-3"><div class="fn" style="background:#fef3c7;color:#92400e">4</div><div><div class="ft">Listing: fotos sin pico emocional</div><div class="fs">6 reviews + precio oculto sin fechas → ansiedad alta</div></div><div class="ftag" style="background:#fef3c7;color:#92400e">✗ Fricción</div></div>
+        <div class="funnel-step fs-4"><div class="fn" style="background:#dcfce7;color:#166534">5</div><div><div class="ft">Reserva eventual</div><div class="fs">Solo viajeros que llegan por búsqueda directa en Airbnb</div></div><div class="ftag" style="background:#dcfce7;color:#166534">Conversión baja</div></div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink3);font-weight:600;margin-bottom:.7rem">Estado objetivo — embudo sin fricción</div>
+      <div class="funnel">
+        <div class="funnel-step fs-4"><div class="fn" style="background:#dcfce7;color:#166534">1</div><div><div class="ft">Reel viraliza → nuevo viajero descubre el dome</div><div class="fs">3–4 Reels/semana → alcance a viajeros reales en CABA/CBA</div></div><div class="ftag" style="background:#dcfce7;color:#166534">✓ Activo</div></div>
+        <div class="funnel-step fs-4"><div class="fn" style="background:#dcfce7;color:#166534">2</div><div><div class="ft">Bio: precio visible + Highlights + CTA claro</div><div class="fs">"🌲 3 domos geodésicos | Desde $85 USD/noche 📅"</div></div><div class="ftag" style="background:#dcfce7;color:#166534">✓ Activo</div></div>
+        <div class="funnel-step fs-4"><div class="fn" style="background:#dcfce7;color:#166534">3</div><div><div class="ft">Linktree: precalificación antes de Airbnb</div><div class="fs">Foto hero + precio + 2–3 reviews + WhatsApp + botón Airbnb</div></div><div class="ftag" style="background:#dcfce7;color:#166534">✓ Activo</div></div>
+        <div class="funnel-step fs-4"><div class="fn" style="background:#dcfce7;color:#166534">4</div><div><div class="ft">Listing optimizado: foto hero de pico emocional</div><div class="fs">20+ reviews + título con diferenciales + ancla en descripción</div></div><div class="ftag" style="background:#dcfce7;color:#166534">✓ Activo</div></div>
+        <div class="funnel-step fs-5"><div class="fn" style="background:#bbf7d0;color:#14532d">5</div><div><div class="ft">Reserva confirmada</div><div class="fs">Conversión desde IG estimada: 3–4× mayor</div></div><div class="ftag" style="background:#bbf7d0;color:#14532d">✓ Objetivo</div></div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="rev" style="font-family:var(--ff-d);font-size:1.2rem;font-weight:700;color:var(--ink);margin:1.8rem 0 .8rem">3.2 — Modelo de revenue: 3 escenarios</h3>
+
+  <div class="rev">
+    <div class="rev-scenario">
+      <div class="rs-header"><div><div class="rs-label">Escenario actual</div><div class="rs-title">Sin pricing dinámico ni canales activos</div></div><div style="font-size:9px;color:rgba(245,241,235,.4)">Hoy</div></div>
+      <div class="rs-body">
+        <div class="rs-cell"><div class="rs-val">$120</div><div class="rs-lbl">precio plano</div><div class="rs-note">sin estacionalidad</div></div>
+        <div class="rs-cell"><div class="rs-val">~20%</div><div class="rs-lbl">ocupación</div></div>
+        <div class="rs-cell"><div class="rs-val">219</div><div class="rs-lbl">noches/año</div></div>
+        <div class="rs-cell"><div class="rs-val">$26.280</div><div class="rs-lbl">revenue anual</div></div>
+      </div>
+    </div>
+    <div class="rev-scenario" style="margin-top:.8rem">
+      <div class="rs-header" style="background:rgba(45,92,51,.9)"><div><div class="rs-label">Escenario Fase 2 — con estrategia</div><div class="rs-title">Pricing estacional + canales activos + 20+ reviews</div></div><div style="font-size:9px;color:rgba(245,241,235,.4)">Mes 3–6</div></div>
+      <div class="rs-body">
+        <div class="rs-cell"><div class="rs-val">$135</div><div class="rs-lbl">precio promedio</div><div class="rs-note">ponderado estacional</div></div>
+        <div class="rs-cell"><div class="rs-val">~55%</div><div class="rs-lbl">ocupación</div></div>
+        <div class="rs-cell"><div class="rs-val">601</div><div class="rs-lbl">noches/año</div></div>
+        <div class="rs-cell"><div class="rs-val" style="color:var(--forest-light)">$62.370</div><div class="rs-lbl">revenue anual</div><div class="rs-note">+137%</div></div>
+      </div>
+    </div>
+    <div class="rev-scenario" style="margin-top:.8rem">
+      <div class="rs-header" style="background:rgba(13,31,15,.98)"><div><div class="rs-label">Escenario Fase 3 — Superhost + marca + multi-canal</div><div class="rs-title">Badge Superhost + Booking.com + brand awareness consolidada</div></div><div style="font-size:9px;color:var(--gold)">Mes 9–12</div></div>
+      <div class="rs-body">
+        <div class="rs-cell"><div class="rs-val">$155</div><div class="rs-lbl">precio promedio</div><div class="rs-note">peak pricing activado</div></div>
+        <div class="rs-cell"><div class="rs-val">~70%</div><div class="rs-lbl">ocupación</div></div>
+        <div class="rs-cell"><div class="rs-val">767</div><div class="rs-lbl">noches/año</div></div>
+        <div class="rs-cell"><div class="rs-val" style="color:var(--gold)">$96.120</div><div class="rs-lbl">revenue anual</div><div class="rs-note">+265%</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout c-forest rev">
+    <strong>La diferencia de $69.840 USD anuales entre el estado actual y el Fase 3</strong> no requiere invertir en el producto — el producto ya es excepcional. Requiere implementar las decisiones de esta estrategia en el orden correcto y con consistencia.
+  </div>
+
+  <h3 class="rev" style="font-family:var(--ff-d);font-size:1.2rem;font-weight:700;color:var(--ink);margin:1.8rem 0 .8rem">3.3 — Julio como la operación más importante del año</h3>
+
+  <div class="g2 rev">
+    <div class="card" style="border:1.5px solid var(--forest-light)">
+      <div class="card-h">El número que lo dice todo</div>
+      <div style="text-align:center;padding:1rem 0">
+        <div style="font-family:var(--ff-d);font-size:2.5rem;font-weight:900;color:var(--forest-light);line-height:1">$3.885</div>
+        <div style="font-size:.78rem;color:var(--ink3);margin-top:4px">a $4.830 USD · semana de vacaciones de invierno</div>
+        <div style="font-size:.78rem;color:var(--ink3);margin-top:2px">3 domos × 7 días × $185–230/noche</div>
+        <div style="font-family:var(--ff-m);font-size:.72rem;color:var(--red);margin-top:.8rem;padding:.4rem .7rem;background:var(--red-l);border-radius:4px;display:inline-block">vs. $2.520 actual (precio plano)</div>
+      </div>
+    </div>
+    <div>
+      <div class="action-grid" style="margin:0">
+        <div class="action action-1w">
+          <div class="action-num an-1w">J1</div>
+          <div class="action-body">
+            <div class="at">Subir precio julio a $185/noche (2 pax) ahora mismo</div>
+            <div class="as">Panel Airbnb → Calendario → Precios personalizados. Jul 1–31: $185. Agosto: $165. 20 minutos de trabajo.</div>
+          </div>
+          <div class="action-tag tag-1w">Urgente</div>
+        </div>
+        <div class="action action-1w">
+          <div class="action-num an-1w">J2</div>
+          <div class="action-body">
+            <div class="at">Activar mínimo 5 noches en pico y 3 en julio general</div>
+            <div class="as">Semana de vacaciones: mínimo 5 noches evita fragmentación. El resto de julio: mínimo 3 noches. Maximiza el ticket promedio.</div>
+          </div>
+          <div class="action-tag tag-1w">Urgente</div>
+        </div>
+        <div class="action action-2w">
+          <div class="action-num an-2w">J3</div>
+          <div class="action-body">
+            <div class="at">Contenido de invierno/nieve para julio — crear antes de que llegue</div>
+            <div class="as">Si hay nieve: fotografiar el dome nevado urgente. Si no hay todavía: preparar el storytelling de "cómo es julio en el dome". Este contenido genera el 80% de las reservas de invierno.</div>
+          </div>
+          <div class="action-tag tag-2w">Semana 2</div>
+        </div>
+        <div class="action action-2w">
+          <div class="action-num an-2w">J4</div>
+          <div class="action-body">
+            <div class="at">Contactar 1 travel creator con audiencia ski/nieve/Bariloche para julio</div>
+            <div class="as">DM: "Hola [nombre], vimos tu contenido de Bariloche y creemos que los Domos del Bosque son para vos. Te ofrecemos 2 noches en julio a cambio de 1 Reel y 3 Stories." Nano-creator 5k–30k seguidores = ROI altísimo.</div>
+          </div>
+          <div class="action-tag tag-2w">Semana 2</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<div class="ornament wrap"><span class="od2"></span><span class="od"></span><span class="od2"></span></div>
+
+
+<!-- ══════════════════════════════════════
+     FASE 4 — ESCALA & MERCADO
+══════════════════════════════════════ -->
+<div class="wrap">
+<section class="sec" id="fase4">
+  <div class="sec-hd rev">
+    <div class="sec-phase">Fase 04 · Mes 4–12</div>
+    <div class="sec-hd-row">
+      <div class="sec-num">04</div>
+      <h2 class="sec-title">Escala & Mercado:<br><em>del listing a la marca</em></h2>
+    </div>
+    <p class="sec-desc">Con pricing dinámico activo, reviews acumuladas, canales funcionando y conversión mejorada, esta fase escala lo que funciona y diversifica la base de revenue para construir una operación de hospitalidad sostenible e independiente de algoritmos.</p>
+  </div>
+
+  <div class="phase-header rev">
+    <div class="ph-top">
+      <div class="ph-num">Fase 04 · Escala, diversificación y marca consolidada</div>
+      <div class="ph-title">Superhost, Booking.com, canal directo y experiencias</div>
+      <div class="ph-sub">El objetivo terminal: Domos del Bosque no necesita Airbnb para existir. Airbnb es uno de varios canales de una marca de hospitalidad que opera con pricing power, audiencia propia y demanda recurrente.</div>
+    </div>
+    <div class="ph-footer">
+      <div class="ph-kpi"><div class="ph-kv">Badge</div><div class="ph-kl">Superhost mes 6</div></div>
+      <div class="ph-kpi"><div class="ph-kv">2</div><div class="ph-kl">canales distribución</div></div>
+      <div class="ph-kpi"><div class="ph-kv">2.500+</div><div class="ph-kl">seguidores IG año 1</div></div>
+      <div class="ph-kpi"><div class="ph-kv">$96.120</div><div class="ph-kl">revenue objetivo año 1</div></div>
+    </div>
+  </div>
+
+  <h3 class="rev" style="font-family:var(--ff-d);font-size:1.2rem;font-weight:700;color:var(--ink);margin:1.8rem 0 .8rem">4.1 — El badge Superhost: el activo algorítmico más valioso</h3>
+
+  <div class="g2 rev">
+    <div>
+      <div class="strat-block">
+        <div class="sb-label">Qué es Superhost y por qué cambia todo</div>
+        <p>El badge Superhost en Airbnb es un <strong>multiplicador algorítmico permanente</strong>. Las propiedades Superhost aparecen primero en búsquedas, reciben más visibilidad, convierten a mayor tasa y pueden cobrar entre 10–22% más por la misma propiedad. Los requisitos: 10+ estadías/año, 4.8+ rating, 90%+ tasa de respuesta, 1% o menos de cancelaciones. Hoy ya tiene el rating. Faltan las reservas y el tiempo.</p>
+      </div>
+    </div>
+    <div>
+      <div class="strat-block strat-gold">
+        <div class="sb-label">Plan para obtener Superhost antes de agosto</div>
+        <p>
+          <strong>Mes 1–2:</strong> 6–10 reservas con precio reducido ($85–89) + Instant Book = acumular las estadías necesarias.<br>
+          <strong>Mes 2–3:</strong> implementar el sistema de reviews post-checkout = llegar a 20+ con rating sostenido en 5.0.<br>
+          <strong>Mes 4:</strong> verificación del badge. Con Superhost activo antes de la temporada de primavera-verano, el impacto se maximiza.<br>
+          <strong>Impacto proyectado:</strong> +15–20% en tasa de conversión en Airbnb.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="rev" style="font-family:var(--ff-d);font-size:1.2rem;font-weight:700;color:var(--ink);margin:1.8rem 0 .8rem">4.2 — Expansión de distribución: Booking.com + canal directo</h3>
+
+  <div class="g3 rev">
+    <div class="card">
+      <div class="card-h">Booking.com — canal internacional</div>
+      <div style="font-size:.8rem;color:var(--ink2);line-height:1.7">
+        <div style="margin-bottom:.5rem"><strong>Por qué sumar Booking.com ahora:</strong></div>
+        <div style="display:flex;gap:.4rem;margin-bottom:.25rem;font-size:.77rem"><span style="color:var(--forest-light)">→</span> 550M usuarios vs. Airbnb 150M — 3× más alcance global</div>
+        <div style="display:flex;gap:.4rem;margin-bottom:.25rem;font-size:.77rem"><span style="color:var(--forest-light)">→</span> Dominante en turismo europeo y asiático</div>
+        <div style="display:flex;gap:.4rem;margin-bottom:.25rem;font-size:.77rem"><span style="color:var(--forest-light)">→</span> Ideal para el segmento C (turista internacional)</div>
+        <div style="display:flex;gap:.4rem;margin-bottom:.5rem;font-size:.77rem"><span style="color:var(--forest-light)">→</span> Comisión: 15–18% (vs. 3% host Airbnb)</div>
+        <div><strong>Cómo:</strong> partner.booking.com + gestor de canales (Lodgify o Guesty) para sincronizar calendarios y evitar overbooking.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-h">Canal directo — reservas sin comisión</div>
+      <div style="font-size:.8rem;color:var(--ink2);line-height:1.7">
+        <div style="margin-bottom:.5rem"><strong>El objetivo a 12 meses:</strong> 20–30% de reservas por canal directo — sin pagar comisión a Airbnb ni Booking.</div>
+        <div style="display:flex;gap:.4rem;margin-bottom:.25rem;font-size:.77rem"><span style="color:var(--forest-light)">→</span> Base de datos de ex-huéspedes (WhatsApp + email)</div>
+        <div style="display:flex;gap:.4rem;margin-bottom:.25rem;font-size:.77rem"><span style="color:var(--forest-light)">→</span> Campaña de "temporada repetidores" — descuento por reserva directa</div>
+        <div style="display:flex;gap:.4rem;margin-bottom:.25rem;font-size:.77rem"><span style="color:var(--forest-light)">→</span> Linktree con formulario de consulta directa</div>
+        <div style="display:flex;gap:.4rem;font-size:.77rem"><span style="color:var(--forest-light)">→</span> A largo plazo: landing page propia con calendar booking</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-h">Categoría Unique Stays Airbnb</div>
+      <div style="font-size:.8rem;color:var(--ink2);line-height:1.7">
+        <div style="margin-bottom:.5rem">Airbnb tiene categorías especiales para alojamientos genuinamente únicos que amplifican la visibilidad en el algoritmo de búsqueda.</div>
+        <div style="display:flex;gap:.4rem;margin-bottom:.25rem;font-size:.77rem"><span style="color:var(--forest-light)">→</span> "Unique Stays" → un dome geodésico califica claramente</div>
+        <div style="display:flex;gap:.4rem;margin-bottom:.25rem;font-size:.77rem"><span style="color:var(--forest-light)">→</span> Panel host → Listing → Categories → evaluar elegibilidad</div>
+        <div style="display:flex;gap:.4rem;font-size:.77rem"><span style="color:var(--forest-light)">→</span> Con 20+ reviews y Superhost: posibilidad de aparecer en editoriales de Airbnb</div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="rev" style="font-family:var(--ff-d);font-size:1.2rem;font-weight:700;color:var(--ink);margin:1.8rem 0 .8rem">4.3 — Expansión de producto: experiencias y paquetes</h3>
+
+  <div class="callout c-gold rev">
+    <strong>El dome es la plataforma, no el producto final.</strong> Los huéspedes no solo compran "dónde dormir" — compran una experiencia. Cada experiencia adicional que se pueda agregar al dome aumenta el ticket promedio sin aumentar el costo de distribución.
+  </div>
+
+  <div class="g2 rev">
+    <div class="card">
+      <div class="card-h">Paquetes y add-ons de alto margen</div>
+      <div style="display:flex;flex-direction:column;gap:.5rem;margin-top:.3rem">
+        <div style="font-size:.79rem;color:var(--ink2);display:flex;gap:.5rem;align-items:flex-start;line-height:1.5">
+          <span style="background:var(--forest-pale);color:var(--forest-light);padding:1px 7px;border-radius:3px;font-size:8px;font-weight:600;flex-shrink:0;margin-top:1px">+$</span>
+          <span><strong>Welcome package:</strong> botella de vino Patagonia + chocolates Bariloche + nota escrita a mano. Costo $10–15, valor percibido $40–60. Aumenta reviews en 30%.</span>
+        </div>
+        <div style="font-size:.79rem;color:var(--ink2);display:flex;gap:.5rem;align-items:flex-start;line-height:1.5">
+          <span style="background:var(--forest-pale);color:var(--forest-light);padding:1px 7px;border-radius:3px;font-size:8px;font-weight:600;flex-shrink:0;margin-top:1px">+$</span>
+          <span><strong>Desayuno premium:</strong> $20–30 USD/persona, tercerizado a proveedor local. 40–60% de huéspedes lo toman si se ofrece bien al check-in.</span>
+        </div>
+        <div style="font-size:.79rem;color:var(--ink2);display:flex;gap:.5rem;align-items:flex-start;line-height:1.5">
+          <span style="background:var(--forest-pale);color:var(--forest-light);padding:1px 7px;border-radius:3px;font-size:8px;font-weight:600;flex-shrink:0;margin-top:1px">+$</span>
+          <span><strong>Fogón privado + s'mores kit:</strong> $25–35 USD. Costo mínimo, experiencia de alto valor emocional. Foto perfecta para Instagram → genera UGC automáticamente.</span>
+        </div>
+        <div style="font-size:.79rem;color:var(--ink2);display:flex;gap:.5rem;align-items:flex-start;line-height:1.5">
+          <span style="background:var(--forest-pale);color:var(--forest-light);padding:1px 7px;border-radius:3px;font-size:8px;font-weight:600;flex-shrink:0;margin-top:1px">+$</span>
+          <span><strong>Early check-in / late check-out:</strong> $30–50 USD según demanda. Revenue de baja fricción.</span>
+        </div>
+        <div style="font-size:.79rem;color:var(--ink2);display:flex;gap:.5rem;align-items:flex-start;line-height:1.5">
+          <span style="background:var(--forest-pale);color:var(--forest-light);padding:1px 7px;border-radius:3px;font-size:8px;font-weight:600;flex-shrink:0;margin-top:1px">+$</span>
+          <span><strong>Pack "Nómade Digital" — 7+ noches:</strong> descuento por estadía larga + kit de home office (monitor portátil, mouse, pad). Llenar temporada baja con workations.</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-h">Formato retiro corporativo — 3 domos completos</div>
+      <div style="font-size:.79rem;color:var(--ink2);line-height:1.7;margin-bottom:.7rem">El formato más lucrativo y menos explotado. 3 domos simultáneos para un equipo de 6–9 personas. Ticket total: $400–600/noche × 3 domos × 2–4 noches = $800–2.400 USD por reserva.</div>
+      <div style="display:flex;flex-direction:column;gap:.4rem">
+        <div style="font-size:.77rem;color:var(--ink2);display:flex;gap:.4rem;align-items:flex-start">
+          <span style="color:var(--forest-light)">→</span>
+          <span><strong>Target:</strong> agencias creativas, startups, equipos de tech, consultoras. Perfil: 6–10 personas, 28–42 años, base CABA.</span>
+        </div>
+        <div style="font-size:.77rem;color:var(--ink2);display:flex;gap:.4rem;align-items:flex-start">
+          <span style="color:var(--forest-light)">→</span>
+          <span><strong>Canal:</strong> LinkedIn outreach directo a founders, heads de people, CEOs de empresas de 20–80 personas.</span>
+        </div>
+        <div style="font-size:.77rem;color:var(--ink2);display:flex;gap:.4rem;align-items:flex-start">
+          <span style="color:var(--forest-light)">→</span>
+          <span><strong>Propuesta de valor:</strong> "Desconexión garantizada en el bosque. Starlink para el que no puede desconectarse del todo. Capacidad 9 personas. Los mejores retiros que hiciste eran en un lugar así."</span>
+        </div>
+        <div style="font-size:.77rem;color:var(--ink2);display:flex;gap:.4rem;align-items:flex-start">
+          <span style="color:var(--forest-light)">→</span>
+          <span><strong>Timing:</strong> activar para otoño y primavera — las temporadas que hoy no tienen alta demanda turística.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="rev" style="font-family:var(--ff-d);font-size:1.2rem;font-weight:700;color:var(--ink);margin:1.8rem 0 .8rem">4.4 — Meta Ads: escalar la audiencia calificada</h3>
+
+  <div class="strat-block rev">
+    <div class="sb-label">Cuándo activar y cómo</div>
+    <p>
+      Activar Meta Ads recién cuando haya contenido orgánico que funcione — al menos 3 Reels con 500+ views. Amplificar lo que el algoritmo ya validó, no crear desde cero con inversión.<br><br>
+      <strong>Campaña 1 (mes 2):</strong> "Leads" — objetivo clicks al perfil. Segmentación: CABA + Córdoba + Rosario · 28–45 años · Intereses: viajes, Bariloche, naturaleza, diseño, hoteles boutique. Budget: $30–50 USD/semana. Formato: el Reel de mejor performance orgánica.<br><br>
+      <strong>Campaña 2 (mes 3–4):</strong> "Conversiones" — objetivo clicks al link de Airbnb. Retargeting de quienes vieron el video al 75%. Budget: $50–80 USD/semana cuando haya 20+ reviews que sostengan la conversión.<br><br>
+      <strong>Regla de oro:</strong> nunca pagar para enviar tráfico a un perfil sin reviews ni a un listing sin foto de pico emocional. El dinero de ads amplifica lo que ya existe — no crea lo que falta.
+    </p>
+  </div>
+</section>
+</div>
+
+<div class="ornament wrap"><span class="od2"></span><span class="od"></span><span class="od2"></span></div>
+
+
+<!-- ══════════════════════════════════════
+     PLAN DE ACCIÓN MAESTRO
+══════════════════════════════════════ -->
+<div class="wrap">
+<section class="sec">
+  <div class="sec-hd rev">
+    <div class="sec-phase">Ejecución · 17 acciones ordenadas</div>
+    <div class="sec-hd-row">
+      <div class="sec-num">05</div>
+      <h2 class="sec-title">Plan de acción:<br><em>qué hacer exactamente</em></h2>
+    </div>
+    <p class="sec-desc">Ordenadas de más crítica a menos crítica. Las primeras 7 deben ejecutarse esta semana. No requieren presupuesto — solo tiempo y decisión.</p>
+  </div>
+
+  <div class="metric-strip rev">
+    <div class="metric"><div class="mv" style="color:var(--red)">7</div><div class="ml">Acciones críticas<br>esta semana</div></div>
+    <div class="metric"><div class="mv" style="color:var(--gold)">6</div><div class="ml">Acciones altas<br>próximos 15 días</div></div>
+    <div class="metric"><div class="mv" style="color:var(--forest-light)">4</div><div class="ml">Acciones medias<br>mes 1–2</div></div>
+    <div class="metric metric-dark"><div class="mv">$0</div><div class="ml">inversión requerida<br>primeras 7 acciones</div></div>
+  </div>
+
+  <h3 class="rev" style="font-family:var(--ff-d);font-size:1.1rem;font-weight:700;color:var(--red);margin:1.4rem 0 .7rem">🔴 Acciones críticas — esta semana</h3>
+
+  <div class="action-grid rev">
+    <div class="action action-1w"><div class="action-num an-1w">1</div><div class="action-body"><div class="at">Activar pricing estacional — julio $185/noche, mayo $75/noche</div><div class="as">Panel Airbnb → Calendario → Precios personalizados. 20 minutos. El mayor impacto de revenue de toda la estrategia. No hay justificación para demorarlo.</div></div><div class="action-tag tag-1w">Hoy</div></div>
+    <div class="action action-1w"><div class="action-num an-1w">2</div><div class="action-body"><div class="at">Filmar y publicar el primer Reel — dome al amanecer con el bosque</div><div class="as">Sin guión elaborado. Cámara, dome, luz del amanecer, café. 30 segundos. Audio trending. Publicar. Este video activa todo lo demás.</div></div><div class="action-tag tag-1w">Esta semana</div></div>
+    <div class="action action-1w"><div class="action-num an-1w">3</div><div class="action-body"><div class="at">Bajar precio base a $85–89/noche para acelerar acumulación de reviews</div><div class="as">Activar Instant Book. Mínimo 2 noches. Objetivo: 20 reviews antes de julio. Estas semanas no son de revenue — son de inversión en social proof.</div></div><div class="action-tag tag-1w">Esta semana</div></div>
+    <div class="action action-1w"><div class="action-num an-1w">4</div><div class="action-body"><div class="at">Reactivar Instagram — Stories diarias + 4 posts/semana sin excepción</div><div class="as">Después de 5 semanas de inactividad el algoritmo penaliza. Volver requiere consistencia, no perfección. Stories de lo que pasa hoy en el bosque: eso es suficiente para empezar.</div></div><div class="action-tag tag-1w">Hoy</div></div>
+    <div class="action action-1w"><div class="action-num an-1w">5</div><div class="action-body"><div class="at">Instalar detectores de CO y humo (~$20 USD) y marcarlos en el listing</div><div class="as">Visible para todos en la página de detalles de Airbnb. Para el viajero anglosajón o europeo es una señal de alerta que frena la conversión. Fix de $20 con impacto inmediato.</div></div><div class="action-tag tag-1w">Esta semana</div></div>
+    <div class="action action-1w"><div class="action-num an-1w">6</div><div class="action-body"><div class="at">Reescribir la bio de Instagram con precio visible y CTA WhatsApp</div><div class="as">"🌲 3 domos geodésicos | Bosque Cerro Otto · Bariloche / ✨ Diseño · Losa radiante · Starlink / 📅 Desde $85 USD/noche 👇" + Linktree con WhatsApp y Airbnb.</div></div><div class="action-tag tag-1w">Esta semana</div></div>
+    <div class="action action-1w"><div class="action-num an-1w">7</div><div class="action-body"><div class="at">Subir cargo por huésped adicional a $15–20 USD/noche desde el 3er pax</div><div class="as">Verificado: pasar de 1 a 4 huéspedes cuesta $7.56/noche por huésped adicional — subvaluado. Panel Airbnb → Precios → Cargo adicional. 5 minutos.</div></div><div class="action-tag tag-1w">Esta semana</div></div>
+  </div>
+
+  <h3 class="rev" style="font-family:var(--ff-d);font-size:1.1rem;font-weight:700;color:#7a5a1a;margin:1.4rem 0 .7rem">🟡 Acciones altas — próximos 15 días</h3>
+
+  <div class="action-grid rev">
+    <div class="action action-2w"><div class="action-num an-2w">8</div><div class="action-body"><div class="at">Crear Linktree — precio + fotos hero + WhatsApp + Airbnb</div><div class="as">Linktree.com (gratis). Foto del dome exterior, precio desde $85, 2 reviews, botón Airbnb, botón WhatsApp. 30 minutos. Cierra la fricción #3 del embudo.</div></div><div class="action-tag tag-2w">15 días</div></div>
+    <div class="action action-2w"><div class="action-num an-2w">9</div><div class="action-body"><div class="at">Reescribir el título del listing Airbnb con diferenciales técnicos</div><div class="as">"Geodesic Dome | Patagonian Forest · Heated Floors · Starlink · Design" — los diferenciales en los primeros caracteres donde el algoritmo y el viajero los ven primero.</div></div><div class="action-tag tag-2w">15 días</div></div>
+    <div class="action action-2w"><div class="action-num an-2w">10</div><div class="action-body"><div class="at">Crear 5 Highlights en Instagram</div><div class="as">🏠 El Domo (tour interior) · 🌲 El Jardín · ⭐ Reviews (capturas Airbnb) · 📍 Cómo llegar · 📅 Disponibilidad. El visitante nuevo necesita esto para convertir.</div></div><div class="action-tag tag-2w">15 días</div></div>
+    <div class="action action-2w"><div class="action-num an-2w">11</div><div class="action-body"><div class="at">Activar sistema UGC post-checkout vía WhatsApp</div><div class="as">Mensaje 24hs después del checkout. El UGC es 3× más persuasivo que el contenido propio y cuesta $0. Cada ex-huésped satisfecho es un creador de contenido potencial.</div></div><div class="action-tag tag-2w">15 días</div></div>
+    <div class="action action-2w"><div class="action-num an-2w">12</div><div class="action-body"><div class="at">Implementar hashtag strategy de nicho — 15–20 por post, variados</div><div class="as">#alojamientosunicos #geodesicdome #domelife #barilochealojamiento #viajarabariloche #domogeodésico #slowtravel #patagonialife + branded #domosdelbosque #cerrootto</div></div><div class="action-tag tag-2w">15 días</div></div>
+    <div class="action action-2w"><div class="action-num an-2w">13</div><div class="action-body"><div class="at">Crear contenido específico para familias — 2 posts + 1 Reel</div><div class="as">Post 1: "¿Familia grande en Bariloche?" Carrusel con configuración para 4. Post 2: testimonial de Anabel (review real, familia con 3 hijos). Reel: día de familia en el dome.</div></div><div class="action-tag tag-2w">15 días</div></div>
+  </div>
+
+  <h3 class="rev" style="font-family:var(--ff-d);font-size:1.1rem;font-weight:700;color:var(--forest-light);margin:1.4rem 0 .7rem">🔵 Acciones medias — mes 1–2</h3>
+
+  <div class="action-grid rev">
+    <div class="action action-1m"><div class="action-num an-1m">14</div><div class="action-body"><div class="at">Escribir "la historia de los domos" — listing + serie de Instagram</div><div class="as">El 42% de las reservas en alojamientos únicos se gatillan por conexión emocional con el host. Listing: "Conocé a Vero y Eric". IG: 3–5 posts del proceso de construcción. Contenido imposible de copiar.</div></div><div class="action-tag tag-1m">Mes 1</div></div>
+    <div class="action action-1m"><div class="action-num an-1m">15</div><div class="action-body"><div class="at">Contactar 2–3 travel creators para canje de estadía en julio</div><div class="as">Buscar en #viajarabariloche. DM: "Hola, creemos que los Domos del Bosque son para vos. Te ofrecemos 2 noches en julio a cambio de 1 Reel y 3 Stories." Nano-creator 5k–30k = ROI óptimo.</div></div><div class="action-tag tag-1m">Mes 1</div></div>
+    <div class="action action-1m"><div class="action-num an-1m">16</div><div class="action-body"><div class="at">Activar campañas pagas IG — CABA, Córdoba, Rosario · 28–45 años</div><div class="as">Activar solo cuando haya contenido validado orgánicamente. Meta Ads, objetivo clicks al perfil primero. $30–50 USD/semana. Amplificar el Reel de mejor performance, no crear desde cero.</div></div><div class="action-tag tag-1m">Mes 2</div></div>
+    <div class="action action-1m"><div class="action-num an-1m">17</div><div class="action-body"><div class="at">Activar Booking.com + evaluar Unique Stays en Airbnb</div><div class="as">Booking.com: partner.booking.com + gestor de canales para evitar overbooking. Unique Stays: panel host → Listing → Categories. Activar cuando haya 20+ reviews y Superhost.</div></div><div class="action-tag tag-1m">Mes 3</div></div>
+  </div>
+</section>
+</div>
+
+<div class="ornament wrap"><span class="od2"></span><span class="od"></span><span class="od2"></span></div>
+
+
+<!-- ══════════════════════════════════════
+     TIMELINE DE 12 MESES
+══════════════════════════════════════ -->
+<div class="wrap">
+<section class="sec">
+  <div class="sec-hd rev">
+    <div class="sec-phase">Ejecución · Roadmap</div>
+    <div class="sec-hd-row">
+      <div class="sec-num">06</div>
+      <h2 class="sec-title">Roadmap:<br><em>12 meses a $96.120 USD</em></h2>
+    </div>
+  </div>
+
+  <div class="g2 rev">
+    <div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-week" style="color:var(--red)">Semana 1–2 · Activación</div>
+          <div class="tl-tasks">
+            <div class="tl-task">Pricing estacional activo — julio $185, mayo $75</div>
+            <div class="tl-task">Primer Reel publicado + Stories diarias</div>
+            <div class="tl-task">Bio reescrita + detectores instalados + cargo huésped corregido</div>
+            <div class="tl-task">Precio base bajado a $85–89 para acumular reviews</div>
+          </div>
+          <div class="tl-kpi">KPI: 1ª reserva nueva en 10 días · Stories 200+ views</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-week" style="color:#d97706">Semana 3–6 · Contenido y audiencia</div>
+          <div class="tl-tasks">
+            <div class="tl-task">3 Reels publicados · 4 posts/sem · 5 Highlights activos</div>
+            <div class="tl-task">Linktree activo · título listing reescrito · historia de founders publicada</div>
+            <div class="tl-task">Sistema UGC activo · hashtag strategy implementada</div>
+            <div class="tl-task">Contacto con primer travel creator para julio</div>
+          </div>
+          <div class="tl-kpi">KPI: 10+ reservas · 10+ reviews · 900+ seguidores IG</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-week" style="color:var(--forest-light)">Semana 7–12 · Escala y julio</div>
+          <div class="tl-tasks">
+            <div class="tl-task">Julio full a $185–230/noche — revenue máximo del año</div>
+            <div class="tl-task">20+ reviews · Meta Ads activas con Reel validado</div>
+            <div class="tl-task">Creator publica contenido de julio → viralizacion de invierno</div>
+            <div class="tl-task">Contenido de nieve e invierno — el que más convierte en Bariloche</div>
+          </div>
+          <div class="tl-kpi">KPI: 60%+ ocupación jul · $4.500+ USD julio · 1.500+ seguidores</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-week" style="color:#7c3aed">Mes 4–6 · Superhost y diversificación</div>
+          <div class="tl-tasks">
+            <div class="tl-task">Badge Superhost obtenido — boost algorítmico permanente</div>
+            <div class="tl-task">Booking.com activado como 2do canal</div>
+            <div class="tl-task">Precio subido a $135–155/noche base con social proof</div>
+            <div class="tl-task">Primeros paquetes corporativos para otoño</div>
+          </div>
+          <div class="tl-kpi">KPI: 70%+ ocupación · $8.000+ USD/mes · 30+ reviews</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-week" style="color:#0891b2">Mes 7–9 · Marca consolidada</div>
+          <div class="tl-tasks">
+            <div class="tl-task">2.000+ seguidores IG · comunidad de ex-huéspedes activa</div>
+            <div class="tl-task">Canal directo: 20%+ reservas sin comisión</div>
+            <div class="tl-task">Primera temporada primavera con pricing óptimo</div>
+            <div class="tl-task">Evaluación de 4to domo o expansión de servicios</div>
+          </div>
+          <div class="tl-kpi">KPI: 65%+ ocupación anual · $7.500+ USD/mes promedio</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-week" style="color:var(--gold)">Mes 10–12 · Año 1 completado</div>
+          <div class="tl-tasks">
+            <div class="tl-task">Segundo verano con precios $125–135 vs. primer verano a $120</div>
+            <div class="tl-task">Categoría Unique Stays activa en Airbnb</div>
+            <div class="tl-task">Primer retiro corporativo completado</div>
+            <div class="tl-task">Proyección año 2: $96.120 USD de revenue anual sostenido</div>
+          </div>
+          <div class="tl-kpi">KPI: $96.120 USD/año · 50+ reviews · 2.500+ seguidores</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+
+<!-- CTA -->
+<div class="cta-section">
+  <h2>La estrategia existe.<br><em>Ahora hay que ejecutarla.</em></h2>
+  <p>Las primeras 7 acciones no cuestan dinero. Cuestan decisión y tiempo. El único activo que no se puede recuperar es julio sin pricing dinámico.</p>
+  <div class="cta-contact">
+    <div class="cta-item">
+      <label>Consultor</label>
+      <a href="tel:+541163574750">+54 11 6357 4750</a>
+    </div>
+    <div class="cta-item">
+      <label>Email</label>
+      <a href="mailto:hernan@hbconsultor.com.ar">hernan@hbconsultor.com.ar</a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>
+    HB Consultor · Hernán Berbari · Estrategia Comercial · Hospitalidad Digital · Revenue Management · Brand Strategy · Buenos Aires, Argentina<br>
+    Estrategia desarrollada para Domos del Bosque Bariloche · Abril 2026 · Datos basados en auditoría directa de plataformas en tiempo real
+  </p>
+</footer>
+
+<script>
+// Progress bar
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement;
+  const p=(h.scrollTop||document.body.scrollTop)/(h.scrollHeight-h.clientHeight)*100;
+  document.getElementById('pbar').style.width=p+'%';
+});
+
+// Scroll reveal
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target)}
+  });
+},{threshold:.07});
+document.querySelectorAll('.rev').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
