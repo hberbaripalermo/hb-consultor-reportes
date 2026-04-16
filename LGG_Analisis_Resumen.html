@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Desafío — Plan de Acción</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#F4F6F9;
+  --dark:#1A2E4A;
+  --dark2:#152438;
+  --gold:#B07D2E;
+  --gold2:#D4A44C;
+  --gold3:#F0CC80;
+  --text:#1A2232;
+  --muted:#6B7A8D;
+  --land:#1A2E4A;
+  --green:#2E6E2B;
+  --green2:#4A9E47;
+  --blue:#1A2E4A;
+  --blue2:#2A4E7A;
+  --border:rgba(26,46,74,0.15);
+}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font-weight:300;}
+
+/* ── HERO ── */
+.hero{
+  background:var(--dark);
+  padding:0;
+  position:relative;
+  overflow:hidden;
+  min-height:280px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 80% at 90% 20%, rgba(176,125,46,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 60% at 10% 80%, rgba(26,46,74,0.8) 0%, transparent 60%),
+    linear-gradient(160deg,#1A2E4A 0%,#0F1E32 60%,#1A2E4A 100%);
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(176,125,46,0.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(176,125,46,0.05) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+.hero-content{position:relative;z-index:2;padding:40px 32px 36px;}
+.hero-eyebrow{
+  font-size:9px;letter-spacing:4px;text-transform:uppercase;
+  color:var(--gold2);margin-bottom:16px;font-weight:500;
+  display:flex;align-items:center;gap:10px;
+}
+.hero-eyebrow::before{content:'';width:24px;height:1px;background:var(--gold2);}
+.hero-title{
+  font-family:'Playfair Display',serif;
+  font-size:36px;font-weight:700;
+  color:#F5EDD8;line-height:1.1;margin-bottom:6px;
+}
+.hero-title em{font-style:italic;color:var(--gold3);}
+.hero-sub{font-size:13px;color:rgba(245,237,216,0.5);margin-bottom:28px;font-weight:300;}
+.hero-stats{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:rgba(176,125,46,0.3);
+  border:1px solid rgba(176,125,46,0.4);
+}
+.stat{
+  background:#B07D2E;
+  padding:14px 16px;
+}
+.stat-val{
+  font-family:'Playfair Display',serif;
+  font-size:22px;color:#FFFFFF;font-weight:700;
+  line-height:1;margin-bottom:4px;
+}
+.stat-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.75);}
+
+/* ── SECTION ── */
+.section{padding:32px 32px 0;}
+.section:last-of-type{padding-bottom:48px;}
+.s-label{
+  font-size:9px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--blue);font-weight:600;margin-bottom:16px;
+  display:flex;align-items:center;gap:10px;
+}
+.s-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* ── ORO BOX ── */
+.oro-box{
+  background:linear-gradient(135deg,#EEF2F8,#E8EEF6);
+  border:1px solid rgba(26,46,74,0.2);
+  border-left:4px solid var(--blue);
+  padding:20px 20px;
+  position:relative;overflow:hidden;
+}
+.oro-box::before{
+  content:'★';
+  position:absolute;right:16px;top:12px;
+  font-size:32px;color:rgba(26,46,74,0.08);
+}
+.oro-tag{
+  font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--blue);font-weight:600;margin-bottom:8px;display:block;
+}
+.oro-title{
+  font-family:'Playfair Display',serif;
+  font-size:18px;font-weight:700;color:var(--dark);
+  margin-bottom:8px;line-height:1.2;
+}
+.oro-desc{font-size:12px;color:var(--muted);line-height:1.6;}
+.oro-desc strong{color:var(--text);font-weight:500;}
+.oro-caveat{
+  margin-top:12px;padding:8px 12px;
+  background:rgba(26,46,74,0.06);border:1px dashed rgba(26,46,74,0.2);
+  font-size:11px;color:var(--muted);font-style:italic;line-height:1.5;
+}
+
+/* ── PROPUESTA VS COMPARABLE ── */
+.versus{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px;}
+.vs-card{padding:16px;border:1px solid;}
+.vs-card.lgc{
+  background:#FBF7F0;border-color:rgba(176,125,46,0.3);
+}
+.vs-card.mdc{
+  background:#F5F5F3;border-color:rgba(0,0,0,0.08);
+}
+.vs-provider{
+  font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  font-weight:600;margin-bottom:10px;
+}
+.vs-provider.lp{color:var(--gold);}
+.vs-provider.mp{color:var(--muted);}
+.vs-amount{
+  font-family:'Playfair Display',serif;
+  font-size:28px;font-weight:700;margin-bottom:6px;
+}
+.vs-amount.la{color:var(--gold);}
+.vs-amount.ma{color:var(--muted);}
+.vs-scope{font-size:11px;line-height:1.5;}
+.vs-scope.ls{color:var(--text);}
+.vs-scope.ms{color:var(--muted);}
+.vs-items{margin-top:10px;display:flex;flex-direction:column;gap:4px;}
+.vs-item{
+  display:flex;align-items:center;gap:6px;
+  font-size:11px;
+}
+.vs-item::before{content:'✓';color:var(--green2);font-size:10px;font-weight:700;flex-shrink:0;}
+.vs-item.no::before{content:'—';color:var(--muted);}
+.vs-note{font-size:10px;color:var(--muted);font-style:italic;margin-top:4px;}
+
+/* ── GANTT ── */
+.gantt{overflow-x:auto;}
+.gantt-wrap{min-width:500px;}
+.gantt-header{
+  display:grid;
+  grid-template-columns:120px repeat(8,1fr);
+  gap:0;margin-bottom:4px;
+}
+.gh-label{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:4px 4px 4px 0;}
+.gh-month{
+  font-size:9px;letter-spacing:1px;text-transform:uppercase;
+  color:var(--muted);text-align:center;padding:4px 2px;
+}
+.gh-month.now{color:var(--gold);font-weight:600;}
+
+.gantt-row{
+  display:grid;
+  grid-template-columns:120px repeat(8,1fr);
+  gap:0;margin-bottom:3px;align-items:center;
+}
+.gr-label{
+  font-size:11px;color:var(--text);
+  padding:6px 8px 6px 0;line-height:1.3;
+  font-weight:400;
+}
+.gr-label span{display:block;font-size:9px;color:var(--muted);margin-top:1px;}
+.gr-cell{height:28px;padding:0 1px;}
+.bar{
+  height:100%;border-radius:2px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;font-weight:600;letter-spacing:0.5px;
+  white-space:nowrap;overflow:hidden;
+}
+.bar-land{background:#1A2E4A;color:white;}
+.bar-sfc{background:#2A5A8A;color:white;opacity:0.9;}
+.bar-f3{background:var(--green);color:white;}
+.bar-f4{background:#4A3A7A;color:white;}
+.bar-f5{background:#1A5A7A;color:white;}
+.bar-bma{background:#5A3A2A;color:white;}
+.bar-loi{
+  background:#C0392B;
+  color:white;
+  font-weight:700;
+  font-size:8px;
+  border:none;
+  box-shadow:0 0 0 2px #E74C3C, 0 2px 8px rgba(192,57,43,0.35);
+  letter-spacing:0.3px;
+}
+.gantt-sep{
+  height:1px;background:var(--border);
+  grid-column:1/-1;margin:4px 0;
+}
+
+/* ── DESEMBOLSOS ── */
+.desembolsos{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.desemb{
+  border:1px solid var(--border);
+  overflow:hidden;
+}
+.desemb-header{
+  padding:10px 14px;
+  font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:600;
+}
+.desemb-header.d1{background:#1A2E4A;color:white;}
+.desemb-header.d2{background:#E8EEF6;color:#1A2E4A;}
+.desemb-body{padding:14px;}
+.desemb-total{
+  font-family:'Playfair Display',serif;
+  font-size:30px;color:var(--dark);margin-bottom:8px;
+}
+.desemb-items{display:flex;flex-direction:column;gap:4px;}
+.desemb-item{
+  display:flex;justify-content:space-between;
+  font-size:11px;padding:4px 0;
+  border-bottom:1px solid rgba(0,0,0,0.05);
+}
+.desemb-item:last-child{border-bottom:none;}
+.di-label{color:var(--muted);}
+.di-val{color:var(--text);font-weight:500;}
+.desemb-condition{
+  margin-top:10px;font-size:10px;color:var(--muted);
+  font-style:italic;line-height:1.5;
+}
+
+/* ── FASES RESUMEN ── */
+.fases{display:flex;flex-direction:column;gap:0;}
+.fase{
+  display:grid;grid-template-columns:80px 1fr auto;
+  gap:12px;align-items:center;
+  padding:10px 0;border-bottom:1px solid var(--border);
+}
+.fase:last-child{border-bottom:none;}
+.fase-id{
+  font-size:9px;letter-spacing:1.5px;text-transform:uppercase;
+  font-weight:600;
+}
+.fase-desc{font-size:11px;color:var(--muted);line-height:1.4;}
+.fase-desc strong{color:var(--text);font-weight:500;}
+.fase-monto{
+  font-family:'Playfair Display',serif;
+  font-size:16px;color:var(--blue);
+  text-align:right;white-space:nowrap;
+}
+.fase-monto small{display:block;font-size:9px;color:var(--muted);font-family:'Outfit',sans-serif;text-align:right;margin-top:1px;}
+
+/* ── CIERRE ── */
+.cierre{
+  margin:32px 32px 0;
+  background:var(--dark);
+  padding:24px 24px;
+  position:relative;overflow:hidden;
+}
+.cierre::before{
+  content:'';position:absolute;
+  top:-40px;right:-40px;width:200px;height:200px;
+  background:radial-gradient(circle,rgba(176,125,46,0.12) 0%,transparent 70%);
+}
+.cierre-text{
+  font-family:'Playfair Display',serif;
+  font-size:16px;color:#F5EDD8;
+  line-height:1.5;position:relative;z-index:1;
+}
+.cierre-text em{color:var(--gold3);font-style:italic;}
+.cierre-sub{
+  font-size:11px;color:rgba(245,237,216,0.45);
+  margin-top:10px;position:relative;z-index:1;
+}
+
+/* ── FOOTER ── */
+.footer{
+  padding:20px 32px;
+  border-top:3px solid #B07D2E;
+  display:flex;justify-content:space-between;align-items:center;
+  background:#1A2E4A;
+}
+.footer-l{font-size:10px;color:rgba(255,255,255,0.5);}
+.footer-r{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.5);}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.hero-content{animation:fadeUp 0.6s ease both;}
+.oro-box{animation:fadeUp 0.6s 0.1s ease both;}
+.versus{animation:fadeUp 0.6s 0.15s ease both;}
+.gantt-wrap{animation:fadeUp 0.6s 0.2s ease both;}
+.desembolsos{animation:fadeUp 0.6s 0.25s ease both;}
+</style>
+</head>
+<body>
+
+<!-- HB HEADER -->
+<div style="background:#1A2E4A;padding:18px 32px;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #B07D2E;">
+  <div style="display:flex;align-items:center;gap:16px;">
+    <div style="width:48px;height:48px;background:#B07D2E;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:white;letter-spacing:1px;flex-shrink:0;">HB</div>
+    <div>
+      <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#F5EDD8;letter-spacing:0.5px;">Hernán Berbari</div>
+      <div style="font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:#B07D2E;font-weight:600;margin-top:2px;">Strategic Development Lead</div>
+    </div>
+  </div>
+  <div style="text-align:right;display:flex;flex-direction:column;gap:4px;">
+    <div style="font-size:11px;color:rgba(245,237,216,0.7);">📱 +54 9 11 6357-4750</div>
+    <div style="font-size:11px;color:rgba(245,237,216,0.7);">✉ hernan@hbconsultor.com.ar</div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Confidencial · Abril 2026</div>
+    <div class="hero-title">El Desafío<br><em>Mountain Resort</em></div>
+    <div class="hero-sub">Plan de acción · De hoy a la LOI con Marriott</div>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-val">15 ha</div>
+        <div class="stat-label">Lote hotelero · 33.000 m² FOT</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">65+</div>
+        <div class="stat-label">Llaves · Luxury 5 Star Hotel Brand</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">4 meses</div>
+        <div class="stat-label">De hoy a la LOI con Marriott</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ORO -->
+<div class="section">
+  <div class="s-label">Lo que recibimos de LAND</div>
+  <div class="oro-box">
+    <span class="oro-tag">★ Documento estratégico</span>
+    <div class="oro-title">Por primera vez el proyecto tiene un programa hotelero viable en papel</div>
+    <div class="oro-desc">
+      Marcas internacionales aplicables, cantidad de llaves, branded residences, glamping, escenarios de ADR y retorno. <strong>Es la hoja de ruta técnica que El Desafío nunca tuvo.</strong>
+    </div>
+    <div class="oro-caveat">
+      ⚠ Análisis preliminar — la profundidad real llega con el estudio de mercado formal dentro del proceso. Esto es el mapa, no el territorio.
+    </div>
+  </div>
+</div>
+
+<!-- GANTT -->
+<div class="section">
+  <div class="s-label">Cronograma — de hoy a la LOI y más allá</div>
+  <div class="gantt">
+    <div class="gantt-wrap">
+      <div class="gantt-header">
+        <div class="gh-label"></div>
+        <div class="gh-month now">HOY</div>
+        <div class="gh-month">MES 1</div>
+        <div class="gh-month">MES 2</div>
+        <div class="gh-month">MES 3</div>
+        <div class="gh-month" style="color:var(--green);font-weight:600;">LOI ✓</div>
+        <div class="gh-month">MES 6–9</div>
+        <div class="gh-month">MES 9–18</div>
+        <div class="gh-month">MES 18–24</div>
+      </div>
+
+      <!-- FASES I+II -->
+      <div class="gantt-row">
+        <div class="gr-label">Fases I+II<span>Validación + mercado</span></div>
+        <div class="gr-cell" style="grid-column:2/span 2"><div class="bar bar-land">LGG + SFC</div></div>
+        <div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div>
+      </div>
+
+      <!-- FASE III -->
+      <div class="gantt-row">
+        <div class="gr-label">Fase III<span>Marca y franquicia</span></div>
+        <div class="gr-cell"></div><div class="gr-cell"></div>
+        <div class="gr-cell" style="grid-column:4/span 2"><div class="bar bar-f3">Selección marca</div></div>
+        <div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div>
+      </div>
+
+      <!-- LOI -->
+      <div class="gantt-row">
+        <div class="gr-label">LOI Hotel<span>Hito clave · mes 4</span></div>
+        <div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div>
+        <div class="gr-cell" style="grid-column:5/span 2"><div class="bar bar-loi">✓ LOI HOTEL FIRMADA</div></div>
+        <div class="gr-cell"></div>
+      </div>
+
+      <!-- BMA -->
+      <div class="gantt-row">
+        <div class="gr-label">Arquitectura<span>BMA · negociando presupuesto recibido 7/4</span></div>
+        <div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div>
+        <div class="gr-cell" style="grid-column:5/span 3"><div class="bar bar-bma">BMA — Masterplan + Proyecto · activa post-LOI</div></div>
+        <div class="gr-cell"></div>
+      </div>
+
+      <div class="gantt-row"><div class="gantt-sep" style="grid-column:1/-1;height:1px;background:var(--border);margin:2px 0;"></div></div>
+
+      <!-- FASE IV -->
+      <div class="gantt-row">
+        <div class="gr-label">Fase IV<span>Neg. franquicia</span></div>
+        <div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div>
+        <div class="gr-cell" style="grid-column:6/span 1"><div class="bar bar-f4">Negociación</div></div>
+        <div class="gr-cell"></div><div class="gr-cell"></div>
+      </div>
+
+      <!-- FASE V -->
+      <div class="gantt-row">
+        <div class="gr-label">Fase V<span>Supervisión obra</span></div>
+        <div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div>
+        <div class="gr-cell" style="grid-column:7/span 2"><div class="bar bar-f5">Supervisión técnica · 15 meses</div></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- DESEMBOLSOS -->
+<div class="section">
+  <div class="s-label">Dos desembolsos para arrancar</div>
+  <div class="desembolsos">
+    <div class="desemb">
+      <div class="desemb-header d1">Hoy — para arrancar</div>
+      <div class="desemb-body">
+        <div class="desemb-total">USD 13.500</div>
+        <div class="desemb-items">
+          <div class="desemb-item"><span class="di-label">50% LGG Fases I+II</span><span class="di-val">USD 7.500</span></div>
+          <div class="desemb-item"><span class="di-label">50% SFC estudio mercado</span><span class="di-val">USD 6.000</span></div>
+        </div>
+        <div class="desemb-condition">Al firmar ambos acuerdos · arranca todo el proceso</div>
+      </div>
+    </div>
+    <div class="desemb">
+      <div class="desemb-header d2">Día ~40 — contra entrega</div>
+      <div class="desemb-body">
+        <div class="desemb-total">USD 13.500</div>
+        <div class="desemb-items">
+          <div class="desemb-item"><span class="di-label">Saldo LGG — reporte GO/NO-GO</span><span class="di-val">USD 7.500</span></div>
+          <div class="desemb-item"><span class="di-label">Saldo SFC — informe de mercado</span><span class="di-val">USD 6.000</span></div>
+        </div>
+        <div class="desemb-condition">Si el reporte es GO, se activa Fase III · USD 24.000 en dos cuotas hasta la LOI</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FASES RESUMEN -->
+<div class="section" style="padding-bottom:32px;">
+  <div class="s-label">El mapa completo</div>
+  <div class="fases">
+    <div class="fase">
+      <div class="fase-id" style="color:#1A2E4A">I + II</div>
+      <div class="fase-desc">Validación técnica + estudio de mercado SFC (incluido). Reporte GO/NO-GO.</div>
+      <div class="fase-monto">USD 15K<small>+ 12K SFC</small></div>
+    </div>
+    <div class="fase">
+      <div class="fase-id" style="color:var(--green)">III</div>
+      <div class="fase-desc">Selección de marca · presentación a cadenas · <strong>LOI Hotel firmada</strong></div>
+      <div class="fase-monto">USD 24K<small>2 meses</small></div>
+    </div>
+    <div class="fase">
+      <div class="fase-id" style="color:#4A3A7A">IV</div>
+      <div class="fase-desc">Negociación y firma del contrato de franquicia con Marriott</div>
+      <div class="fase-monto">USD 50K<small>5 meses</small></div>
+    </div>
+    <div class="fase">
+      <div class="fase-id" style="color:#1A5A7A">V</div>
+      <div class="fase-desc">Supervisión técnica de construcción · cumplimiento estándares de marca</div>
+      <div class="fase-monto">USD 180K<small>15 meses</small></div>
+    </div>
+    <div class="fase">
+      <div class="fase-id" style="color:#5A3A2A">BMA</div>
+      <div class="fase-desc">Arquitectura · presupuesto recibido el 7/4, <strong>en negociación</strong> · arranca con LOI en mano · masterplan + proyecto ejecutivo</div>
+      <div class="fase-monto" style="color:var(--muted)">Post-LOI<small>mes 4+</small></div>
+    </div>
+  </div>
+</div>
+
+<!-- PROPUESTA VS COMPARABLE -->
+<div class="section">
+  <div class="s-label">Contexto de precio — comparable de mercado</div>
+
+  <style>
+    .pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--border);overflow:hidden;}
+    .pricing-card{padding:0;position:relative;}
+    .pricing-card.pc-mader{border-right:1px solid var(--border);}
+    .pricing-card.pc-land{background:#EEF2F8;}
+
+    .pc-header{padding:20px 20px 16px;}
+    .pc-provider{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;font-weight:600;margin-bottom:10px;}
+    .pc-provider.pp-mader{color:var(--muted);}
+    .pc-provider.pp-land{color:#1A2E4A;}
+
+    .pc-price{display:flex;align-items:baseline;gap:4px;margin-bottom:4px;}
+    .pc-price-val{font-family:'Playfair Display',serif;font-size:38px;font-weight:700;line-height:1;}
+    .pc-price-val.pv-mader{color:#9A9288;}
+    .pc-price-val.pv-land{color:#1A2E4A;}
+    .pc-price-period{font-size:11px;color:var(--muted);}
+
+    .pc-scope{font-size:11px;color:var(--muted);line-height:1.4;padding-bottom:16px;border-bottom:1px solid var(--border);}
+    .pc-scope strong{color:var(--text);}
+
+    .pc-features{padding:16px 20px 20px;}
+    .pc-section-label{
+      font-size:8px;letter-spacing:2px;text-transform:uppercase;
+      font-weight:700;color:var(--muted);margin-bottom:10px;
+    }
+    .pc-feature{
+      display:flex;align-items:flex-start;gap:8px;
+      font-size:11px;color:var(--text);
+      padding:5px 0;border-bottom:1px solid rgba(0,0,0,0.04);
+      line-height:1.3;
+    }
+    .pc-feature:last-child{border-bottom:none;}
+    .pc-check{
+      width:16px;height:16px;border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      font-size:8px;font-weight:700;flex-shrink:0;margin-top:1px;
+    }
+    .pc-check.ck-mader{background:rgba(154,146,136,0.15);color:var(--muted);}
+    .pc-check.ck-land{background:rgba(176,125,46,0.15);color:var(--gold);}
+    .pc-check.ck-plus{background:#1A2E4A;color:white;}
+
+    .pc-plus-divider{
+      display:flex;align-items:center;gap:8px;
+      margin:14px 0 10px;
+    }
+    .pc-plus-divider::before,.pc-plus-divider::after{content:'';flex:1;height:1px;background:rgba(176,125,46,0.2);}
+    .pc-plus-label{
+      font-size:9px;letter-spacing:1.5px;text-transform:uppercase;
+      font-weight:700;color:#1A2E4A;white-space:nowrap;
+      background:#EEF2F8;padding:0 6px;
+    }
+
+    .pc-badge{
+      position:absolute;top:16px;right:16px;
+      font-size:8px;letter-spacing:1.5px;text-transform:uppercase;
+      background:#1A2E4A;color:white;
+      padding:3px 9px;font-weight:600;
+    }
+    .pc-note{
+      font-size:9px;color:var(--muted);font-style:italic;
+      text-align:center;padding:10px 20px;
+      background:rgba(0,0,0,0.02);border-top:1px solid var(--border);
+    }
+  </style>
+
+  <div class="pricing-grid">
+
+    <!-- MADER -->
+    <div class="pricing-card pc-mader">
+      <div class="pc-header">
+        <div class="pc-provider pp-mader">Mader Hotel Advisors</div>
+        <div class="pc-price">
+          <span class="pc-price-val pv-mader">USD 25K</span>
+        </div>
+        <div class="pc-scope">Solo estudio de mercado · <strong>7–8 semanas</strong></div>
+      </div>
+      <div class="pc-features">
+        <div class="pc-section-label">Incluye</div>
+        <div class="pc-feature"><div class="pc-check ck-mader">✓</div><span>Estudio de mercado hotelero</span></div>
+        <div class="pc-feature"><div class="pc-check ck-mader">✓</div><span>Análisis competitive set Patagonia</span></div>
+        <div class="pc-feature"><div class="pc-check ck-mader">✓</div><span>Proyección ADR / OCC / RevPAR a 5 años</span></div>
+        <div class="pc-feature"><div class="pc-check ck-mader">✓</div><span>Proyección de residencias y sellout</span></div>
+      </div>
+      <div class="pc-note">Comparable de referencia — un solo entregable</div>
+    </div>
+
+    <!-- LAND -->
+    <div class="pricing-card pc-land">
+      <div class="pc-badge">Propuesta activa</div>
+      <div class="pc-header">
+        <div class="pc-provider pp-land">LAND Global Group</div>
+        <div class="pc-price">
+          <span class="pc-price-val pv-land">USD 269K</span>
+          <span class="pc-price-period">· 24 meses · Fases I–V</span>
+        </div>
+        <div class="pc-scope">Consultoría integral · desde validación hasta hotel abierto</div>
+      </div>
+      <div class="pc-features">
+
+        <!-- FASE I+II -->
+        <div class="pc-phase-header" style="background:rgba(26,46,74,0.06);padding:5px 0 5px 2px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:8px;letter-spacing:2px;text-transform:uppercase;font-weight:700;color:var(--gold);">Fases I + II — USD 15K + 12K SFC</span>
+          <span style="font-size:9px;color:var(--muted);">~40 días</span>
+        </div>
+        <div class="pc-feature"><div class="pc-check ck-plus">+</div><span>Todo lo de Mader incluido (estudio de mercado SFC)</span></div>
+        <div class="pc-feature"><div class="pc-check ck-plus">+</div><span>Validación técnica del proyecto</span></div>
+        <div class="pc-feature"><div class="pc-check ck-plus">+</div><span>Diagnóstico del programa de áreas</span></div>
+        <div class="pc-feature"><div class="pc-check ck-plus">+</div><span>Reporte GO / NO-GO con recomendación de marca</span></div>
+
+        <!-- FASE III -->
+        <div class="pc-plus-divider" style="margin:10px 0 6px;">
+          <span class="pc-plus-label">Fase III — USD 24K · 2 meses</span>
+        </div>
+        <div class="pc-feature"><div class="pc-check ck-land">✓</div><span>Presentación confidencial a cadenas internacionales</span></div>
+        <div class="pc-feature"><div class="pc-check ck-land">✓</div><span style="font-weight:600;color:var(--dark);">LOI Hotel Firmada — Marriott / Hilton / Hyatt</span></div>
+
+        <!-- FASE IV -->
+        <div class="pc-plus-divider" style="margin:10px 0 6px;">
+          <span class="pc-plus-label">Fase IV — USD 50K · 5 meses</span>
+        </div>
+        <div class="pc-feature"><div class="pc-check ck-land">✓</div><span>Negociación contrato de franquicia</span></div>
+        <div class="pc-feature"><div class="pc-check ck-land">✓</div><span>Negociación branded residences dentro del acuerdo de marca</span></div>
+
+        <!-- FASE V -->
+        <div class="pc-plus-divider" style="margin:10px 0 6px;">
+          <span class="pc-plus-label">Fase V — USD 180K · 15 meses</span>
+        </div>
+        <div class="pc-feature"><div class="pc-check ck-land">✓</div><span>Supervisión técnica de construcción</span></div>
+        <div class="pc-feature"><div class="pc-check ck-land">✓</div><span>Control de CAPEX y cumplimiento de estándares de marca</span></div>
+        <div class="pc-feature"><div class="pc-check ck-land">✓</div><span>Operador certificado Marriott desde 2016</span></div>
+
+      </div>
+      <div class="pc-note">USD 13.500 hoy · el resto por fases · sin compromiso automático</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CIERRE -->
+<div class="cierre">
+  <div class="cierre-text">
+    Con <em>USD 13.500 hoy</em> arranca el proceso que en 4 meses pone una LOI de Marriott sobre la mesa.
+  </div>
+  <div class="cierre-sub">El resto se activa solo si cada etapa confirma el GO. Sin compromisos automáticos.</div>
+</div>
+
+<div class="footer">
+  <div style="display:flex;align-items:center;gap:14px;">
+    <div style="width:32px;height:32px;background:#B07D2E;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:12px;font-weight:700;color:white;flex-shrink:0;">HB</div>
+    <div>
+      <div style="font-family:'Playfair Display',serif;font-size:13px;color:#FFFFFF;font-weight:700;">Hernán Berbari</div>
+      <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#B07D2E;font-weight:600;">Strategic Development Lead</div>
+    </div>
+  </div>
+  <div style="text-align:center;">
+    <div style="display:inline-block;border:1px solid rgba(192,57,43,0.4);padding:3px 14px;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#C0392B;font-weight:700;">Confidencial</div>
+  </div>
+  <div style="text-align:right;display:flex;flex-direction:column;gap:3px;">
+    <div style="font-size:11px;color:#6B7A8D;">+54 9 11 6357-4750</div>
+    <div style="font-size:11px;color:#6B7A8D;">hernan@hbconsultor.com.ar</div>
+    <div style="font-size:9px;letter-spacing:1px;color:#B0B8C4;margin-top:2px;">Abril 2026</div>
+  </div>
+</div>
+
+</body>
+</html>
