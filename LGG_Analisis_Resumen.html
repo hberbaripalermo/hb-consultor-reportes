@@ -158,7 +158,7 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
 .gantt-wrap{min-width:500px;}
 .gantt-header{
   display:grid;
-  grid-template-columns:120px repeat(8,1fr);
+  grid-template-columns:120px repeat(7,1fr);
   gap:0;margin-bottom:4px;
 }
 .gh-label{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:4px 4px 4px 0;}
@@ -170,7 +170,7 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
 
 .gantt-row{
   display:grid;
-  grid-template-columns:120px repeat(8,1fr);
+  grid-template-columns:120px repeat(7,1fr);
   gap:0;margin-bottom:3px;align-items:center;
 }
 .gr-label{
@@ -324,7 +324,7 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
   <div class="hero-content">
     <div class="hero-eyebrow">Confidencial · Abril 2026</div>
     <div class="hero-title">El Desafío<br><em>Mountain Resort</em></div>
-    <div class="hero-sub">Plan de acción · De hoy a la LOI HOTELERA </div>
+    <div class="hero-sub">Plan de acción · De hoy a la LOI Hotel</div>
     <div class="hero-stats">
       <div class="stat">
         <div class="stat-val">15 ha</div>
@@ -335,8 +335,8 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
         <div class="stat-label">Llaves · Luxury 5 Star Hotel Brand</div>
       </div>
       <div class="stat">
-        <div class="stat-val">4 meses</div>
-        <div class="stat-label">De hoy a la LOI con Marriott</div>
+        <div class="stat-val">5 meses</div>
+        <div class="stat-label">De hoy a la LOI Hotel</div>
       </div>
     </div>
   </div>
@@ -364,62 +364,61 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
     <div class="gantt-wrap">
       <div class="gantt-header">
         <div class="gh-label"></div>
-        <div class="gh-month now">HOY</div>
-        <div class="gh-month">MES 1</div>
+        <div class="gh-month now">MES 1 ▶</div>
         <div class="gh-month">MES 2</div>
         <div class="gh-month">MES 3</div>
-        <div class="gh-month" style="color:var(--green);font-weight:600;">LOI ✓</div>
-        <div class="gh-month">MES 6–9</div>
-        <div class="gh-month">MES 9–18</div>
-        <div class="gh-month">MES 18–24</div>
+        <div class="gh-month">MES 4</div>
+        <div class="gh-month" style="color:#C0392B;font-weight:700;">MES 5 · LOI</div>
+        <div class="gh-month">MES 6–10</div>
+        <div class="gh-month">MES 10–25</div>
       </div>
 
-      <!-- FASES I+II -->
+      <!-- FASES I+II — meses 1 y 2 -->
       <div class="gantt-row">
-        <div class="gr-label">Fases I+II<span>Validación + mercado</span></div>
-        <div class="gr-cell" style="grid-column:2/span 2"><div class="bar bar-land">LGG + SFC</div></div>
-        <div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div>
+        <div class="gr-label">Fases I+II<span>Validación + mercado · 2 meses</span></div>
+        <div class="gr-cell" style="grid-column:2/span 2"><div class="bar bar-land">LGG + SFC · 2 meses</div></div>
+        <div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div>
       </div>
 
-      <!-- FASE III -->
+      <!-- FASE III — meses 3 y 4 -->
       <div class="gantt-row">
-        <div class="gr-label">Fase III<span>Marca y franquicia</span></div>
+        <div class="gr-label">Fase III<span>Marca y franquicia · 2 meses</span></div>
         <div class="gr-cell"></div><div class="gr-cell"></div>
-        <div class="gr-cell" style="grid-column:4/span 2"><div class="bar bar-f3">Selección marca</div></div>
-        <div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div>
+        <div class="gr-cell" style="grid-column:4/span 2"><div class="bar bar-f3">Selección marca · 2 meses</div></div>
+        <div class="gr-cell"></div><div class="gr-cell"></div>
       </div>
 
-      <!-- LOI -->
+      <!-- LOI — mes 5 -->
       <div class="gantt-row">
-        <div class="gr-label">LOI Hotel<span>Hito clave · mes 4</span></div>
-        <div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div>
-        <div class="gr-cell" style="grid-column:5/span 2"><div class="bar bar-loi">✓ LOI HOTEL FIRMADA</div></div>
+        <div class="gr-label">LOI Hotel<span>Hito clave · mes 5</span></div>
+        <div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div>
+        <div class="gr-cell" style="grid-column:6/span 1"><div class="bar bar-loi">✓ LOI HOTEL FIRMADA</div></div>
         <div class="gr-cell"></div>
       </div>
 
-      <!-- BMA -->
+      <!-- BMA — desde mes 5 -->
       <div class="gantt-row">
-        <div class="gr-label">Arquitectura<span>BMA · negociando presupuesto recibido 7/4</span></div>
-        <div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div>
-        <div class="gr-cell" style="grid-column:5/span 3"><div class="bar bar-bma">BMA — Masterplan + Proyecto · activa post-LOI</div></div>
+        <div class="gr-label">Arquitectura<span>BMA · presupuesto recibido 7/4</span></div>
+        <div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div>
+        <div class="gr-cell" style="grid-column:6/span 2"><div class="bar bar-bma">BMA — activa post-LOI</div></div>
         <div class="gr-cell"></div>
       </div>
 
       <div class="gantt-row"><div class="gantt-sep" style="grid-column:1/-1;height:1px;background:var(--border);margin:2px 0;"></div></div>
 
-      <!-- FASE IV -->
+      <!-- FASE IV — mes 6-10 -->
       <div class="gantt-row">
-        <div class="gr-label">Fase IV<span>Neg. franquicia</span></div>
-        <div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div>
-        <div class="gr-cell" style="grid-column:6/span 1"><div class="bar bar-f4">Negociación</div></div>
-        <div class="gr-cell"></div><div class="gr-cell"></div>
+        <div class="gr-label">Fase IV<span>Neg. franquicia · 5 meses</span></div>
+        <div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div>
+        <div class="gr-cell" style="grid-column:7/span 1"><div class="bar bar-f4">Negociación franquicia</div></div>
+        <div class="gr-cell"></div>
       </div>
 
-      <!-- FASE V -->
+      <!-- FASE V — mes 10-25 -->
       <div class="gantt-row">
-        <div class="gr-label">Fase V<span>Supervisión obra</span></div>
-        <div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div>
-        <div class="gr-cell" style="grid-column:7/span 2"><div class="bar bar-f5">Supervisión técnica · 15 meses</div></div>
+        <div class="gr-label">Fase V<span>Supervisión obra · 15 meses</span></div>
+        <div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div><div class="gr-cell"></div>
+        <div class="gr-cell" style="grid-column:8/span 1"><div class="bar bar-f5">Supervisión técnica · 15 meses</div></div>
       </div>
 
     </div>
@@ -593,7 +592,7 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
         <!-- FASE I+II -->
         <div class="pc-phase-header" style="background:rgba(26,46,74,0.06);padding:5px 0 5px 2px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;">
           <span style="font-size:8px;letter-spacing:2px;text-transform:uppercase;font-weight:700;color:var(--gold);">Fases I + II — USD 15K + 12K SFC</span>
-          <span style="font-size:9px;color:var(--muted);">~40 días</span>
+          <span style="font-size:9px;color:var(--muted);">~2 meses</span>
         </div>
         <div class="pc-feature"><div class="pc-check ck-plus">+</div><span>Todo lo de Mader incluido (estudio de mercado SFC)</span></div>
         <div class="pc-feature"><div class="pc-check ck-plus">+</div><span>Validación técnica del proyecto</span></div>
@@ -632,7 +631,7 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
 <!-- CIERRE -->
 <div class="cierre">
   <div class="cierre-text">
-    Con <em>USD 13.500 hoy</em> arranca el proceso que en 4 meses pone una LOI de Marriott sobre la mesa.
+    Con <em>USD 13.500 hoy</em> arranca el proceso que en 5 meses pone una LOI Hotel firmada sobre la mesa.
   </div>
   <div class="cierre-sub">El resto se activa solo si cada etapa confirma el GO. Sin compromisos automáticos.</div>
 </div>
