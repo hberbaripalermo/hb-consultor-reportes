@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BoatShare — Consultoría Estratégica</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1628;
+    --deep: #071020;
+    --gold: #c9a84c;
+    --gold-light: #e8c76a;
+    --gold-pale: #f5e6b8;
+    --teal: #1a5f7a;
+    --teal-light: #2d8ca8;
+    --fog: #e8edf2;
+    --fog-deep: #d0d9e3;
+    --sand: #f7f3ec;
+    --white: #fafafa;
+    --text: #1a2535;
+    --text-muted: #5a6a7e;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--deep);
+    color: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* ── COVER ── */
+  .cover {
+    min-height: 100vh;
+    background: var(--deep);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cover-waves {
+    position: absolute;
+    inset: 0;
+    opacity: 0.07;
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 38px,
+        rgba(201,168,76,0.6) 38px,
+        rgba(201,168,76,0.6) 40px
+      );
+    animation: waveDrift 18s linear infinite;
+  }
+
+  @keyframes waveDrift {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(40px); }
+  }
+
+  .cover-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .cover-compass {
+    position: absolute;
+    right: -80px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 560px;
+    height: 560px;
+    opacity: 0.04;
+    animation: slowSpin 60s linear infinite;
+  }
+
+  @keyframes slowSpin { to { transform: translateY(-50%) rotate(360deg); } }
+
+  .compass-svg { width: 100%; height: 100%; }
+
+  .cover-inner {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 3rem 4rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .cover-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s ease forwards;
+  }
+
+  .cover-logo-line {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    opacity: 0.8;
+  }
+
+  .cover-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+  }
+
+  .cover-main {
+    opacity: 0;
+    animation: fadeUp 0.9s 0.5s ease forwards;
+  }
+
+  .cover-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .cover-eyebrow::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .cover-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 300;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: var(--white);
+    margin-bottom: 0.3rem;
+  }
+
+  .cover-title em {
+    font-style: italic;
+    color: var(--gold-light);
+  }
+
+  .cover-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--teal-light);
+    margin-top: 1.2rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .cover-desc {
+    font-size: 0.95rem;
+    font-weight: 300;
+    color: var(--text-muted);
+    max-width: 480px;
+    line-height: 1.7;
+  }
+
+  .cover-footer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.9s ease forwards;
+  }
+
+  .cover-stats {
+    display: flex;
+    gap: 3rem;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8rem;
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+  }
+
+  .cover-scroll {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.1); }
+  }
+
+  .scroll-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.25em;
+    color: var(--text-muted);
+    writing-mode: vertical-rl;
+  }
+
+  .gold-rule {
+    height: 1px;
+    background: linear-gradient(to right, var(--gold), transparent);
+    margin: 2.5rem 0;
+    opacity: 0.4;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: rgba(255,255,255,0.97);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 0 4rem;
+  }
+
+  .nav-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+  }
+
+  .nav-brand {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--navy);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    color: var(--text);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--gold-light); }
+
+  /* ── SECTIONS ── */
+  section {
+    position: relative;
+  }
+
+  .section-light {
+    background: var(--sand);
+    color: var(--text);
+  }
+
+  .section-mid {
+    background: #0e1e30;
+    color: var(--white);
+  }
+
+  .section-dark {
+    background: var(--navy);
+    color: var(--white);
+  }
+
+  .section-deep {
+    background: var(--deep);
+    color: var(--white);
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 5rem 4rem;
+  }
+
+  .section-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-eyebrow::before {
+    content: '';
+    display: block;
+    width: 30px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .section-light .section-eyebrow {
+    color: var(--teal);
+  }
+
+  .section-light .section-eyebrow::before {
+    background: var(--teal);
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 300;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+
+  .section-light .section-title { color: var(--navy); }
+  .section-light .section-lead { color: var(--text); }
+  .section-title em { font-style: italic; color: var(--gold-light); }
+  .section-light .section-title em { color: var(--teal); }
+
+  .section-lead {
+    font-size: 1rem;
+    line-height: 1.75;
+    max-width: 640px;
+    color: var(--text-muted);
+    margin-bottom: 3rem;
+  }
+
+  /* ── DIAGNOSIS GRID ── */
+  .diagnosis-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5px;
+    margin-top: 3rem;
+    background: rgba(0,0,0,0.08);
+  }
+
+  .diag-cell {
+    background: #fff;
+    padding: 2rem 2.2rem;
+    position: relative;
+    transition: background 0.3s;
+  }
+
+  .diag-cell:hover { background: var(--fog); }
+
+  .diag-cell-letter {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4rem;
+    font-weight: 300;
+    color: rgba(201,168,76,0.1);
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .diag-icon {
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.2rem;
+    font-size: 1rem;
+  }
+
+  .diag-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--navy);
+    margin-bottom: 0.6rem;
+  }
+
+  .diag-text {
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  .diag-tag {
+    display: inline-block;
+    margin-top: 1rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    padding: 0.25rem 0.6rem;
+    border: 1px solid rgba(231,79,79,0.4);
+    color: #e7794f;
+    border-radius: 2px;
+  }
+
+  .diag-tag.warn { border-color: rgba(201,168,76,0.4); color: var(--gold); }
+  .diag-tag.ok { border-color: rgba(45,140,168,0.4); color: var(--teal-light); }
+
+  /* ── PAIN POINTS ── */
+  .pain-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 2.5rem;
+  }
+
+  .pain-item {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 2rem;
+    padding: 1.8rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.07);
+    align-items: start;
+    transition: background 0.2s;
+    cursor: default;
+  }
+
+  .pain-item:hover { background: rgba(0,0,0,0.02); }
+
+  .pain-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem;
+    font-weight: 300;
+    color: rgba(201,168,76,0.25);
+    line-height: 1;
+    text-align: right;
+  }
+
+  .pain-content {}
+
+  .pain-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--navy);
+    margin-bottom: 0.4rem;
+  }
+
+  .pain-desc {
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--text-muted);
+  }
+
+  /* ── TECH STACK ── */
+  .stack-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-top: 3rem;
+  }
+
+  .stack-option {
+    position: relative;
+  }
+
+  .stack-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    padding: 0.3rem 0.8rem;
+    border-radius: 2px;
+    display: inline-block;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+  }
+
+  .badge-gold { background: rgba(201,168,76,0.15); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); }
+  .badge-teal { background: rgba(26,95,122,0.3); color: var(--teal-light); border: 1px solid rgba(45,140,168,0.3); }
+  .badge-fog  { background: rgba(255,255,255,0.06); color: var(--text-muted); border: 1px solid rgba(255,255,255,0.1); }
+
+  .stack-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 400;
+    color: var(--white);
+    margin-bottom: 0.8rem;
+  }
+
+  .stack-tools {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-top: 1.5rem;
+  }
+
+  .tool-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.9rem 1.2rem;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.07);
+    border-left: 3px solid rgba(201,168,76,0.4);
+    transition: border-color 0.2s, background 0.2s;
+    cursor: default;
+  }
+
+  .tool-row:hover { border-left-color: var(--gold); background: rgba(201,168,76,0.04); }
+
+  .tool-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--gold-light);
+    min-width: 130px;
+  }
+
+  .tool-desc {
+    font-size: 0.8rem;
+    color: var(--text);
+    line-height: 1.4;
+  }
+
+  .tool-price {
+    margin-left: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--teal-light);
+    white-space: nowrap;
+  }
+
+  .cost-total {
+    margin-top: 2rem;
+    padding: 1.2rem 1.5rem;
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .cost-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .cost-amount {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 300;
+    color: var(--gold);
+  }
+
+  .full-stack {
+    margin-top: 3rem;
+  }
+
+  /* ── TIERS ── */
+  .tiers-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    margin-top: 3rem;
+    background: rgba(201,168,76,0.1);
+  }
+
+  .tier-card {
+    background: var(--sand);
+    padding: 2.5rem 2rem;
+    position: relative;
+    transition: transform 0.3s;
+  }
+
+  .tier-card:hover { transform: translateY(-4px); }
+
+  .tier-card.premium-tier {
+    background: var(--navy);
+    color: var(--white);
+    z-index: 2;
+  }
+
+  .tier-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+  }
+
+  .tier-card:not(.premium-tier) .tier-tag { color: var(--teal); }
+  .tier-card.premium-tier .tier-tag { color: var(--gold); }
+
+  .tier-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem;
+    font-weight: 300;
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+
+  .tier-card:not(.premium-tier) .tier-name { color: var(--navy); }
+  .tier-card.premium-tier .tier-name { color: var(--gold-light); }
+
+  .tier-sub {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+  }
+
+  .tier-price-block {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
+
+  .tier-card.premium-tier .tier-price-block { border-color: rgba(255,255,255,0.1); }
+
+  .tier-currency {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    vertical-align: super;
+  }
+
+  .tier-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem;
+    font-weight: 300;
+  }
+
+  .tier-card:not(.premium-tier) .tier-price { color: var(--navy); }
+  .tier-card.premium-tier .tier-price { color: var(--white); }
+
+  .tier-period {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .tier-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .tier-features li {
+    font-size: 0.82rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    line-height: 1.4;
+  }
+
+  .tier-card:not(.premium-tier) .tier-features li { color: var(--text); }
+  .tier-card.premium-tier .tier-features li { color: rgba(255,255,255,0.8); }
+
+  .feat-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    margin-top: 0.45rem;
+    flex-shrink: 0;
+  }
+
+  .tier-card:not(.premium-tier) .feat-dot { background: var(--teal-light); }
+  .tier-card.premium-tier .feat-dot { background: var(--gold); }
+
+  /* ── EXPERIENCES ── */
+  .exp-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5px;
+    background: rgba(0,0,0,0.08);
+    margin-top: 3rem;
+  }
+
+  .exp-card {
+    background: #fff;
+    padding: 2.2rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+    cursor: default;
+  }
+
+  .exp-card:hover { background: var(--fog); }
+
+  .exp-accent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+  }
+
+  .acc-gold { background: linear-gradient(to right, var(--gold), transparent); }
+  .acc-teal { background: linear-gradient(to right, var(--teal-light), transparent); }
+
+  .exp-emoji {
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+  }
+
+  .exp-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--navy);
+    margin-bottom: 0.5rem;
+  }
+
+  .exp-desc {
+    font-size: 0.83rem;
+    color: var(--text);
+    line-height: 1.65;
+    margin-bottom: 1.2rem;
+  }
+
+  .exp-price {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+  }
+
+  .exp-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    color: var(--teal-light);
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid rgba(45,140,168,0.3);
+    display: inline-block;
+    margin-left: 0.8rem;
+  }
+
+  /* ── ROADMAP ── */
+  .roadmap {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 3rem;
+    position: relative;
+  }
+
+  .roadmap::before {
+    content: '';
+    position: absolute;
+    left: 28px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--teal), rgba(26,95,122,0.1));
+  }
+
+  .roadmap-phase {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 2rem;
+    padding: 2rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.07);
+  }
+
+  .phase-dot {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 1px solid rgba(26,95,122,0.4);
+    background: var(--sand);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .phase-dot-inner {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--gold);
+  }
+
+  .phase-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+
+  .phase-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--navy);
+    margin-bottom: 0.8rem;
+  }
+
+  .phase-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .phase-item {
+    font-size: 0.78rem;
+    padding: 0.3rem 0.8rem;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.1);
+    color: var(--text);
+    border-radius: 2px;
+    transition: border-color 0.2s;
+  }
+
+  .phase-item:hover { border-color: var(--teal); color: var(--teal); }
+
+  /* ── IMPACT ── */
+  .impact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5px;
+    margin-top: 3rem;
+    background: rgba(201,168,76,0.1);
+  }
+
+  .impact-card {
+    background: var(--sand);
+    padding: 2.5rem 2rem;
+    text-align: center;
+  }
+
+  .impact-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3.5rem;
+    font-weight: 300;
+    color: var(--navy);
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+
+  .impact-unit {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--teal);
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+
+  .impact-desc {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+
+  /* ── POSITIONING ── */
+  .brand-comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .brand-col {
+    padding: 2rem;
+  }
+
+  .brand-col.current {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+
+  .brand-col.target {
+    background: rgba(201,168,76,0.06);
+    border: 1px solid rgba(201,168,76,0.2);
+  }
+
+  .brand-col-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .brand-col.current .brand-col-label { color: var(--text-muted); }
+  .brand-col.target .brand-col-label { color: var(--gold); border-color: rgba(201,168,76,0.2); }
+
+  .brand-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    font-size: 0.83rem;
+  }
+
+  .brand-col.current .brand-row { color: var(--text-muted); }
+  .brand-col.target .brand-row { color: rgba(255,255,255,0.9); }
+
+  .brand-arrow {
+    font-size: 0.7rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  .brand-col.current .brand-arrow { color: rgba(231,79,79,0.6); }
+  .brand-col.target .brand-arrow { color: var(--gold); }
+
+  /* ── QUICK WINS ── */
+  .qw-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+  }
+
+  .qw-card {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.07);
+    padding: 1.5rem 1.8rem;
+    border-left: 3px solid var(--gold);
+    transition: background 0.2s;
+    cursor: default;
+  }
+
+  .qw-card:hover { background: var(--fog); }
+
+  .qw-week {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .qw-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--navy);
+    margin-bottom: 0.4rem;
+  }
+
+  .qw-desc {
+    font-size: 0.8rem;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--deep);
+    border-top: 1px solid rgba(201,168,76,0.12);
+    padding: 3rem 4rem;
+  }
+
+  .footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: var(--white);
+  }
+
+  .footer-copy {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 800px) {
+    nav { padding: 0 1.5rem; }
+    nav .nav-links { display: none; }
+    .container { padding: 3.5rem 1.5rem; }
+    .cover-inner { padding: 2rem 1.5rem; }
+    .cover-title { font-size: 3rem; }
+    .cover-stats { gap: 1.5rem; }
+    .cover-compass { display: none; }
+    .diagnosis-grid { grid-template-columns: 1fr; }
+    .stack-layout { grid-template-columns: 1fr; }
+    .tiers-grid { grid-template-columns: 1fr; }
+    .exp-grid { grid-template-columns: 1fr; }
+    .impact-grid { grid-template-columns: 1fr; }
+    .brand-comparison { grid-template-columns: 1fr; }
+    .qw-grid { grid-template-columns: 1fr; }
+    footer { padding: 2rem 1.5rem; }
+    .footer-inner { flex-direction: column; gap: 1rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-waves"></div>
+  <div class="cover-grid"></div>
+  <div class="cover-compass">
+    <svg class="compass-svg" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="200" cy="200" r="190" stroke="#c9a84c" stroke-width="1"/>
+      <circle cx="200" cy="200" r="160" stroke="#c9a84c" stroke-width="0.5"/>
+      <circle cx="200" cy="200" r="100" stroke="#c9a84c" stroke-width="0.5"/>
+      <line x1="200" y1="10" x2="200" y2="390" stroke="#c9a84c" stroke-width="0.5"/>
+      <line x1="10" y1="200" x2="390" y2="200" stroke="#c9a84c" stroke-width="0.5"/>
+      <line x1="65" y1="65" x2="335" y2="335" stroke="#c9a84c" stroke-width="0.3"/>
+      <line x1="335" y1="65" x2="65" y2="335" stroke="#c9a84c" stroke-width="0.3"/>
+      <polygon points="200,20 210,195 200,185 190,195" fill="#c9a84c"/>
+      <polygon points="200,380 210,205 200,215 190,205" fill="#c9a84c" opacity="0.4"/>
+      <text x="200" y="52" fill="#c9a84c" font-size="14" text-anchor="middle" font-family="serif">N</text>
+      <text x="200" y="368" fill="#c9a84c" font-size="14" text-anchor="middle" font-family="serif">S</text>
+      <text x="358" y="204" fill="#c9a84c" font-size="14" text-anchor="middle" font-family="serif">E</text>
+      <text x="42" y="204" fill="#c9a84c" font-size="14" text-anchor="middle" font-family="serif">W</text>
+    </svg>
+  </div>
+
+  <div class="cover-inner">
+    <div class="cover-header" style="justify-content:center;flex-direction:column;align-items:center;text-align:center;gap:1rem">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:0.5rem">
+        <div style="display:flex;align-items:center;gap:0.9rem">
+          <div style="width:36px;height:36px;border:1.5px solid rgba(255,255,255,0.7);display:flex;align-items:center;justify-content:center">
+            <span style="font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:500;color:#fff;letter-spacing:0.05em">HB</span>
+          </div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;letter-spacing:0.25em;color:#fff;text-transform:uppercase">Consultor</div>
+        </div>
+        <div style="width:100%;height:1px;background:rgba(255,255,255,0.2)"></div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;color:rgba(255,255,255,0.6)">HERNÁN BERBARI</div>
+      </div>
+      <div style="display:flex;gap:1.5rem;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;flex-wrap:wrap;justify-content:center">
+        <a href="https://wa.me/541163574750" target="_blank" style="color:rgba(255,255,255,0.85);text-decoration:none">+54 11 6357 4750</a>
+        <span style="color:rgba(255,255,255,0.3)">·</span>
+        <a href="mailto:hernan@hbconsultor.com.ar" style="color:rgba(255,255,255,0.85);text-decoration:none">hernan@hbconsultor.com.ar</a>
+        <span style="color:rgba(255,255,255,0.3)">·</span>
+        <span style="color:rgba(255,255,255,0.5)">DIAGNÓSTICO ESTRATÉGICO — 2025</span>
+      </div>
+    </div>
+
+    <div class="cover-main">
+      <div class="cover-eyebrow">Informe de Consultoría</div>
+      <h1 class="cover-title">
+        Navegar<br>hacia <em>el futuro.</em>
+      </h1>
+      <p class="cover-subtitle">Diagnóstico · Tecnología · Posicionamiento Premium</p>
+      <div class="gold-rule"></div>
+      <p class="cover-desc">
+        Un análisis profundo de la operación actual de BoatShare, con un plan de acción concreto para digitalizar la empresa, capturar eficiencias, y escalar hacia el segmento ABC1 con una propuesta de valor aspiracional.
+      </p>
+    </div>
+
+    <div class="cover-footer">
+      <div class="cover-stats">
+        <div class="stat">
+          <span class="stat-num">6</span>
+          <span class="stat-label">Procesos críticos</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">3</span>
+          <span class="stat-label">Tiers de membresía</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">7</span>
+          <span class="stat-label">Fuentes de ingreso</span>
+        </div>
+      </div>
+      <div class="cover-scroll">
+        <div class="scroll-line"></div>
+        <span class="scroll-text">scroll</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">BOATSHARE — DIAGNÓSTICO</div>
+    <ul class="nav-links">
+      <li><a href="https://wa.me/541163574750" target="_blank" style="color:var(--gold);letter-spacing:0.08em">+54 11 6357 4750</a></li>
+      <li><a href="mailto:hernan@hbconsultor.com.ar" style="color:var(--gold)">hernan@hbconsultor.com.ar</a></li>
+      <li><a href="#diagnostico">Diagnóstico</a></li>
+      <li><a href="#tecnologia">Tecnología</a></li>
+      <li><a href="#posicionamiento">Posicionamiento</a></li>
+      <li><a href="#tiers">Membresías</a></li>
+      <li><a href="#experiencias">Experiencias</a></li>
+      <li><a href="#roadmap">Hoja de Ruta</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- SECTION 1 — DIAGNÓSTICO OPERATIVO -->
+<section id="diagnostico" class="section-light">
+  <div class="container">
+    <div class="section-eyebrow">01 — Diagnóstico</div>
+    <h2 class="section-title">Lo que hoy <em>frena el crecimiento</em></h2>
+    <p class="section-lead">BoatShare tiene una base sólida: pionero en Argentina en tiempo compartido náutico, flota diversa, y socios con años de antigüedad. El problema no es el producto. Es la operación interna que se quedó en Excel mientras el potencial del negocio creció.</p>
+
+    <div class="diagnosis-grid">
+      <div class="diag-cell">
+        <div class="diag-cell-letter">A</div>
+        <div class="diag-icon">🗂</div>
+        <div class="diag-title">Gestión de Membresías</div>
+        <p class="diag-text">Planilla con datos de socios, vencimientos y pagos sin alertas automáticas. Renovar depende de que alguien se acuerde. El ciclo de vida del cliente es invisible.</p>
+        <span class="diag-tag">RIESGO ALTO</span>
+      </div>
+
+      <div class="diag-cell">
+        <div class="diag-cell-letter">B</div>
+        <div class="diag-icon">📅</div>
+        <div class="diag-title">Reservas por WhatsApp</div>
+        <p class="diag-text">Alguien recibe el mensaje, verifica disponibilidad en la planilla, confirma, y actualiza manualmente. Si dos personas piden la misma lancha, gana quien tuvo suerte.</p>
+        <span class="diag-tag">RIESGO ALTO</span>
+      </div>
+
+      <div class="diag-cell">
+        <div class="diag-cell-letter">C</div>
+        <div class="diag-icon">📊</div>
+        <div class="diag-title">Control de Saldo de Salidas</div>
+        <p class="diag-text">Cada socio tiene 12 o 20 salidas por temporada. Rastrear consumidas, disponibles, y topes por temporada alta/baja es un cálculo propenso a errores humanos.</p>
+        <span class="diag-tag warn">RIESGO MEDIO</span>
+      </div>
+
+      <div class="diag-cell">
+        <div class="diag-cell-letter">D</div>
+        <div class="diag-icon">💳</div>
+        <div class="diag-title">Facturación y Cobros</div>
+        <p class="diag-text">Cuotas mensuales, alquileres puntuales, cánones adicionales, pesos vs. USD. Seguimiento de morosos y conciliación bancaria consumen horas semanales sin automatización.</p>
+        <span class="diag-tag">RIESGO ALTO</span>
+      </div>
+
+      <div class="diag-cell">
+        <div class="diag-cell-letter">E</div>
+        <div class="diag-icon">⛵</div>
+        <div class="diag-title">Gestión de Flota</div>
+        <p class="diag-text">Mantenimiento, estado de disponibilidad, historial de uso y documentación legal por embarcación. Probablemente todo vive en planillas o en la cabeza del dueño.</p>
+        <span class="diag-tag warn">RIESGO MEDIO</span>
+      </div>
+
+      <div class="diag-cell">
+        <div class="diag-cell-letter">F</div>
+        <div class="diag-icon">💬</div>
+        <div class="diag-title">Comunicación sin CRM</div>
+        <p class="diag-text">Todo por WhatsApp: consultas, reservas, confirmaciones, cambios. No hay registro centralizado ni seguimiento de leads. Potenciales socios se pierden sin follow-up.</p>
+        <span class="diag-tag ok">RIESGO BAJO</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2 — DOLORES -->
+<section class="section-light">
+  <div class="container">
+    <div class="section-eyebrow">02 — Puntos de Dolor</div>
+    <h2 class="section-title">Los seis procesos que <em>drenan tiempo y dinero</em></h2>
+    <p class="section-lead">Cada uno de estos procesos, operado manualmente, representa horas perdidas que podrían ir a crecer el negocio.</p>
+
+    <div class="pain-list">
+      <div class="pain-item">
+        <div class="pain-num">01</div>
+        <div class="pain-content">
+          <div class="pain-title">La reserva manual crea fricción y errores</div>
+          <p class="pain-desc">El cliente manda un WhatsApp. El admin verifica disponibilidad. Si hay solapamiento o dos pedidos simultáneos, hay conflicto. Cada reserva toma entre 5 y 15 minutos de trabajo manual. Con decenas de socios activos, son horas semanales.</p>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-num">02</div>
+        <div class="pain-content">
+          <div class="pain-title">Los vencimientos de membresía pasan desapercibidos</div>
+          <p class="pain-desc">Sin alertas automáticas, la renovación depende de que alguien revise la planilla y recuerde llamar. Un socio que no renueva no por decisión sino por olvido es un ingreso que se pierde por pura fricción operativa.</p>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-num">03</div>
+        <div class="pain-content">
+          <div class="pain-title">El saldo de salidas es una fuente de disputas</div>
+          <p class="pain-desc">Si el control de salidas consumidas no es en tiempo real, el socio puede no saber cuántas le quedan. Cuando se les avisa que ya agotaron el cupo, la experiencia se siente confrontativa en lugar de un servicio de alta calidad.</p>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-num">04</div>
+        <div class="pain-content">
+          <div class="pain-title">Los morosos se detectan tarde</div>
+          <p class="pain-desc">Sin alertas de cobranza automatizadas, un socio puede acumular cuotas sin que el sistema lo detecte. Para un negocio con flota compartida, esto es riesgo operativo real: se usa el servicio sin pagar.</p>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-num">05</div>
+        <div class="pain-content">
+          <div class="pain-title">Los leads se evaporan</div>
+          <p class="pain-desc">Alguien consulta por Instagram o la web, pregunta por WhatsApp, y si no se le da seguimiento rápido, desaparece. Sin CRM, no hay forma de saber cuántos potenciales socios se perdieron este mes.</p>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-num">06</div>
+        <div class="pain-content">
+          <div class="pain-title">El dueño es el sistema</div>
+          <p class="pain-desc">El mayor riesgo operativo: si toda la información vive en planillas y en la cabeza de una persona, escalar es imposible. Cada nuevo socio, cada nueva embarcación, multiplica la carga administrativa en lugar de generar economías de escala.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3 — TECNOLOGÍA -->
+<section id="tecnologia" class="section-light">
+  <div class="container">
+    <div class="section-eyebrow">03 — Stack Tecnológico</div>
+    <h2 class="section-title">La arquitectura <em>recomendada</em></h2>
+    <p class="section-lead">Un CRM genérico como HubSpot o Salesforce no es la solución. El problema central es gestionar recursos compartidos con reglas complejas. La recomendación es un stack modular de herramientas especializadas interconectadas.</p>
+
+    <div class="full-stack">
+      <div class="stack-tools">
+        <div class="tool-row">
+          <div class="tool-name">SimplyBook.me</div>
+          <div class="tool-desc">Motor de reservas online. Permite definir "recursos" (las lanchas), horarios y limitar reservas por cliente. Integración directa con Wix.</div>
+          <div class="tool-price">USD 10–50/mes</div>
+        </div>
+        <div class="tool-row">
+          <div class="tool-name">MemberSpace</div>
+          <div class="tool-desc">Gestión de membresías y cobros recurrentes. Se integra con Wix, crea planes automáticos y bloquea el portal de reservas a socios morosos.</div>
+          <div class="tool-price">USD 25–49/mes</div>
+        </div>
+        <div class="tool-row">
+          <div class="tool-name">Stripe Billing</div>
+          <div class="tool-desc">Backend de pagos recurrentes robusto. Maneja múltiples planes, cuotas en pesos y USD, reintentos automáticos ante fallo de cobro.</div>
+          <div class="tool-price">2.9% + USD 0.30</div>
+        </div>
+        <div class="tool-row">
+          <div class="tool-name">Airtable</div>
+          <div class="tool-desc">Reemplaza los Excels de flota. Vistas tipo calendario para mantenimiento, Kanban de estado de embarcaciones, historial y documentación.</div>
+          <div class="tool-price">USD 20/mes</div>
+        </div>
+        <div class="tool-row">
+          <div class="tool-name">HubSpot Free</div>
+          <div class="tool-desc">CRM liviano para leads. Captura consultas web, hace seguimiento, automatiza emails de bienvenida y recordatorios de renovación.</div>
+          <div class="tool-price">Gratis</div>
+        </div>
+        <div class="tool-row">
+          <div class="tool-name">Make (ex Integromat)</div>
+          <div class="tool-desc">El pegamento del stack. Cuando un socio reserva, actualiza el saldo en Airtable, envía confirmación por email, y marca la lancha como ocupada.</div>
+          <div class="tool-price">USD 10–29/mes</div>
+        </div>
+      </div>
+
+      <div class="cost-total">
+        <div>
+          <div class="cost-label">Costo total del stack</div>
+          <div style="font-size:0.78rem; color: var(--text-muted); margin-top:0.2rem;">Fracción del tiempo administrativo que libera cada mes</div>
+        </div>
+        <div class="cost-amount">USD 75–150<span style="font-size:1rem; color: var(--text-muted)">/mes</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4 — QUICK WINS -->
+<section class="section-light">
+  <div class="container">
+    <div class="section-eyebrow">04 — Acción Inmediata</div>
+    <h2 class="section-title">Quick wins <em>esta semana</em></h2>
+    <p class="section-lead">Sin presupuesto ni implementación técnica, estos cuatro movimientos reducen el caos operativo de inmediato.</p>
+
+    <div class="qw-grid">
+      <div class="qw-card">
+        <div class="qw-week">Día 1–2</div>
+        <div class="qw-title">Botón de reserva en la web</div>
+        <p class="qw-desc">Integrar un formulario de Google Forms o Calendly básico en lugar de solo WhatsApp. Aunque sea simple, crea un registro automático y elimina la dependencia de mensajes manuales.</p>
+      </div>
+      <div class="qw-card">
+        <div class="qw-week">Día 2–4</div>
+        <div class="qw-title">Migrar Excels a Google Sheets</div>
+        <p class="qw-desc">Como paso intermedio antes del stack completo. Permite colaboración en tiempo real, historial de cambios, y acceso desde cualquier dispositivo. Costo: $0.</p>
+      </div>
+      <div class="qw-card">
+        <div class="qw-week">Día 3–5</div>
+        <div class="qw-title">Dashboard de saldo de salidas</div>
+        <p class="qw-desc">Un tab en Google Sheets con fórmulas que muestre en tiempo real cuántas salidas le quedan a cada socio por temporada. Elimina la principal fuente de errores y disputas.</p>
+      </div>
+      <div class="qw-card">
+        <div class="qw-week">Día 5–7</div>
+        <div class="qw-title">WhatsApp Business + difusión</div>
+        <p class="qw-desc">Migrar a WhatsApp Business y crear listas de difusión separadas (socios activos, leads, socios Black). Permite comunicar disponibilidad de último momento sin grupos desorganizados.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 5 — POSICIONAMIENTO -->
+<section id="posicionamiento" class="section-light">
+  <div class="container">
+    <div class="section-eyebrow">05 — Posicionamiento</div>
+    <h2 class="section-title">De club funcional <em>a marca aspiracional</em></h2>
+    <p class="section-lead">El ABC1 no compra 150 HP. Compra una tarde en el río con su familia sin preocuparse por nada. El problema de comunicación actual: le habla al cerebro racional cuando debería hablarle al corazón aspiracional.</p>
+
+    <div class="brand-comparison">
+      <div class="brand-col current">
+        <div class="brand-col-label">✗ &nbsp; Hoy — Comunicación Funcional</div>
+        <div class="brand-row"><span class="brand-arrow">✕</span> Fotos de WhatsApp mezcladas con imágenes profesionales</div>
+        <div class="brand-row"><span class="brand-arrow">✕</span> Copy que habla de motores, HP y metros de eslora</div>
+        <div class="brand-row"><span class="brand-arrow">✕</span> Todo termina en un botón de WhatsApp</div>
+        <div class="brand-row"><span class="brand-arrow">✕</span> Tablas de precio en pesos con formato planilla naranja</div>
+        <div class="brand-row"><span class="brand-arrow">✕</span> Paleta deportiva, sin diferenciación de tier</div>
+        <div class="brand-row"><span class="brand-arrow">✕</span> "Alquiler con capitán" — suena a Rent-a-Car</div>
+        <div class="brand-row"><span class="brand-arrow">✕</span> Un único nivel de membresía para todos los perfiles</div>
+      </div>
+      <div class="brand-col target">
+        <div class="brand-col-label">◆ &nbsp; Objetivo — Experiencia Premium</div>
+        <div class="brand-row"><span class="brand-arrow">◆</span> Sesión fotográfica profesional con modelos y golden hour</div>
+        <div class="brand-row"><span class="brand-arrow">◆</span> Copy aspiracional: "Tu sábado perfecto empieza en el río"</div>
+        <div class="brand-row"><span class="brand-arrow">◆</span> Reserva online con calendario visible y pago instantáneo</div>
+        <div class="brand-row"><span class="brand-arrow">◆</span> Precios en USD para tiers premium, presentación premium</div>
+        <div class="brand-row"><span class="brand-arrow">◆</span> Sub-marca "BoatShare Black" con identidad propia</div>
+        <div class="brand-row"><span class="brand-arrow">◆</span> "Experiencias en el río" — emotivo, aspiracional</div>
+        <div class="brand-row"><span class="brand-arrow">◆</span> Tres tiers diferenciados con beneficios escalonados</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 6 — TIERS -->
+<section id="tiers" class="section-light">
+  <div class="container">
+    <div class="section-eyebrow">06 — Arquitectura de Membresías</div>
+    <h2 class="section-title">Tres tiers que <em>capturan más valor</em></h2>
+    <p class="section-lead">La estructura actual deja dinero sobre la mesa. El modelo linear de "elegís categoría y cantidad de salidas" no diferencia al cliente por valor percibido ni estilo de vida. El ABC1 no quiere sentir que está en el mismo club que la lancha Adventure.</p>
+
+    <div class="tiers-grid">
+      <!-- ESSENTIAL -->
+      <div class="tier-card">
+        <div class="tier-tag">Tier 01</div>
+        <div class="tier-name">Essential</div>
+        <div class="tier-sub">Adventure · Adventure+</div>
+        <div class="tier-price-block">
+          <span class="tier-currency">ARS </span>
+          <span class="tier-price">139k</span>
+          <div class="tier-period">/mes · plan 12 salidas</div>
+        </div>
+        <ul class="tier-features">
+          <li><span class="feat-dot"></span>12 o 20 salidas anuales</li>
+          <li><span class="feat-dot"></span>Flota Adventure y Adventure+</li>
+          <li><span class="feat-dot"></span>Reservas con 7 días de anticipación</li>
+          <li><span class="feat-dot"></span>Portal digital de reservas</li>
+          <li><span class="feat-dot"></span>Acceso a eventos del club</li>
+          <li><span class="feat-dot"></span>Regla 50% temporada alta / baja</li>
+        </ul>
+      </div>
+
+      <!-- PREMIUM (destacada) -->
+      <div class="tier-card premium-tier">
+        <div class="tier-tag">◆ Tier 02 · Destacado</div>
+        <div class="tier-name">Premium</div>
+        <div class="tier-sub">Sport · Sport+ · Day Cruise · Pontón</div>
+        <div class="tier-price-block">
+          <span class="tier-currency">USD </span>
+          <span class="tier-price">350</span>
+          <div class="tier-period">/mes · plan 12 salidas</div>
+        </div>
+        <ul class="tier-features">
+          <li><span class="feat-dot"></span>Todo lo del tier Essential</li>
+          <li><span class="feat-dot"></span>Reserva prioritaria (+48hs de ventana)</li>
+          <li><span class="feat-dot"></span>Capitán adicional a tarifa reducida</li>
+          <li><span class="feat-dot"></span>Descuento 30% en add-ons (catering, equipo)</li>
+          <li><span class="feat-dot"></span>Acceso a eventos exclusivos Premium</li>
+          <li><span class="feat-dot"></span>Dashboard de salidas en tiempo real</li>
+          <li><span class="feat-dot"></span>Bienvenida con kit náutico de marca</li>
+        </ul>
+      </div>
+
+      <!-- BLACK -->
+      <div class="tier-card">
+        <div class="tier-tag">Tier 03</div>
+        <div class="tier-name">Black</div>
+        <div class="tier-sub">Cruise · Yacht + acceso flota completa</div>
+        <div class="tier-price-block">
+          <span class="tier-currency">USD </span>
+          <span class="tier-price">800</span>
+          <div class="tier-period">/mes · plan personalizado</div>
+        </div>
+        <ul class="tier-features">
+          <li><span class="feat-dot"></span>Acceso a toda la flota por disponibilidad</li>
+          <li><span class="feat-dot"></span>Concierge personal dedicado</li>
+          <li><span class="feat-dot"></span>Transfer CABA → San Fernando incluido</li>
+          <li><span class="feat-dot"></span>Catering premium en todas las salidas</li>
+          <li><span class="feat-dot"></span>Cancelación sin penalidad hasta 24hs antes</li>
+          <li><span class="feat-dot"></span>Membresía familiar (hasta 4 adultos)</li>
+          <li><span class="feat-dot"></span>Fee de inscripción único (exclusividad real)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 7 — EXPERIENCIAS -->
+<section id="experiencias" class="section-light">
+  <div class="container">
+    <div class="section-eyebrow">07 — Nuevas Líneas de Ingreso</div>
+    <h2 class="section-title">Experiencias que se <em>venden solas</em></h2>
+    <p class="section-lead">Hoy BoatShare vende "2hs en Sport por $290.000". Eso es commodity. Empaquetar experiencias con nombre propio multiplica el margen, genera contenido orgánico en redes, y atrae al ABC1 que no busca "alquilar una lancha" sino vivir un momento.</p>
+
+    <div class="exp-grid">
+      <div class="exp-card">
+        <div class="exp-accent acc-gold"></div>
+        <div class="exp-emoji">🌅</div>
+        <div class="exp-name">Sunset Session</div>
+        <p class="exp-desc">Navegación al atardecer de 3hs con picada gourmet y espumante. Day Cruise o Pontón. El contenido se postea solo: cada pareja que sube fotos atrae cinco leads nuevos.</p>
+        <div>
+          <span class="exp-price">USD 280 – 380</span>
+          <span class="exp-tag">ALTO MARGEN</span>
+        </div>
+      </div>
+
+      <div class="exp-card">
+        <div class="exp-accent acc-teal"></div>
+        <div class="exp-emoji">🏝</div>
+        <div class="exp-name">Delta Day</div>
+        <p class="exp-desc">Jornada completa de 8hs con parada en isla, asado a bordo en Pontón con parrilla, y deportes acuáticos incluidos. La experiencia flagship para familias ABC1.</p>
+        <div>
+          <span class="exp-price">USD 600 – 900</span>
+          <span class="exp-tag">PRODUCTO ESTRELLA</span>
+        </div>
+      </div>
+
+      <div class="exp-card">
+        <div class="exp-accent acc-gold"></div>
+        <div class="exp-emoji">💼</div>
+        <div class="exp-name">Corporate Retreat</div>
+        <p class="exp-desc">Yacht + catering + actividades de team building en el agua. Paquete para empresas de zona norte. El mercado corporativo náutico está prácticamente sin cubrir en la región.</p>
+        <div>
+          <span class="exp-price">USD 3.000 – 5.000</span>
+          <span class="exp-tag">MERCADO LIBRE</span>
+        </div>
+      </div>
+
+      <div class="exp-card">
+        <div class="exp-accent acc-teal"></div>
+        <div class="exp-emoji">💍</div>
+        <div class="exp-name">Proposal Package</div>
+        <p class="exp-desc">Pedida de mano en el río al atardecer. Decoración, champagne, y fotógrafo coordinado por el equipo. Demanda constante, margen extraordinario, cero infraestructura adicional.</p>
+        <div>
+          <span class="exp-price">USD 500 – 800</span>
+          <span class="exp-tag">MARGEN MÁXIMO</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 8 — PARTNERSHIPS -->
+<section class="section-light">
+  <div class="container">
+    <div class="section-eyebrow">08 — Ecosistema de Partnerships</div>
+    <h2 class="section-title">Estar donde <em>vive el ABC1</em></h2>
+    <p class="section-lead">El ABC1 de zona norte se mueve en un ecosistema de marcas. BoatShare necesita estar dentro de ese ecosistema, no esperar que el cliente llegue solo.</p>
+
+    <div class="diagnosis-grid" style="margin-top:2.5rem;">
+      <div class="diag-cell">
+        <div class="diag-icon">🏘</div>
+        <div class="diag-title">Countries y Barrios Cerrados</div>
+        <p class="diag-text">Acuerdos con Nordelta, Villanueva, San Sebastián, Puertos. Membresías preferenciales para residentes. Estos barrios tienen laguna — BoatShare les da el río.</p>
+        <span class="diag-tag ok">CANAL DIRECTO</span>
+      </div>
+
+      <div class="diag-cell">
+        <div class="diag-icon">🍽</div>
+        <div class="diag-title">Restaurantes de Isla</div>
+        <p class="diag-text">Paquetes combinados navegación + almuerzo en restaurantes del Delta. Revenue share. El cliente paga una experiencia completa; los dos negocios se nutren mutuamente.</p>
+        <span class="diag-tag ok">REVENUE SHARE</span>
+      </div>
+
+      <div class="diag-cell">
+        <div class="diag-icon">🚗</div>
+        <div class="diag-title">Marcas de Lifestyle</div>
+        <p class="diag-text">Sede de eventos para marcas premium (automotrices, relojería, indumentaria). Ellos traen el público ABC1 que BoatShare quiere captar. Difusión cruzada de marca.</p>
+        <span class="diag-tag ok">CO-BRANDING</span>
+      </div>
+
+      <div class="diag-cell">
+        <div class="diag-icon">💐</div>
+        <div class="diag-title">Wedding & Event Planners</div>
+        <p class="diag-text">Canal directo para despedidas, propuestas, casamentos en el río. Una red de 10 planners activos puede generar más de 4 eventos premium por mes sin esfuerzo comercial.</p>
+        <span class="diag-tag ok">CANAL PASIVO</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 9 — IMPACTO -->
+<section class="section-light">
+  <div class="container">
+    <div class="section-eyebrow">09 — Impacto Proyectado</div>
+    <h2 class="section-title">El negocio que <em>puede ser</em></h2>
+    <p class="section-lead">Implementando el stack tecnológico y la estrategia de posicionamiento, BoatShare pasa de 2 fuentes de ingreso (membresías + alquiler por hora) a 7 fuentes que se nutren entre sí.</p>
+
+    <div class="impact-grid">
+      <div class="impact-card">
+        <div class="impact-num">7×</div>
+        <div class="impact-unit">Fuentes de Ingreso</div>
+        <p class="impact-desc">Membresías tiered, experiencias empaquetadas, add-ons por reserva, eventos del club, partnerships / revenue share, canal corporativo, y upgrade de tier.</p>
+      </div>
+      <div class="impact-card">
+        <div class="impact-num">−80%</div>
+        <div class="impact-unit">Carga Administrativa</div>
+        <p class="impact-desc">La automatización del stack modular elimina la coordinación manual de reservas, el control de cobranza y el seguimiento de saldos. Horas a la semana liberadas para vender y crecer.</p>
+      </div>
+      <div class="impact-card">
+        <div class="impact-num">+40%</div>
+        <div class="impact-unit">Tasa de Renovación</div>
+        <p class="impact-desc">Un proceso de onboarding premium, alertas de vencimiento, y portal del socio transforman la renovación de "esfuerzo del admin" a proceso automático con altísima conversión.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 10 — ROADMAP -->
+<section id="roadmap" class="section-light">
+  <div class="container">
+    <div class="section-eyebrow">10 — Hoja de Ruta</div>
+    <h2 class="section-title">Doce meses hacia <em>el club premium</em></h2>
+    <p class="section-lead">Una implementación ordenada por fases que minimiza el riesgo operativo y permite validar cada capa antes de avanzar.</p>
+
+    <div class="roadmap">
+      <div class="roadmap-phase">
+        <div class="phase-dot"><div class="phase-dot-inner"></div></div>
+        <div>
+          <div class="phase-label">Mes 1–2 — Quick Wins</div>
+          <div class="phase-title">Digitalizar sin disrumpir</div>
+          <div class="phase-items">
+            <span class="phase-item">Sesión fotográfica profesional de toda la flota</span>
+            <span class="phase-item">Reescribir copy del sitio (aspiracional)</span>
+            <span class="phase-item">3 experiencias empaquetadas lanzadas</span>
+            <span class="phase-item">Instagram con contenido de lifestyle</span>
+            <span class="phase-item">Dashboard de salidas en Google Sheets</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="roadmap-phase">
+        <div class="phase-dot"><div class="phase-dot-inner"></div></div>
+        <div>
+          <div class="phase-label">Mes 3–4 — Estructura</div>
+          <div class="phase-title">Tecnología y tiers</div>
+          <div class="phase-items">
+            <span class="phase-item">Sistema de reservas online implementado</span>
+            <span class="phase-item">Estructura Essential / Premium / Black</span>
+            <span class="phase-item">Kit de bienvenida diseñado y producido</span>
+            <span class="phase-item">Primeros 2–3 partnerships con countries</span>
+            <span class="phase-item">HubSpot Free para seguimiento de leads</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="roadmap-phase">
+        <div class="phase-dot"><div class="phase-dot-inner"></div></div>
+        <div>
+          <div class="phase-label">Mes 5–6 — Lanzamiento Premium</div>
+          <div class="phase-title">BoatShare Black goes live</div>
+          <div class="phase-items">
+            <span class="phase-item">Rediseño o migración del sitio web</span>
+            <span class="phase-item">Evento inaugural BoatShare Black</span>
+            <span class="phase-item">Primera Sunset Party del club</span>
+            <span class="phase-item">Canal corporativo activado</span>
+            <span class="phase-item">Primer socio Black captado como caso de éxito</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="roadmap-phase">
+        <div class="phase-dot"><div class="phase-dot-inner"></div></div>
+        <div>
+          <div class="phase-label">Mes 7–12 — Escala</div>
+          <div class="phase-title">Optimizar y expandir</div>
+          <div class="phase-items">
+            <span class="phase-item">Optimizar basado en datos del stack</span>
+            <span class="phase-item">Agregar embarcaciones premium si la demanda lo justifica</span>
+            <span class="phase-item">Evaluar segunda locación (Dique Luján / Pilar)</span>
+            <span class="phase-item">Programa de referidos entre socios Black</span>
+            <span class="phase-item">Red de 10+ planners de eventos activos</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">HB Consultor</div>
+      <div class="footer-copy" style="margin-top:0.4rem">Hernán Berbari — Estrategia &amp; Estructuración de Negocios</div>
+    </div>
+    <div style="text-align:center">
+      <div class="footer-copy">DIAGNÓSTICO ESTRATÉGICO — CONFIDENCIAL</div>
+      <div class="footer-copy" style="margin-top:0.3rem">DELTA DEL TIGRE, BUENOS AIRES — 2025</div>
+    </div>
+    <div style="text-align:right">
+      <a href="https://wa.me/541163574750" target="_blank" class="footer-copy" style="display:block;color:var(--gold);text-decoration:none;letter-spacing:0.15em">+54 11 6357 4750</a>
+      <a href="mailto:hernan@hbconsultor.com.ar" class="footer-copy" style="display:block;color:var(--gold);text-decoration:none;margin-top:0.3rem">hernan@hbconsultor.com.ar</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
