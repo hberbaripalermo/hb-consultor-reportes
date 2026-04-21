@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulador de Costos de Escrituración — ALEM PROPIEDADES</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0B1F3A;
+    --navy-mid: #152D50;
+    --gold: #A8864B;
+    --gold-light: #C9A961;
+    --paper: #FBF8F1;
+    --cream: #F5EFE0;
+    --line: #E5DFD1;
+    --muted: #6B7280;
+    --text: #1F2937;
+    --success: #5B8A5A;
+    --danger: #C97064;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    padding-bottom: 28px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--line);
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .brand-mark {
+    width: 42px; height: 42px;
+    background: var(--navy);
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 28px;
+    line-height: 1;
+    padding-bottom: 2px;
+  }
+  .brand-text .name {
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    color: var(--navy);
+    font-weight: 600;
+  }
+  .brand-text .sub {
+    font-size: 11.5px;
+    color: var(--muted);
+  }
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 38px;
+    font-weight: 500;
+    color: var(--navy);
+    line-height: 1.1;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  h1 em { font-style: italic; color: var(--gold); }
+  .subtitle {
+    color: var(--muted);
+    font-size: 14px;
+    max-width: 560px;
+  }
+
+  /* ===== LAYOUT: INPUTS (sticky on desktop) ===== */
+  .workspace {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  @media (min-width: 900px) {
+    .workspace {
+      grid-template-columns: 380px 1fr;
+      align-items: start;
+    }
+    .inputs-panel {
+      position: sticky;
+      top: 24px;
+    }
+  }
+
+  .panel {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .panel-head {
+    padding: 14px 20px;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 600;
+  }
+  .panel-body { padding: 20px; }
+
+  /* ===== FIELDS ===== */
+  .field { margin-bottom: 18px; }
+  .field:last-child { margin-bottom: 0; }
+
+  .flabel {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .price-row {
+    display: flex;
+    gap: 6px;
+  }
+  select, input[type="text"] {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--text);
+    outline: none;
+    transition: all 0.2s;
+    width: 100%;
+  }
+  input[type="text"]:hover { border-color: #CFC6B0; }
+  select:focus, input[type="text"]:focus {
+    border-color: var(--navy);
+    box-shadow: 0 0 0 3px rgba(11, 31, 58, 0.08);
+  }
+  select {
+    width: 78px;
+    flex-shrink: 0;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236B7280' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 28px;
+  }
+
+  .hint {
+    font-size: 12.5px;
+    color: var(--muted);
+    margin-top: 6px;
+    min-height: 18px;
+    transition: all 0.2s;
+  }
+  .hint strong {
+    color: var(--navy);
+    font-weight: 600;
+  }
+  .hint.live {
+    color: var(--navy);
+  }
+
+  /* ===== ROLE TOGGLE ===== */
+  .role-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    background: var(--paper);
+    padding: 4px;
+    border: 1px solid var(--line);
+  }
+  .role-btn {
+    padding: 10px;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    letter-spacing: 0.02em;
+  }
+  .role-btn:hover:not(.active) {
+    color: var(--navy);
+  }
+  .role-btn.active {
+    background: var(--navy);
+    color: #fff;
+  }
+
+  /* ===== CHIPS (compact checkboxes) ===== */
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 12px;
+    background: #fff;
+    border: 1px solid var(--line);
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+    white-space: nowrap;
+    position: relative;
+  }
+  .chip:hover {
+    border-color: var(--navy);
+    background: var(--paper);
+  }
+  .chip input {
+    display: none;
+  }
+  .chip .dot {
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid var(--line);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .chip:has(input:checked) {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: #fff;
+  }
+  .chip:has(input:checked) .dot {
+    border-color: var(--gold-light);
+    background: var(--gold-light);
+  }
+  .chip:has(input:checked) .dot::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--navy);
+    border-radius: 50%;
+  }
+  .chip.hidden { display: none; }
+  .chip .info {
+    font-size: 10px;
+    color: var(--muted);
+    margin-left: 4px;
+    font-weight: 400;
+  }
+  .chip:has(input:checked) .info {
+    color: rgba(255, 255, 255, 0.65);
+  }
+
+  /* Nested input (acquisition value) */
+  .nested {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: var(--paper);
+    border: 1px dashed var(--line);
+    margin-top: 8px;
+    transition: all 0.3s;
+  }
+  .nested.hidden { display: none; }
+  .nested.dim { opacity: 0.4; pointer-events: none; }
+  .nested label {
+    font-size: 11.5px;
+    color: var(--muted);
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+    margin: 0;
+  }
+  .nested input {
+    width: 130px;
+    padding: 5px 8px;
+    font-size: 13px;
+  }
+
+  /* ===== SUMMARY PANEL ===== */
+  .summary-empty {
+    padding: 48px 20px;
+    text-align: center;
+    color: var(--muted);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 18px;
+  }
+  .summary-empty .dot-pulse {
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    margin-right: 10px;
+    vertical-align: middle;
+    animation: pulse 1.4s infinite ease-in-out;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+  }
+
+  /* Summary header */
+  .sh {
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(to bottom, var(--paper), #fff);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .sh-left .role-pill {
+    display: inline-block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--gold);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .sh-left .role-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--navy);
+    line-height: 1.1;
+  }
+  .sh-right {
+    text-align: right;
+  }
+  .sh-right .price-label {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 600;
+  }
+  .sh-right .price-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--navy);
+    margin-top: 2px;
+  }
+  .sh-right .price-conv {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* ===== ITEMS ===== */
+  .items { padding: 0; }
+  .item {
+    padding: 14px 22px;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    transition: background 0.15s;
+    animation: slideIn 0.3s ease-out;
+  }
+  .item:last-of-type { border-bottom: none; }
+  .item:hover { background: var(--paper); }
+  .item.zero { opacity: 0.45; }
+  .item.separate { background: #FAF5E8; }
+  .item.separate:hover { background: #F5EDD7; }
+  .item.expanded { background: var(--paper); }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .item-top {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 14px;
+    align-items: center;
+  }
+  .item-icon {
+    width: 28px; height: 28px;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--gold);
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .item-icon.active {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: var(--gold-light);
+  }
+  .item-main {
+    min-width: 0;
+  }
+  .item-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .item-label .badge {
+    display: inline-block;
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    background: #fff;
+    border: 1px solid var(--gold-light);
+    padding: 2px 6px;
+    font-weight: 600;
+  }
+  .item-formula {
+    font-size: 11.5px;
+    color: var(--muted);
+    margin-top: 3px;
+    font-family: 'Inter', sans-serif;
+  }
+  .item-formula code {
+    background: var(--cream);
+    padding: 1px 6px;
+    font-family: inherit;
+    font-size: 11px;
+    color: var(--navy);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+  }
+  .item-values {
+    text-align: right;
+    white-space: nowrap;
+    position: relative;
+  }
+  .item-ars {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 19px;
+    font-weight: 600;
+    color: var(--navy);
+    line-height: 1;
+  }
+  .item-usd {
+    font-size: 11.5px;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+  .item-toggle {
+    display: inline-block;
+    margin-left: 6px;
+    color: var(--muted);
+    font-size: 10px;
+    transition: transform 0.2s;
+  }
+  .item.expanded .item-toggle { transform: rotate(180deg); }
+
+  /* Expanded breakdown */
+  .item-breakdown {
+    margin-top: 10px;
+    padding: 12px 14px 10px 50px;
+    background: #fff;
+    border-left: 2px solid var(--gold);
+    display: none;
+    animation: expand 0.25s ease-out;
+  }
+  .item.expanded .item-breakdown { display: block; }
+  @keyframes expand {
+    from { opacity: 0; max-height: 0; }
+    to { opacity: 1; max-height: 400px; }
+  }
+  .breakdown-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 4px 0;
+    font-size: 12.5px;
+    color: var(--text);
+  }
+  .breakdown-row .bd-label {
+    color: var(--muted);
+  }
+  .breakdown-row .bd-label code {
+    background: var(--cream);
+    padding: 1px 5px;
+    font-size: 11px;
+    color: var(--navy);
+    border: 1px solid var(--line);
+  }
+  .breakdown-row .bd-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .breakdown-row.positive .bd-value { color: var(--navy); }
+  .breakdown-row.negative .bd-value { color: var(--danger); }
+  .breakdown-row.total {
+    border-top: 1px dashed var(--line);
+    margin-top: 6px;
+    padding-top: 8px;
+    font-weight: 600;
+  }
+  .breakdown-row.total .bd-label { color: var(--navy); font-weight: 600; }
+  .breakdown-row.total .bd-value { color: var(--navy); font-size: 16px; }
+  .breakdown-note {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--line);
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  /* Cedular callout */
+  .cedular-note {
+    padding: 12px 22px;
+    background: #FAF5E8;
+    border-top: 1px solid var(--line);
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+  .cedular-note b { color: var(--navy); font-weight: 600; }
+
+  /* ===== TOTAL ===== */
+  .total {
+    background: var(--navy);
+    color: #fff;
+    padding: 22px 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  .total::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+  }
+  .total-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    align-items: center;
+  }
+  .total-label {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .total-label .sub {
+    display: block;
+    font-size: 10px;
+    color: var(--gold-light);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-top: 3px;
+    font-weight: 600;
+  }
+  .total-values {
+    text-align: right;
+  }
+  .total-ars {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 1;
+    transition: all 0.3s;
+  }
+  .total-ars.flash {
+    animation: flash 0.4s ease-out;
+  }
+  @keyframes flash {
+    0% { color: var(--gold-light); transform: scale(1.05); }
+    100% { color: #fff; transform: scale(1); }
+  }
+  .total-usd {
+    font-size: 12.5px;
+    color: rgba(255, 255, 255, 0.65);
+    margin-top: 5px;
+  }
+
+  /* Action footer */
+  .actions {
+    display: flex;
+    gap: 8px;
+    padding: 14px 22px;
+    border-top: 1px solid var(--line);
+    background: var(--paper);
+    flex-wrap: wrap;
+  }
+  .action-btn {
+    flex: 1;
+    min-width: 110px;
+    padding: 9px 14px;
+    background: #fff;
+    border: 1px solid var(--line);
+    color: var(--navy);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .action-btn:hover {
+    background: var(--navy);
+    color: #fff;
+    border-color: var(--navy);
+  }
+  .action-btn svg {
+    width: 13px; height: 13px;
+  }
+
+  /* Copy toast */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--navy);
+    color: #fff;
+    padding: 10px 18px;
+    font-size: 13px;
+    border: 1px solid var(--gold);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 100;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Disclaimer */
+  .disclaimer {
+    margin-top: 40px;
+    font-size: 11.5px;
+    color: var(--muted);
+    line-height: 1.65;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid var(--line);
+  }
+  .disclaimer b { color: var(--text); font-weight: 600; }
+  .disclaimer-title {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 700;
+    margin-bottom: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .disclaimer-content {
+    display: none;
+  }
+  .disclaimer.open .disclaimer-content {
+    display: block;
+  }
+  .disclaimer-title::after {
+    content: '+';
+    font-size: 16px;
+    color: var(--gold);
+    font-weight: 400;
+    transition: transform 0.2s;
+  }
+  .disclaimer.open .disclaimer-title::after {
+    transform: rotate(45deg);
+  }
+
+  .contact {
+    margin-top: 16px;
+    font-size: 11.5px;
+    color: var(--muted);
+    text-align: center;
+  }
+  .contact b {
+    color: var(--navy);
+    font-weight: 600;
+  }
+
+  /* Responsive */
+  @media (max-width: 560px) {
+    .container { padding: 32px 16px 60px; }
+    h1 { font-size: 30px; }
+    .panel-body { padding: 16px; }
+    .sh, .item, .total, .cedular-note, .actions { padding-left: 16px; padding-right: 16px; }
+    .total-ars { font-size: 26px; }
+    .item-breakdown { padding-left: 16px; }
+    .item-top { grid-template-columns: auto 1fr auto; gap: 10px; }
+    .item-icon { width: 24px; height: 24px; font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="brand">
+      <div class="brand-mark">A</div>
+      <div class="brand-text">
+        <div class="name">ALEM PROPIEDADES</div>
+        <div class="sub">Cecilia Guerrero · Agente Inmobiliario</div>
+      </div>
+    </div>
+    <h1>Simulador de costos de <em>escrituración</em></h1>
+    <div class="subtitle">
+      Calculá los impuestos y gastos de una compraventa en CABA. Hacé clic en cualquier
+      concepto del desglose para ver el cálculo exacto.
+    </div>
+  </div>
+
+  <div class="workspace">
+
+    <!-- ============ INPUTS ============ -->
+    <aside class="inputs-panel">
+      <div class="panel">
+        <div class="panel-head">Operación</div>
+        <div class="panel-body">
+
+          <div class="field">
+            <label class="flabel">Precio del inmueble</label>
+            <div class="price-row">
+              <select id="currency">
+                <option value="USD">USD</option>
+                <option value="ARS">ARS</option>
+              </select>
+              <input type="text" id="price" placeholder="0" inputmode="numeric">
+            </div>
+            <div class="hint" id="hint">Ingresá el precio de la operación</div>
+          </div>
+
+          <div class="field">
+            <label class="flabel">Tipo de cambio (ARS por USD)</label>
+            <input type="text" id="rate" value="1.245" inputmode="numeric">
+          </div>
+
+          <div class="field">
+            <label class="flabel">Parte en la operación</label>
+            <div class="role-row">
+              <button class="role-btn" data-role="seller">Vendedor</button>
+              <button class="role-btn" data-role="buyer">Comprador</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="flabel">Opciones aplicables</label>
+            <div class="chips">
+
+              <label class="chip">
+                <input type="checkbox" id="viviendaUnica">
+                <span class="dot"></span>
+                Vivienda única
+                <span class="info">Sellos</span>
+              </label>
+
+              <label class="chip seller-only hidden" id="chipTracto">
+                <input type="checkbox" id="tracto">
+                <span class="dot"></span>
+                Tracto abreviado
+                <span class="info">+0,4%</span>
+              </label>
+
+              <label class="chip seller-only hidden" id="chipPreAntes2018">
+                <input type="checkbox" id="preAntes2018">
+                <span class="dot"></span>
+                Adquirido pre-2018
+                <span class="info">Exención Cedular</span>
+              </label>
+
+              <label class="chip seller-only hidden" id="chipViviendaUnicaCedular">
+                <input type="checkbox" id="viviendaUnicaCedular">
+                <span class="dot"></span>
+                Exención Cedular
+                <span class="info">Vivienda única</span>
+              </label>
+            </div>
+
+            <div class="nested seller-only hidden" id="wrapPurchaseValue">
+              <label>Valor de adquisición (USD):</label>
+              <input type="text" id="purchaseValue" placeholder="0" inputmode="numeric">
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </aside>
+
+    <!-- ============ SUMMARY ============ -->
+    <section class="panel" id="summary">
+      <div class="panel-head" id="summaryHead">Desglose</div>
+
+      <div class="summary-empty" id="summaryEmpty">
+        <span class="dot-pulse"></span>
+        Completá el precio y elegí tu rol
+      </div>
+
+      <div id="summaryContent" style="display: none;">
+        <div class="sh">
+          <div class="sh-left">
+            <div class="role-pill" id="rolePill">—</div>
+            <div class="role-title">Costos <em>estimados</em></div>
+          </div>
+          <div class="sh-right">
+            <div class="price-label">Precio</div>
+            <div class="price-val" id="priceLabel">—</div>
+            <div class="price-conv" id="priceConv">—</div>
+          </div>
+        </div>
+
+        <div class="items" id="items"></div>
+
+        <div class="cedular-note" id="cedularNote" style="display:none;">
+          <b>Nota:</b> El Impuesto Cedular se liquida en la DDJJ anual siguiente a la venta.
+          No se retiene en la escritura y se informa por separado del total de cierre.
+        </div>
+
+        <div class="total">
+          <div class="total-row">
+            <div class="total-label">
+              Total estimado
+              <span class="sub">Costos de cierre</span>
+            </div>
+            <div class="total-values">
+              <div class="total-ars" id="totalArsWrap">$<span id="totalArs">—</span></div>
+              <div class="total-usd">≈ US$ <span id="totalUsd">—</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="action-btn" id="btnCopy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="1"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+            </svg>
+            Copiar resumen
+          </button>
+          <button class="action-btn" id="btnPrint">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>
+            </svg>
+            Imprimir / PDF
+          </button>
+          <button class="action-btn" id="btnReset">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/>
+            </svg>
+            Reiniciar
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Disclaimer colapsable -->
+  <div class="disclaimer" id="disclaimer">
+    <div class="disclaimer-title" id="disclaimerToggle">Aviso legal</div>
+    <div class="disclaimer-content">
+      La presente herramienta tiene carácter meramente informativo, indicativo y no vinculante.
+      Los cálculos se realizan sobre parámetros generales establecidos por la normativa vigente
+      a enero 2026 (Ley Tarifaria CABA 2026, Ley 27.743, Res. Gral. 4190-E y concordantes) y no
+      contemplan particularidades de cada operación, tales como valuaciones fiscales, precios de
+      referencia ARCA, situación impositiva de las partes, exenciones especiales u otros factores
+      determinantes de la liquidación final.
+      <br><br>
+      Los valores aquí obtenidos <b>no sustituyen el asesoramiento contable, impositivo ni notarial</b>,
+      el cual deberá ser provisto por los profesionales competentes. La determinación definitiva
+      de los impuestos, tasas, aportes y gastos de escrituración corresponde exclusivamente al
+      escribano público interviniente, único funcionario con facultades legales para su liquidación
+      y retención conforme al Código Civil y Comercial de la Nación y la normativa fiscal aplicable.
+      <br><br>
+      En consecuencia, ALEM PROPIEDADES y Cecilia Guerrero (Mat. CUCICBA Nº [completar]) declinan
+      toda responsabilidad por diferencias, errores, omisiones o variaciones entre los valores
+      estimados por esta herramienta y los efectivamente aplicables al momento de la escrituración,
+      así como por decisiones adoptadas sobre la base de la información aquí calculada.
+    </div>
+  </div>
+
+  <div class="contact">
+    <b>ALEM PROPIEDADES</b> · Cecilia Guerrero · [completar contacto]
+  </div>
+
+</div>
+
+<div class="toast" id="toast">Copiado al portapapeles</div>
+
+<script>
+  // ===== CONFIG =====
+  const DEFAULT_RATE = 1245;
+  const MIN_SELLOS = 226100000;
+  const SELLOS_PCT = 0.0135;
+  const GASTOS_PCT = 0.008;
+  const TRACTO_PCT = 0.004;
+  const ESCRIBANO_PCT = 0.02;
+  const CEDULAR = 0.15;
+
+  // ===== STATE =====
+  const state = {
+    currency: 'USD',
+    price: 0,
+    rate: DEFAULT_RATE,
+    role: null,
+    viviendaUnica: false,
+    tracto: false,
+    preAntes2018: false,
+    viviendaUnicaCedular: false,
+    purchaseValue: 0,
+    expanded: new Set(),
+  };
+
+  // ===== HELPERS =====
+  const fmt = n => {
+    if (!n || !isFinite(n)) return '0';
+    return new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 }).format(Math.round(n));
+  };
+  const parseNum = s => parseInt(String(s || '').replace(/[^\d]/g, ''), 10) || 0;
+
+  function getPrices() {
+    if (state.currency === 'USD') {
+      return { usd: state.price, ars: state.price * state.rate };
+    }
+    return { usd: state.rate > 0 ? state.price / state.rate : 0, ars: state.price };
+  }
+
+  // ===== CALCULATIONS (devuelven item con breakdown detallado) =====
+  function calcSellos(ars) {
+    const breakdown = [];
+    let base = ars;
+    let excento = 0;
+
+    if (state.viviendaUnica) {
+      if (ars <= MIN_SELLOS) {
+        breakdown.push({ label: `Precio del inmueble`, value: ars, positive: true });
+        breakdown.push({ label: `Exención vivienda única (hasta $${fmt(MIN_SELLOS)})`, value: -ars, negative: true });
+        breakdown.push({ label: 'Base imponible', value: 0, code: 'base' });
+        breakdown.push({ label: 'Alícuota 1,35%', value: 0 });
+        return { ars: 0, breakdown, note: 'El inmueble no supera el mínimo no imponible. Exención total por vivienda única (Ley Tarifaria CABA 2026).' };
+      }
+      excento = MIN_SELLOS;
+      base = ars - MIN_SELLOS;
+      breakdown.push({ label: 'Precio del inmueble', value: ars, positive: true });
+      breakdown.push({ label: `Mínimo no imponible`, value: -MIN_SELLOS, negative: true, code: `-$${fmt(MIN_SELLOS)}` });
+      breakdown.push({ label: 'Base imponible', value: base, code: `$${fmt(ars)} − $${fmt(MIN_SELLOS)}` });
+    } else {
+      breakdown.push({ label: 'Base imponible (precio total)', value: ars, code: `$${fmt(ars)}` });
+    }
+
+    const result = base * SELLOS_PCT;
+    breakdown.push({ label: `Alícuota 1,35%`, value: result, code: `× 1,35%`, total: true });
+    return {
+      ars: result,
+      breakdown,
+      note: state.viviendaUnica
+        ? 'Se aplica 1,35% sobre el excedente del mínimo no imponible. Cada parte paga el 1,35% (total operación 2,7%).'
+        : 'Alícuota total de la operación 2,7%. Cada parte (comprador y vendedor) paga el 1,35%.',
+    };
+  }
+
+  function calcGastos(ars) {
+    const breakdown = [];
+    const base = ars * GASTOS_PCT;
+    breakdown.push({ label: 'Precio del inmueble', value: ars });
+    breakdown.push({ label: 'Gastos base 0,8%', value: base, code: `× 0,8%` });
+
+    let total = base;
+    if (state.tracto) {
+      const tracto = ars * TRACTO_PCT;
+      breakdown.push({ label: 'Recargo tracto abreviado 0,4%', value: tracto, code: `× 0,4%`, positive: true });
+      total += tracto;
+    }
+
+    breakdown.push({ label: 'Total gastos de escritura', value: total, total: true });
+
+    return {
+      ars: total,
+      breakdown,
+      note: state.tracto
+        ? 'Incluye certificados, informes registrales, aportes al Colegio de Escribanos y recargo por tracto abreviado (herencia no inscripta).'
+        : 'Certificados de dominio e inhibiciones, estudio de títulos, aportes al Colegio de Escribanos, timbrado y costos administrativos.',
+    };
+  }
+
+  function calcEscribano(ars) {
+    const v = ars * ESCRIBANO_PCT;
+    return {
+      ars: v,
+      breakdown: [
+        { label: 'Precio del inmueble', value: ars },
+        { label: 'Honorarios escribano 2%', value: v, code: `× 2%`, total: true },
+      ],
+      note: 'Honorarios notariales por redacción e inscripción de la escritura pública. El escribano es elegido por la parte compradora.',
+    };
+  }
+
+  function calcCedular(usd) {
+    if (state.preAntes2018) {
+      return {
+        ars: 0, excluded: true,
+        breakdown: [
+          { label: 'Inmueble adquirido antes del 01/01/2018', value: 0 },
+          { label: 'No alcanzado por Impuesto Cedular', value: 0, total: true },
+        ],
+        note: 'Las propiedades adquiridas antes del 1° de enero de 2018 están excluidas del Impuesto Cedular (Ley 27.743). El ITI fue derogado en julio 2024.',
+      };
+    }
+    if (state.viviendaUnicaCedular) {
+      return {
+        ars: 0, excluded: true,
+        breakdown: [
+          { label: 'Exención por vivienda única', value: 0 },
+          { label: 'No paga Cedular', value: 0, total: true },
+        ],
+        note: 'La vivienda única, familiar y de ocupación permanente está exenta, siempre que sea reemplazada por otra dentro del año.',
+      };
+    }
+    if (state.purchaseValue <= 0) {
+      return {
+        ars: 0,
+        breakdown: [
+          { label: 'Ingresá el valor de adquisición', value: 0 },
+        ],
+        note: 'Para calcular el Impuesto Cedular es necesario conocer el precio original de compra del inmueble.',
+      };
+    }
+
+    const ganancia = usd - state.purchaseValue;
+    if (ganancia <= 0) {
+      return {
+        ars: 0,
+        breakdown: [
+          { label: 'Precio de venta', value: usd, currency: 'USD' },
+          { label: 'Precio de compra', value: -state.purchaseValue, negative: true, currency: 'USD' },
+          { label: 'Ganancia neta', value: ganancia, currency: 'USD', total: true },
+        ],
+        note: 'No hay ganancia imponible: el precio de venta es menor o igual al de compra.',
+      };
+    }
+
+    const cedularUsd = ganancia * CEDULAR;
+    const cedularArs = cedularUsd * state.rate;
+    return {
+      ars: cedularArs,
+      breakdown: [
+        { label: 'Precio de venta', value: usd, currency: 'USD' },
+        { label: 'Precio de compra', value: -state.purchaseValue, negative: true, currency: 'USD' },
+        { label: 'Ganancia neta', value: ganancia, code: `US$ ${fmt(usd)} − US$ ${fmt(state.purchaseValue)}`, currency: 'USD' },
+        { label: 'Alícuota 15%', value: cedularUsd, code: `× 15%`, currency: 'USD', total: true },
+        { label: `Convertido a pesos (TC $${fmt(state.rate)})`, value: cedularArs, code: `× $${fmt(state.rate)}`, total: true },
+      ],
+      note: 'Se liquida en la DDJJ anual del período fiscal siguiente a la venta. El escribano no retiene en el acto escritural (Res. Gral. 4190-E).',
+    };
+  }
+
+  // ===== BUILD ITEMS =====
+  function buildItems() {
+    const { usd, ars } = getPrices();
+    const mainItems = [];
+
+    // Sellos (ambos)
+    const s = calcSellos(ars);
+    mainItems.push({ id: 'sellos', label: 'Impuesto a los Sellos', ...s });
+
+    if (state.role === 'seller') {
+      const g = calcGastos(ars);
+      mainItems.push({
+        id: 'gastos',
+        label: 'Gastos de escritura',
+        badges: state.tracto ? ['Tracto abreviado'] : [],
+        ...g,
+      });
+
+      const separate = [];
+      const c = calcCedular(usd);
+      separate.push({
+        id: 'cedular',
+        label: 'Impuesto Cedular',
+        badges: ['DDJJ aparte'],
+        ...c,
+        separate: true,
+      });
+
+      return { mainItems, separate };
+    } else {
+      const e = calcEscribano(ars);
+      mainItems.push({ id: 'escribano', label: 'Honorarios del escribano', ...e });
+
+      const g = calcGastos(ars);
+      mainItems.push({ id: 'gastos', label: 'Gastos de escritura', ...g });
+
+      return { mainItems, separate: [] };
+    }
+  }
+
+  // ===== RENDER =====
+  let lastTotal = 0;
+
+  function render() {
+    const { usd, ars } = getPrices();
+
+    // Hint
+    const hint = document.getElementById('hint');
+    if (state.price > 0 && state.rate > 0) {
+      if (state.currency === 'USD') hint.innerHTML = `≈ <strong>$${fmt(ars)} ARS</strong>`;
+      else hint.innerHTML = `≈ <strong>US$ ${fmt(usd)}</strong>`;
+      hint.classList.add('live');
+    } else {
+      hint.innerHTML = 'Ingresá el precio de la operación';
+      hint.classList.remove('live');
+    }
+
+    // Seller-only visibility
+    document.querySelectorAll('.seller-only').forEach(el => {
+      el.classList.toggle('hidden', state.role !== 'seller');
+    });
+
+    // Nested input dim state
+    const wrapPV = document.getElementById('wrapPurchaseValue');
+    wrapPV.classList.toggle('dim', state.preAntes2018 || state.viviendaUnicaCedular);
+
+    // Summary visibility
+    const empty = document.getElementById('summaryEmpty');
+    const content = document.getElementById('summaryContent');
+    if (!state.role || state.price <= 0) {
+      empty.style.display = 'block';
+      content.style.display = 'none';
+      return;
+    }
+    empty.style.display = 'none';
+    content.style.display = 'block';
+
+    // Header
+    document.getElementById('rolePill').textContent =
+      state.role === 'seller' ? 'Parte vendedora' : 'Parte compradora';
+    document.getElementById('priceLabel').innerHTML =
+      state.currency === 'USD' ? `US$ ${fmt(state.price)}` : `$${fmt(state.price)}`;
+    document.getElementById('priceConv').innerHTML =
+      state.currency === 'USD' ? `≈ $${fmt(ars)} · TC $${fmt(state.rate)}` : `≈ US$ ${fmt(usd)} · TC $${fmt(state.rate)}`;
+
+    // Items
+    const { mainItems, separate } = buildItems();
+    const itemsEl = document.getElementById('items');
+    itemsEl.innerHTML = '';
+
+    let total = 0;
+    const renderItem = (it, i) => {
+      total += it.ars || 0;
+
+      const isExpanded = state.expanded.has(it.id);
+      const isZero = !it.ars || it.ars === 0;
+      const div = document.createElement('div');
+      div.className = 'item' + (isZero ? ' zero' : '') + (it.separate ? ' separate' : '') + (isExpanded ? ' expanded' : '');
+      div.dataset.id = it.id;
+
+      const iconChar = it.separate ? '§' : String.fromCharCode(0x3A0 + i); // ≈ roman/greek feel
+      const labelNum = String(i + 1).padStart(2, '0');
+
+      const usdVal = state.rate > 0 ? (it.ars || 0) / state.rate : 0;
+
+      let breakdownHtml = '';
+      if (it.breakdown && it.breakdown.length > 0) {
+        breakdownHtml = '<div class="item-breakdown">';
+        it.breakdown.forEach(row => {
+          const cls = [
+            'breakdown-row',
+            row.positive ? 'positive' : '',
+            row.negative ? 'negative' : '',
+            row.total ? 'total' : '',
+          ].filter(Boolean).join(' ');
+          const curr = row.currency === 'USD' ? 'US$ ' : '$';
+          const sign = row.value < 0 ? '−' : '';
+          const val = row.value === 0 ? '—' : `${sign}${curr}${fmt(Math.abs(row.value))}`;
+          const codeHtml = row.code ? ` <code>${row.code}</code>` : '';
+          breakdownHtml += `<div class="${cls}">
+            <div class="bd-label">${row.label}${codeHtml}</div>
+            <div class="bd-value">${val}</div>
+          </div>`;
+        });
+        if (it.note) {
+          breakdownHtml += `<div class="breakdown-note">${it.note}</div>`;
+        }
+        breakdownHtml += '</div>';
+      }
+
+      const badgesHtml = it.badges && it.badges.length
+        ? it.badges.map(b => `<span class="badge">${b}</span>`).join('')
+        : '';
+
+      div.innerHTML = `
+        <div class="item-top">
+          <div class="item-icon${isExpanded ? ' active' : ''}">${labelNum}</div>
+          <div class="item-main">
+            <div class="item-label">${it.label} ${badgesHtml}</div>
+          </div>
+          <div class="item-values">
+            <div class="item-ars">$${fmt(it.ars || 0)}<span class="item-toggle">▾</span></div>
+            <div class="item-usd">≈ US$ ${fmt(usdVal)}</div>
+          </div>
+        </div>
+        ${breakdownHtml}
+      `;
+
+      div.addEventListener('click', () => {
+        if (state.expanded.has(it.id)) state.expanded.delete(it.id);
+        else state.expanded.add(it.id);
+        render();
+      });
+
+      itemsEl.appendChild(div);
+    };
+
+    mainItems.forEach((it, i) => renderItem(it, i));
+
+    separate.forEach((it, i) => {
+      // No sumar al total
+      const idx = mainItems.length + i;
+      renderItem(it, idx);
+    });
+
+    // Cedular note
+    document.getElementById('cedularNote').style.display = separate.length > 0 ? 'block' : 'none';
+
+    // Total con flash animation
+    const totalArsEl = document.getElementById('totalArs');
+    const totalUsdEl = document.getElementById('totalUsd');
+    totalArsEl.textContent = fmt(total);
+    totalUsdEl.textContent = fmt(state.rate > 0 ? total / state.rate : 0);
+
+    if (total !== lastTotal && lastTotal > 0) {
+      const wrap = document.getElementById('totalArsWrap');
+      wrap.classList.remove('flash');
+      void wrap.offsetWidth; // reflow
+      wrap.classList.add('flash');
+    }
+    lastTotal = total;
+  }
+
+  // ===== EVENT BINDINGS =====
+  document.getElementById('currency').addEventListener('change', e => {
+    state.currency = e.target.value;
+    render();
+  });
+
+  document.getElementById('price').addEventListener('input', e => {
+    state.price = parseNum(e.target.value);
+    e.target.value = state.price > 0 ? fmt(state.price) : '';
+    render();
+  });
+
+  document.getElementById('rate').addEventListener('input', e => {
+    state.rate = parseNum(e.target.value);
+    e.target.value = state.rate > 0 ? fmt(state.rate) : '';
+    render();
+  });
+  document.getElementById('rate').value = fmt(DEFAULT_RATE);
+
+  document.querySelectorAll('.role-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.role = btn.dataset.role;
+      state.expanded.clear();
+      render();
+    });
+  });
+
+  document.getElementById('purchaseValue').addEventListener('input', e => {
+    state.purchaseValue = parseNum(e.target.value);
+    e.target.value = state.purchaseValue > 0 ? fmt(state.purchaseValue) : '';
+    render();
+  });
+
+  ['viviendaUnica', 'tracto', 'preAntes2018', 'viviendaUnicaCedular'].forEach(id => {
+    document.getElementById(id).addEventListener('change', e => {
+      state[id] = e.target.checked;
+      render();
+    });
+  });
+
+  // Disclaimer collapse
+  document.getElementById('disclaimerToggle').addEventListener('click', () => {
+    document.getElementById('disclaimer').classList.toggle('open');
+  });
+
+  // Action buttons
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  document.getElementById('btnCopy').addEventListener('click', () => {
+    const { mainItems, separate } = buildItems();
+    const { usd, ars } = getPrices();
+    let txt = `ALEM PROPIEDADES — Simulador de costos de escrituración\n`;
+    txt += `═══════════════════════════════════════════════\n\n`;
+    txt += `Parte: ${state.role === 'seller' ? 'Vendedor' : 'Comprador'}\n`;
+    txt += `Precio: ${state.currency === 'USD' ? `US$ ${fmt(state.price)}` : `$${fmt(state.price)}`}`;
+    txt += state.currency === 'USD' ? ` (≈ $${fmt(ars)})\n` : ` (≈ US$ ${fmt(usd)})\n`;
+    txt += `TC aplicado: $${fmt(state.rate)} ARS/USD\n\n`;
+    txt += `DESGLOSE:\n`;
+    let total = 0;
+    mainItems.forEach(it => {
+      total += it.ars || 0;
+      const usdVal = state.rate > 0 ? (it.ars || 0) / state.rate : 0;
+      txt += `  · ${it.label}: $${fmt(it.ars || 0)} (≈ US$ ${fmt(usdVal)})\n`;
+    });
+    txt += `\n  TOTAL CIERRE: $${fmt(total)} (≈ US$ ${fmt(state.rate > 0 ? total / state.rate : 0)})\n`;
+    if (separate.length > 0) {
+      txt += `\nIMPUESTOS SEPARADOS (DDJJ aparte):\n`;
+      separate.forEach(it => {
+        if (!it.excluded && it.ars > 0) {
+          txt += `  · ${it.label}: $${fmt(it.ars)} (≈ US$ ${fmt(it.ars / state.rate)})\n`;
+        } else if (it.excluded) {
+          txt += `  · ${it.label}: No aplica (${it.note})\n`;
+        }
+      });
+    }
+    txt += `\n———\nValores orientativos. Consultar escribano interviniente.`;
+
+    navigator.clipboard.writeText(txt).then(() => showToast('Resumen copiado'));
+  });
+
+  document.getElementById('btnPrint').addEventListener('click', () => {
+    window.print();
+  });
+
+  document.getElementById('btnReset').addEventListener('click', () => {
+    state.price = 0;
+    state.viviendaUnica = false;
+    state.tracto = false;
+    state.preAntes2018 = false;
+    state.viviendaUnicaCedular = false;
+    state.purchaseValue = 0;
+    state.role = null;
+    state.expanded.clear();
+    document.getElementById('price').value = '';
+    document.getElementById('purchaseValue').value = '';
+    document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
+    lastTotal = 0;
+    render();
+    showToast('Reiniciado');
+  });
+
+  render();
+</script>
+
+</body>
+</html>
