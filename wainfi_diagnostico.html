@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HB Capital · Wainfi · Diagnóstico Estratégico 180 días</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root{
+    --navy-deep:#0B1F3A; --navy:#1A2E4A; --navy-2:#142744; --navy-light:#2A3F5F;
+    --gold:#B07D2E; --gold-soft:#D4B37A; --gold-pale:#F5EDD8; --cream:#FAF6EB;
+    --ink:#1A2E4A; --muted:#7A8699;
+    --line:rgba(176,125,46,0.25); --line-strong:rgba(176,125,46,0.55);
+    --green:#2D7D5F; --red:#C44536; --bg:#0a1627;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--cream);height:100vh;overflow:hidden}
+  body{
+    background:
+      radial-gradient(ellipse at top left, rgba(176,125,46,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(26,46,74,0.4) 0%, transparent 50%),
+      linear-gradient(180deg, #0a1627 0%, #0a1325 100%);
+  }
+
+  .deck{position:fixed;inset:0;display:flex;flex-direction:column}
+
+  /* TOPBAR */
+  .topbar{
+    flex:0 0 auto;border-bottom:1px solid var(--line);
+    padding:10px 28px;background:rgba(11,31,58,0.85);backdrop-filter:blur(12px);
+    display:flex;justify-content:space-between;align-items:center;gap:20px;z-index:50
+  }
+  .brand{display:flex;align-items:center;gap:12px}
+  .monogram{
+    width:34px;height:34px;border:2px solid var(--gold);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Playfair Display',serif;font-weight:700;color:var(--gold);font-size:15px;letter-spacing:-1px
+  }
+  .brand-text h1{font-family:'Playfair Display',serif;font-weight:400;font-size:14px;color:#fff;line-height:1.2}
+  .brand-text h1 em{color:var(--gold-soft);font-style:italic;font-weight:700}
+  .brand-text p{font-size:8px;color:var(--muted);letter-spacing:1.8px;text-transform:uppercase;margin-top:2px;font-family:'JetBrains Mono'}
+  .topbar-right{display:flex;align-items:center;gap:14px}
+  .header-tag{display:inline-flex;align-items:center;gap:6px;font-size:9px;letter-spacing:1.8px;text-transform:uppercase;color:var(--muted);font-family:'JetBrains Mono'}
+  .header-tag .dot{width:5px;height:5px;background:var(--red);border-radius:50%;animation:pulse 2s ease-in-out infinite}
+  .header-tag .gold{color:var(--gold-soft)}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .menu-btn{
+    background:transparent;border:1px solid var(--line-strong);color:var(--gold-soft);
+    padding:6px 12px;font-family:'Outfit';font-size:10px;font-weight:600;
+    letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .25s
+  }
+  .menu-btn:hover{background:rgba(176,125,46,0.12);color:var(--gold)}
+
+  /* STAGE */
+  .stage{flex:1 1 auto;position:relative;overflow:hidden}
+
+  /* SLIDE - centrada, content-sized */
+  .slide{
+    position:absolute;inset:0;
+    padding:32px 56px;
+    display:flex;align-items:center;justify-content:center;
+    opacity:0;pointer-events:none;
+    transition:opacity .4s ease;overflow:hidden
+  }
+  .slide.active{opacity:1;pointer-events:auto}
+  .slide-inner{
+    max-width:1320px;width:100%;
+    display:flex;flex-direction:column;
+    /* NO flex:1 — usa solo el espacio que necesita */
+  }
+
+  /* SLIDE HEADER */
+  .slide-header{margin-bottom:24px}
+  .section-eyebrow{
+    font-size:9px;letter-spacing:2.5px;text-transform:uppercase;
+    color:var(--gold);font-weight:600;font-family:'JetBrains Mono';
+    margin-bottom:10px;display:inline-flex;align-items:center;gap:10px
+  }
+  .section-eyebrow::before{content:'';display:inline-block;width:24px;height:1px;background:var(--gold)}
+  .slide-title{
+    font-family:'Playfair Display',serif;font-weight:400;
+    font-size:clamp(28px,3.4vw,42px);color:#fff;line-height:1.05;
+    letter-spacing:-0.5px;margin-bottom:10px
+  }
+  .slide-title em{font-style:italic;color:var(--gold-soft);font-weight:700}
+  .slide-lead{
+    font-family:'Playfair Display',serif;font-style:italic;
+    font-size:clamp(13px,1.2vw,16px);color:var(--gold-pale);
+    max-width:880px;line-height:1.4;font-weight:400
+  }
+
+  /* TYPO */
+  .slide-body p{font-size:13px;line-height:1.6;color:var(--cream);font-weight:300}
+  .slide-body p strong{color:#fff;font-weight:600}
+  .slide-body p em{color:var(--gold-soft);font-style:italic}
+  .slide-body h3{
+    font-family:'Playfair Display',serif;font-weight:400;
+    font-size:18px;color:#fff;letter-spacing:-0.2px;margin-bottom:8px
+  }
+  .slide-body h3 em{font-style:italic;color:var(--gold-soft);font-weight:700}
+  .slide-body ul,.slide-body ol{list-style:none;padding:0;margin:0}
+  .slide-body li{
+    font-size:12.5px;line-height:1.55;color:var(--cream);
+    font-weight:300;margin-bottom:6px;padding-left:18px;position:relative
+  }
+  .slide-body ul li::before{content:'';position:absolute;left:0;top:9px;width:10px;height:1px;background:var(--gold)}
+  .slide-body ol{counter-reset:ol}
+  .slide-body ol li{counter-increment:ol;margin-bottom:7px}
+  .slide-body ol li::before{
+    content:counter(ol,decimal-leading-zero);position:absolute;left:0;top:0;
+    font-family:'JetBrains Mono';font-size:10px;color:var(--gold);font-weight:600
+  }
+  .slide-body li strong{color:#fff;font-weight:600}
+
+  /* COVER */
+  .cover-slide{padding:0 56px}
+  .cover-content{max-width:1100px;width:100%}
+  .cover-eyebrow{
+    font-size:11px;letter-spacing:3.5px;text-transform:uppercase;
+    color:var(--gold);font-weight:600;font-family:'JetBrains Mono';
+    margin-bottom:24px;display:inline-flex;align-items:center;gap:14px
+  }
+  .cover-eyebrow::before{content:'';display:inline-block;width:36px;height:1px;background:var(--gold)}
+  .cover-title{
+    font-family:'Playfair Display',serif;font-weight:400;
+    font-size:clamp(40px,6vw,76px);color:#fff;line-height:1.0;
+    letter-spacing:-2px;margin-bottom:20px
+  }
+  .cover-title em{font-style:italic;color:var(--gold-soft);font-weight:700}
+  .cover-sub{
+    font-family:'Playfair Display',serif;font-style:italic;font-weight:400;
+    font-size:clamp(16px,1.5vw,20px);color:var(--gold-pale);max-width:720px;
+    line-height:1.45;margin-bottom:36px
+  }
+  .cover-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;padding-top:24px;border-top:1px solid var(--line)}
+  .cover-meta .label{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);font-weight:600;font-family:'JetBrains Mono';margin-bottom:5px}
+  .cover-meta .val{font-family:'Playfair Display',serif;font-style:italic;font-size:18px;color:var(--cream);font-weight:700}
+  .cover-decoration{position:absolute;bottom:32px;right:56px;opacity:.18}
+
+  /* TESIS */
+  .tesis{
+    padding:18px 24px;
+    background:linear-gradient(135deg, rgba(176,125,46,0.08) 0%, rgba(176,125,46,0.02) 100%);
+    border:1px solid var(--line);border-left:3px solid var(--gold);
+    border-radius:2px;position:relative;overflow:hidden
+  }
+  .tesis::before{
+    content:'\201C';position:absolute;top:-30px;left:18px;
+    font-family:'Playfair Display',serif;font-style:italic;
+    font-size:140px;color:var(--gold);opacity:.10;line-height:1
+  }
+  .tesis .label{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);font-weight:600;font-family:'JetBrains Mono';margin-bottom:8px}
+  .tesis .text{
+    font-family:'Playfair Display',serif;font-style:italic;font-weight:400;
+    font-size:clamp(14px,1.3vw,17px);color:#fff;line-height:1.4;position:relative;z-index:1
+  }
+  .tesis .text em{color:var(--gold-soft);font-weight:700}
+
+  /* ===== FINDINGS - cards content-sized ===== */
+  .findings-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+  .finding-card{
+    background:rgba(11,31,58,0.5);border:1px solid var(--line);border-top:2px solid var(--gold);
+    padding:18px 16px;border-radius:0 0 2px 2px;
+    display:flex;flex-direction:column;gap:10px;
+    /* sin altura fija — se ajusta al contenido */
+  }
+  .finding-card .icon-row{display:flex;justify-content:space-between;align-items:flex-start}
+  .finding-card .num{font-family:'Playfair Display',serif;font-style:italic;font-size:30px;color:var(--gold);font-weight:700;line-height:1}
+  .finding-card .icon{width:28px;height:28px;color:var(--gold);opacity:.7}
+  .finding-card h4{font-family:'Playfair Display',serif;font-style:italic;font-size:14px;color:#fff;font-weight:700;line-height:1.2;margin:0;text-transform:none;letter-spacing:0}
+  .finding-card p{font-size:11.5px;line-height:1.5;color:var(--cream);font-weight:300;margin:0}
+  .finding-card .metric{
+    margin-top:auto;padding-top:8px;border-top:1px dashed rgba(176,125,46,0.20);
+    display:flex;justify-content:space-between;align-items:center;
+    font-family:'JetBrains Mono';font-size:10px;color:var(--gold-soft)
+  }
+  .finding-card .metric .v{font-family:'Playfair Display',serif;font-style:italic;font-size:15px;color:var(--gold);font-weight:700}
+
+  /* ===== HERO STATS with trend ===== */
+  .hero-stats{
+    background:linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 100%);
+    border:1px solid var(--line-strong);padding:24px 28px;border-radius:2px;
+    position:relative;overflow:hidden
+  }
+  .hero-stats::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--gold)}
+  .hero-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+  .hero-stat{display:flex;flex-direction:column;gap:6px}
+  .hero-stat .label{font-size:9px;letter-spacing:2.2px;text-transform:uppercase;color:var(--gold);font-weight:600;font-family:'JetBrains Mono'}
+  .hero-stat .num{font-family:'Playfair Display',serif;font-style:italic;font-weight:700;color:var(--gold-soft);font-size:30px;line-height:1}
+  .hero-stat .num.large{font-size:38px;color:var(--gold)}
+  .hero-stat .num.neg{color:var(--red)}
+  .hero-stat .num.pos{color:var(--green)}
+  .hero-stat .sub{font-size:10px;color:var(--muted);line-height:1.35}
+  .hero-stat .spark{margin-top:6px;height:24px}
+
+  /* ===== CARDS GENERIC ===== */
+  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .grid-5{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+
+  .sub-card{
+    background:rgba(11,31,58,0.5);border:1px solid var(--line);
+    padding:18px;border-radius:2px;
+    display:flex;flex-direction:column;gap:8px;
+    transition:all .25s
+  }
+  .sub-card:hover{border-color:var(--line-strong);transform:translateY(-2px)}
+  .sub-card .eyebrow{font-size:9px;letter-spacing:2.2px;text-transform:uppercase;color:var(--gold);font-weight:600;font-family:'JetBrains Mono'}
+  .sub-card h4{font-family:'Playfair Display',serif;font-style:italic;font-size:16px;color:#fff;font-weight:700;line-height:1.2;text-transform:none;letter-spacing:0;margin:0}
+  .sub-card p{font-size:11.5px;line-height:1.55;color:var(--cream);font-weight:300;margin:0}
+  .sub-card.highlight{border-color:var(--gold);background:linear-gradient(135deg, rgba(176,125,46,0.08), rgba(11,31,58,0.5))}
+  .sub-card ul{margin:0}
+  .sub-card li{font-size:11px;line-height:1.5;margin-bottom:5px;padding-left:14px}
+  .sub-card li::before{top:7px;width:8px}
+  .sub-card .icon{width:24px;height:24px;color:var(--gold);opacity:.7;margin-bottom:4px}
+
+  /* Sub-card with metric footer */
+  .sub-card .footer-metric{
+    margin-top:auto;padding-top:10px;border-top:1px dashed rgba(176,125,46,0.20);
+    display:flex;justify-content:space-between;align-items:baseline
+  }
+  .sub-card .footer-metric .label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-family:'JetBrains Mono'}
+  .sub-card .footer-metric .v{font-family:'Playfair Display',serif;font-style:italic;font-size:18px;color:var(--gold);font-weight:700;line-height:1}
+
+  /* ===== TABLE ===== */
+  .table-wrap{border:1px solid var(--line);border-radius:2px;overflow:hidden;background:rgba(11,31,58,0.4)}
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  th{background:rgba(11,31,58,0.7);text-align:left;padding:10px 14px;font-size:9px;letter-spacing:1.8px;text-transform:uppercase;color:var(--gold);font-weight:600;font-family:'JetBrains Mono';border-bottom:1px solid var(--line-strong)}
+  td{padding:10px 14px;border-bottom:1px solid var(--line);color:var(--cream);font-weight:300;vertical-align:middle;line-height:1.4}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:rgba(176,125,46,0.05)}
+  td strong{color:#fff;font-weight:600}
+  td em{color:var(--gold-soft);font-style:italic;font-weight:600}
+  td .mono{font-family:'JetBrains Mono';font-size:11px}
+
+  /* TAGS */
+  .tag{display:inline-flex;padding:2px 7px;border-radius:2px;font-size:8.5px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;font-family:'JetBrains Mono';white-space:nowrap}
+  .tag-red{background:rgba(196,69,54,0.18);color:#e87d6e;border:1px solid rgba(196,69,54,0.4)}
+  .tag-gold{background:rgba(176,125,46,0.18);color:var(--gold-soft);border:1px solid rgba(176,125,46,0.4)}
+  .tag-green{background:rgba(45,125,95,0.18);color:#5dbf99;border:1px solid rgba(45,125,95,0.4)}
+  .tag-muted{background:rgba(122,134,153,0.10);color:var(--muted);border:1px solid rgba(122,134,153,0.25)}
+
+  /* ===== CHART ===== */
+  .chart-wrap{
+    background:rgba(11,31,58,0.4);border:1px solid var(--line);
+    border-radius:2px;padding:16px 20px;
+    display:flex;flex-direction:column;
+    height:280px
+  }
+  .chart-head{margin-bottom:8px;flex:0 0 auto}
+  .chart-head .eyebrow{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);font-weight:600;font-family:'JetBrains Mono';margin-bottom:3px}
+  .chart-head h4{font-family:'Playfair Display',serif;font-style:italic;font-size:16px;color:#fff;font-weight:700;text-transform:none;letter-spacing:0;margin:0}
+  .chart-canvas{position:relative;flex:1 1 auto;min-height:0}
+
+  /* ===== CLUSTERS with mini-bar ===== */
+  .cluster{
+    background:rgba(11,31,58,0.5);border:1px solid var(--line);
+    padding:16px;border-radius:2px;transition:all .3s;
+    display:flex;flex-direction:column;gap:8px
+  }
+  .cluster:hover{border-color:var(--line-strong);transform:translateY(-2px)}
+  .cluster.featured{background:linear-gradient(135deg, rgba(176,125,46,0.10) 0%, rgba(11,31,58,0.5) 100%);border-color:var(--gold)}
+  .cluster .name{font-family:'Playfair Display',serif;font-style:italic;font-size:17px;color:#fff;font-weight:700}
+  .cluster .price{font-family:'JetBrains Mono';font-size:11px;color:var(--gold-soft);font-weight:500;letter-spacing:0.5px}
+  .cluster .price-bar{height:3px;background:rgba(176,125,46,0.15);border-radius:2px;overflow:hidden;position:relative}
+  .cluster .price-bar-fill{position:absolute;top:0;left:0;height:100%;background:var(--gold);border-radius:2px}
+  .cluster.featured .price-bar-fill{background:linear-gradient(90deg,var(--gold),var(--gold-soft))}
+  .cluster .brands{font-size:11px;color:var(--muted);line-height:1.5;font-style:italic}
+  .cluster .vector{font-size:11.5px;color:var(--cream);font-weight:300;line-height:1.5}
+
+  /* ===== PRICE TABLE ===== */
+  .price-table{border:1px solid var(--line);background:rgba(11,31,58,0.4);border-radius:2px;overflow:hidden}
+  .price-row{display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr 1.5fr;gap:14px;padding:10px 18px;align-items:center;font-size:12px;border-bottom:1px solid var(--line)}
+  .price-row:last-child{border-bottom:none}
+  .price-row.head{background:rgba(11,31,58,0.7);font-size:9px;letter-spacing:1.8px;text-transform:uppercase;color:var(--gold);font-weight:600;font-family:'JetBrains Mono'}
+  .price-row .product{font-family:'Playfair Display',serif;font-style:italic;font-size:14px;color:#fff;font-weight:700}
+  .price-row .price{font-family:'JetBrains Mono';color:var(--cream);font-weight:500;font-size:12px}
+  .price-row .gap{font-family:'JetBrains Mono';color:var(--gold-soft);font-weight:600;font-size:12px}
+
+  /* ===== PHASES ===== */
+  .phases-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .phase-card{
+    background:linear-gradient(180deg, rgba(20,39,68,0.6) 0%, rgba(11,31,58,0.4) 100%);
+    border:1px solid var(--line);border-top:2px solid var(--gold);
+    padding:18px;border-radius:0 0 2px 2px;
+    display:flex;flex-direction:column;gap:10px
+  }
+  .phase-card .phase-tag{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);font-weight:600;font-family:'JetBrains Mono'}
+  .phase-card .phase-title{font-family:'Playfair Display',serif;font-style:italic;font-size:24px;color:#fff;font-weight:700;line-height:1.05;letter-spacing:-0.3px}
+  .phase-card .phase-objective{font-size:11.5px;color:var(--gold-pale);font-weight:300;line-height:1.45;font-style:italic;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .phase-card .phase-block{margin-top:0}
+  .phase-card .phase-block h5{font-size:9px;letter-spacing:2.2px;text-transform:uppercase;color:var(--gold-soft);font-weight:600;margin-bottom:6px;font-family:'JetBrains Mono'}
+  .phase-card .phase-block ul{margin:0}
+  .phase-card .phase-block li{font-size:10.5px;line-height:1.45;margin-bottom:4px;padding-left:14px;color:var(--cream);font-weight:300}
+  .phase-card .phase-block li::before{top:6px;width:8px}
+
+  /* ===== CALCULATOR ===== */
+  .calc{
+    background:linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 100%);
+    border:1px solid var(--line-strong);padding:22px;border-radius:2px;position:relative;overflow:hidden
+  }
+  .calc::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--gold)}
+  .calc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:12px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+  .calc-header h3{font-family:'Playfair Display',serif;font-size:18px;color:#fff;font-weight:400;letter-spacing:-0.2px;margin:0}
+  .calc-header h3 em{font-style:italic;color:var(--gold-soft);font-weight:700}
+  .scenario-toggle{display:flex;gap:0;border:1px solid var(--line-strong);border-radius:2px;overflow:hidden}
+  .scenario-btn{background:transparent;border:none;color:var(--muted);padding:8px 16px;font-family:'Outfit';font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .25s}
+  .scenario-btn:hover{background:rgba(176,125,46,0.1);color:var(--gold-soft)}
+  .scenario-btn.active{background:var(--gold);color:var(--navy-deep);font-weight:700}
+  .calc-logic{font-size:11px;color:var(--gold-pale);font-style:italic;line-height:1.45;margin-bottom:12px;padding:9px 14px;background:rgba(176,125,46,0.06);border-left:2px solid var(--gold);border-radius:2px}
+  .calc-body{display:grid;grid-template-columns:1.2fr 1fr;gap:20px}
+  .calc-table{display:flex;flex-direction:column;font-size:11.5px}
+  .calc-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--line)}
+  .calc-row .item{color:var(--cream);font-weight:300;font-size:11px}
+  .calc-row .amount{font-family:'JetBrains Mono';color:var(--gold-soft);font-weight:500;font-size:11px}
+  .calc-row.total{margin-top:4px;padding-top:8px;border-top:2px solid var(--gold);border-bottom:none}
+  .calc-row.total .item{font-family:'Playfair Display',serif;font-style:italic;font-size:14px;color:#fff;font-weight:700}
+  .calc-row.total .amount{font-family:'Playfair Display',serif;font-style:italic;font-size:18px;color:var(--gold);font-weight:700}
+  .calc-summary{background:rgba(11,31,58,0.5);border:1px solid var(--line);padding:14px;border-radius:2px;display:flex;flex-direction:column;gap:8px}
+  .calc-summary .head-eyebrow{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);font-weight:600;font-family:'JetBrains Mono';margin-bottom:4px}
+  .summary-stat{padding-bottom:7px;border-bottom:1px solid var(--line)}
+  .summary-stat:last-child{padding-bottom:0;border:none}
+  .summary-stat .label{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:3px;font-weight:600;font-family:'JetBrains Mono'}
+  .summary-stat .value{font-family:'Playfair Display',serif;font-style:italic;font-size:16px;color:var(--gold-soft);font-weight:700;line-height:1}
+  .summary-stat .value.large{color:var(--gold);font-size:20px}
+  .summary-stat .desc{font-size:9.5px;color:var(--muted);margin-top:2px;font-style:italic}
+
+  /* ===== KPI ===== */
+  .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .kpi{
+    background:rgba(11,31,58,0.5);border:1px solid var(--line);
+    padding:16px;border-radius:2px;transition:all .25s;
+    display:flex;flex-direction:column;gap:10px
+  }
+  .kpi:hover{border-color:var(--line-strong);transform:translateY(-2px)}
+  .kpi-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+  .kpi-head .name{font-size:11.5px;color:#fff;font-weight:500;line-height:1.2}
+  .kpi-head .icon{width:22px;height:22px;color:var(--gold);opacity:.6;flex-shrink:0}
+  .kpi .def{font-size:10px;color:var(--muted);line-height:1.4;font-style:italic}
+  .kpi-foot{display:flex;justify-content:space-between;align-items:baseline;padding-top:8px;border-top:1px dashed rgba(176,125,46,0.20)}
+  .kpi-foot .label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-family:'JetBrains Mono'}
+  .kpi-foot .target{font-family:'Playfair Display',serif;font-style:italic;font-size:18px;color:var(--gold);font-weight:700;line-height:1}
+
+  /* ===== PROBLEMS ===== */
+  .problems-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+  .problem-item{
+    background:rgba(11,31,58,0.5);border:1px solid var(--line);
+    border-left:3px solid var(--gold);
+    border-radius:0 2px 2px 0;padding:12px 16px;
+    display:flex;flex-direction:column;gap:5px;transition:all .25s
+  }
+  .problem-item:hover{border-color:var(--line-strong);background:rgba(176,125,46,0.05)}
+  .problem-item.high{border-left-color:var(--red)}
+  .problem-item.med{border-left-color:var(--gold)}
+  .problem-head{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:center}
+  .problem-num{font-family:'Playfair Display',serif;font-style:italic;font-size:18px;color:var(--gold);font-weight:700;line-height:1}
+  .problem-name{font-size:11.5px;color:#fff;font-weight:500;line-height:1.3}
+  .problem-fix{font-size:10.5px;color:var(--gold-pale);font-weight:300;line-height:1.45;padding-left:40px;font-style:italic}
+  .problem-fix strong{color:var(--gold-soft);font-weight:600;font-style:normal}
+
+  /* ===== RISKS ===== */
+  .risks-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .risk-card{
+    background:rgba(11,31,58,0.5);border:1px solid var(--line);
+    border-left:3px solid var(--gold);padding:14px 16px;border-radius:0 2px 2px 0;
+    display:flex;flex-direction:column;gap:8px;transition:all .25s
+  }
+  .risk-card:hover{border-left-color:var(--gold-soft)}
+  .risk-card.high{border-left-color:var(--red)}
+  .risk-card.med{border-left-color:var(--gold)}
+  .risk-card.low{border-left-color:var(--green)}
+  .risk-tags{display:flex;gap:5px;flex-wrap:wrap}
+  .risk-name{font-family:'Playfair Display',serif;font-style:italic;font-size:14px;color:#fff;font-weight:700;line-height:1.2}
+  .risk-mit{font-size:11px;color:var(--cream);font-weight:300;line-height:1.5;margin-top:4px;padding-top:8px;border-top:1px dashed rgba(176,125,46,0.15)}
+  .risk-mit strong{color:var(--gold-soft);font-weight:600}
+
+  /* PULL QUOTE */
+  .pull-quote{padding:24px 16px;text-align:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .pull-quote .text{font-family:'Playfair Display',serif;font-style:italic;font-weight:400;font-size:clamp(15px,1.5vw,20px);color:#fff;line-height:1.4;max-width:780px;margin:0 auto 8px;letter-spacing:-0.3px}
+  .pull-quote .text em{color:var(--gold-soft);font-weight:700}
+  .pull-quote .author{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);font-weight:600;font-family:'JetBrains Mono'}
+
+  /* ===== SOCIAL CARDS for redes slide ===== */
+  .social-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+  .social-card{
+    background:rgba(11,31,58,0.5);border:1px solid var(--line);
+    padding:14px;border-radius:2px;
+    display:flex;flex-direction:column;gap:8px;transition:all .25s
+  }
+  .social-card:hover{border-color:var(--line-strong);transform:translateY(-2px)}
+  .social-card .platform{display:flex;align-items:center;gap:8px}
+  .social-card .icon{width:22px;height:22px}
+  .social-card .name{font-family:'Playfair Display',serif;font-style:italic;font-size:14px;color:#fff;font-weight:700}
+  .social-card .metric{font-family:'Playfair Display',serif;font-style:italic;font-size:18px;color:var(--gold);font-weight:700;line-height:1}
+  .social-card .metric.muted{color:var(--muted);font-size:13px}
+  .social-card .metric-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-family:'JetBrains Mono'}
+  .social-card .action{font-size:10.5px;color:var(--gold-pale);line-height:1.5;font-style:italic;padding-top:6px;border-top:1px dashed rgba(176,125,46,0.15)}
+
+  /* ===== ACTIVOS - propuesta de valor with icons ===== */
+  .assets-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+  .asset-card{
+    background:rgba(11,31,58,0.5);border:1px solid var(--line);
+    padding:18px 16px;border-radius:2px;
+    display:flex;flex-direction:column;gap:10px;transition:all .25s;
+    position:relative;overflow:hidden
+  }
+  .asset-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent)}
+  .asset-card:hover{border-color:var(--line-strong);transform:translateY(-2px)}
+  .asset-card .icon{width:32px;height:32px;color:var(--gold);opacity:.85}
+  .asset-card .eyebrow{font-size:9px;letter-spacing:2.2px;text-transform:uppercase;color:var(--gold);font-weight:600;font-family:'JetBrains Mono'}
+  .asset-card h4{font-family:'Playfair Display',serif;font-style:italic;font-size:15px;color:#fff;font-weight:700;line-height:1.2;text-transform:none;letter-spacing:0;margin:0}
+  .asset-card p{font-size:11px;line-height:1.5;color:var(--cream);font-weight:300;margin:0}
+
+  /* CONTROLS */
+  .controls{flex:0 0 auto;border-top:1px solid var(--line);padding:8px 28px;background:rgba(11,31,58,0.85);backdrop-filter:blur(12px);display:flex;justify-content:space-between;align-items:center;gap:18px;z-index:50}
+  .progress-bar{flex:1 1 auto;height:2px;background:rgba(176,125,46,0.15);border-radius:1px;overflow:hidden;max-width:600px}
+  .progress-fill{height:100%;background:var(--gold);transition:width .4s ease;width:0%}
+  .nav-btn{background:transparent;border:1px solid var(--line-strong);color:var(--gold-soft);width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:2px;transition:all .25s;font-size:16px;font-weight:300}
+  .nav-btn:hover:not(:disabled){background:rgba(176,125,46,0.15);color:var(--gold);border-color:var(--gold)}
+  .nav-btn:disabled{opacity:.3;cursor:not-allowed}
+  .slide-counter{font-family:'JetBrains Mono';font-size:10px;letter-spacing:1.8px;color:var(--muted);min-width:80px;text-align:center}
+  .slide-counter .current{color:var(--gold-soft);font-weight:600}
+  .slide-name{font-family:'Playfair Display',serif;font-style:italic;font-size:12px;color:var(--cream);flex:0 1 auto;text-align:center;min-width:180px}
+  .slide-name em{color:var(--gold-soft);font-weight:700}
+
+  /* MENU */
+  .menu-overlay{position:fixed;inset:0;background:rgba(10,22,39,0.96);backdrop-filter:blur(16px);z-index:200;display:flex;align-items:center;justify-content:center;padding:50px 32px;opacity:0;pointer-events:none;transition:opacity .3s ease;overflow-y:auto}
+  .menu-overlay.open{opacity:1;pointer-events:auto}
+  .menu-content{max-width:1000px;width:100%}
+  .menu-eyebrow{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);font-weight:600;font-family:'JetBrains Mono';margin-bottom:12px}
+  .menu-title{font-family:'Playfair Display',serif;font-weight:400;font-size:32px;color:#fff;line-height:1.1;letter-spacing:-0.5px;margin-bottom:24px}
+  .menu-title em{font-style:italic;color:var(--gold-soft);font-weight:700}
+  .menu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:6px}
+  .menu-item{background:rgba(11,31,58,0.4);border:1px solid var(--line);padding:12px 16px;border-radius:2px;cursor:pointer;transition:all .25s;display:grid;grid-template-columns:36px 1fr;gap:12px;align-items:center;text-align:left}
+  .menu-item:hover{background:rgba(176,125,46,0.10);border-color:var(--gold);transform:translateY(-2px)}
+  .menu-item.current{background:linear-gradient(135deg, rgba(176,125,46,0.15), rgba(11,31,58,0.5));border-color:var(--gold)}
+  .menu-item .num{font-family:'JetBrains Mono';font-size:10px;color:var(--gold);font-weight:600;letter-spacing:1px}
+  .menu-item .name{font-size:12px;color:var(--cream);font-weight:400;line-height:1.3}
+  .menu-item.current .name{color:#fff;font-weight:600}
+  .menu-close{position:absolute;top:20px;right:28px;background:transparent;border:1px solid var(--line-strong);color:var(--gold-soft);width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:2px;transition:all .25s;font-size:18px}
+  .menu-close:hover{background:var(--gold);color:var(--navy-deep);border-color:var(--gold)}
+
+  /* MOBILE */
+  @media (max-width:900px){
+    .slide{padding:18px 22px}
+    .findings-grid,.assets-grid,.social-grid,.grid-3,.grid-4,.grid-5,.kpi-grid,.problems-grid,.risks-grid,.phases-grid{grid-template-columns:1fr;gap:10px}
+    .grid-2{grid-template-columns:1fr}
+    .calc-body{grid-template-columns:1fr}
+    .hero-grid{grid-template-columns:repeat(2,1fr) !important;gap:16px}
+    .cover-meta{grid-template-columns:repeat(2,1fr) !important;gap:16px}
+    .topbar{padding:10px 16px;flex-wrap:wrap;gap:8px}
+    .topbar-right .header-tag{display:none}
+    .controls{padding:8px 16px;gap:8px}
+    .slide-name{display:none}
+    .price-row{grid-template-columns:1fr 1fr;font-size:10px;padding:6px 12px}
+    .price-row.head{display:none}
+  }
+
+  /* SVG ICON helper */
+  .icn{stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+</style>
+</head>
+<body>
+
+<div class="deck">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="brand">
+      <div class="monogram">HB</div>
+      <div class="brand-text">
+        <h1>Strategic Capital · <em>Wainfi · Diagnóstico 180 días</em></h1>
+        <p>Reposicionamiento &amp; reactivación comercial</p>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span class="header-tag"><span class="dot"></span>Crisis declarada</span>
+      <span class="header-tag">v<span class="gold">1.0</span> · Abr 2026</span>
+      <button class="menu-btn" id="menuBtn">☰ Índice</button>
+    </div>
+  </div>
+
+  <!-- STAGE -->
+  <div class="stage" id="stage">
+
+    <!-- 00 COVER -->
+    <section class="slide cover-slide active" data-slide="cover" data-name="Portada">
+      <div class="cover-content">
+        <div class="cover-eyebrow">Diagnóstico estratégico · 180 días · Confidencial</div>
+        <h1 class="cover-title">Wainfi.<br><em>Reposicionamiento</em><br>y reactivación.</h1>
+        <p class="cover-sub">Una fábrica que se comporta como tienda y una marca que no se comporta como marca. Plan de 180 días para corregir ambos errores en simultáneo.</p>
+        <div class="cover-meta">
+          <div><div class="label">Cliente</div><div class="val">Wainfi</div></div>
+          <div><div class="label">Sector</div><div class="val">Indumentaria · AR</div></div>
+          <div><div class="label">Horizonte</div><div class="val">180 días</div></div>
+          <div><div class="label">Fecha</div><div class="val">Abril 2026</div></div>
+        </div>
+      </div>
+      <svg class="cover-decoration" width="200" height="200" viewBox="0 0 200 200">
+        <g class="icn" stroke="#B07D2E" stroke-width="1">
+          <circle cx="100" cy="100" r="80"/>
+          <circle cx="100" cy="100" r="60"/>
+          <circle cx="100" cy="100" r="40"/>
+          <line x1="100" y1="20" x2="100" y2="180"/>
+          <line x1="20" y1="100" x2="180" y2="100"/>
+        </g>
+      </svg>
+    </section>
+
+    <!-- 01 RESUMEN -->
+    <section class="slide" data-slide="resumen" data-name="Resumen ejecutivo">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <div class="section-eyebrow">Resumen ejecutivo · 01</div>
+          <h2 class="slide-title">El diagnóstico, <em>en una página</em></h2>
+        </div>
+        <div class="slide-body" style="display:flex;flex-direction:column;gap:18px">
+          <div class="tesis">
+            <div class="label">Tesis central</div>
+            <p class="text">Wainfi es una fábrica que se comporta como tienda y una marca que no se comporta como <em>marca</em>. La crisis se resuelve atacando los dos errores simultáneamente — sin tocar la fábrica, que es el activo más sólido.</p>
+          </div>
+          <h3>Hallazgos críticos · <em>Top 5</em></h3>
+          <div class="findings-grid">
+            <div class="finding-card">
+              <div class="icon-row">
+                <div class="num">01</div>
+                <svg class="icon" viewBox="0 0 24 24"><g class="icn"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><line x1="3" y1="3" x2="21" y2="21"/></g></svg>
+              </div>
+              <h4>Propuesta de valor invisible</h4>
+              <p>Fabricación nacional, velocidad de reposición y control de calidad no comunicados en sitio, redes ni MELI.</p>
+              <div class="metric"><span>VISIBILIDAD</span><span class="v">~0%</span></div>
+            </div>
+            <div class="finding-card">
+              <div class="icon-row">
+                <div class="num">02</div>
+                <svg class="icon" viewBox="0 0 24 24"><g class="icn"><path d="M8 7h12m0 0l-4-4m4 4l-4 4M16 17H4m0 0l4 4m-4-4l4-4"/></g></svg>
+              </div>
+              <h4>Canibalización de canales</h4>
+              <p>wainfi.com y wainfimayorista.com sin separación clara; precios mayoristas rastreables por consumidores finales.</p>
+              <div class="metric"><span>DOMINIOS EN COLISIÓN</span><span class="v">2 / 2</span></div>
+            </div>
+            <div class="finding-card">
+              <div class="icon-row">
+                <div class="num">03</div>
+                <svg class="icon" viewBox="0 0 24 24"><g class="icn"><path d="M3 3v18h18M7 14l4-4 4 4 5-5"/></g></svg>
+              </div>
+              <h4>MercadoLibre subexplotado</h4>
+              <p>225 publicaciones para una marca con catálogo profundo; faltan variantes, copy SEO y Mercado Ads sistemático.</p>
+              <div class="metric"><span>SKUs / PUBLICACIONES</span><span class="v">200+ / 225</span></div>
+            </div>
+            <div class="finding-card">
+              <div class="icon-row">
+                <div class="num">04</div>
+                <svg class="icon" viewBox="0 0 24 24"><g class="icn"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></g></svg>
+              </div>
+              <h4>Redes inexistentes</h4>
+              <p>TikTok @wainfi.arg con 87 fans en 2026 es señal de abandono; Instagram con contenido producto-céntrico.</p>
+              <div class="metric"><span>TIKTOK FANS</span><span class="v">87</span></div>
+            </div>
+            <div class="finding-card">
+              <div class="icon-row">
+                <div class="num">05</div>
+                <svg class="icon" viewBox="0 0 24 24"><g class="icn"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></g></svg>
+              </div>
+              <h4>Pricing sin segmentación</h4>
+              <p>Productos competitivos contra Bensimon o Indy a $56–68K, pero la comunicación no apalanca esa diferencia.</p>
+              <div class="metric"><span>MARGEN SOBRE LA MESA</span><span class="v">$30–80K</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 METODO -->
+    <section class="slide" data-slide="metodo" data-name="Alcance & método">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <div class="section-eyebrow">Alcance &amp; método · 02</div>
+          <h2 class="slide-title">Cómo se construyó <em>este diagnóstico</em></h2>
+          <p class="slide-lead">Auditoría digital remota + análisis competitivo + benchmarks macro. Limitaciones declaradas para refinar en semana 1.</p>
+        </div>
+        <div class="slide-body">
+          <div class="grid-3">
+            <div class="sub-card">
+              <svg class="icon" viewBox="0 0 24 24"><g class="icn"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></g></svg>
+              <div class="eyebrow">Alcance</div>
+              <h4>Diagnóstico + plan</h4>
+              <p>Diagnóstico estratégico de la marca y plan de acción a 180 días orientado a reactivar ventas y reposicionar la marca, con foco mixto en conversión inmediata y construcción de marca a mediano plazo.</p>
+              <div class="footer-metric"><span class="label">Horizonte</span><span class="v">180d</span></div>
+            </div>
+            <div class="sub-card">
+              <svg class="icon" viewBox="0 0 24 24"><g class="icn"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></g></svg>
+              <div class="eyebrow">Fuentes</div>
+              <h4>Auditoría &amp; benchmarks</h4>
+              <p>Auditoría digital remota: sitio, MercadoLibre, redes. Análisis competitivo de 11 marcas referenciadas. Contexto macro: Infobae, CACE, Tiendanube NubeCommerce 2026. Benchmarks de e-commerce moda AR.</p>
+              <div class="footer-metric"><span class="label">Marcas analizadas</span><span class="v">11</span></div>
+            </div>
+            <div class="sub-card">
+              <svg class="icon" viewBox="0 0 24 24"><g class="icn"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></g></svg>
+              <div class="eyebrow">Limitaciones</div>
+              <h4>Datos a refinar</h4>
+              <p>Sin acceso a métricas internas (GA4, Tiendanube, Mercado Ads, IG Insights). Las estimaciones de CR, ticket y CAC son rangos a ajustar en semana 1 con datos reales antes de Fase 1.</p>
+              <div class="footer-metric"><span class="label">Refinar en</span><span class="v">Sem. 1</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 MACRO -->
+    <section class="slide" data-slide="macro" data-name="Contexto macro AR 2026">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <div class="section-eyebrow">Contexto macro · 03</div>
+          <h2 class="slide-title">Argentina 2026: <em>peor año en una década</em></h2>
+        </div>
+        <div class="slide-body" style="display:flex;flex-direction:column;gap:14px">
+          <div class="hero-stats">
+            <div class="hero-grid">
+              <div class="hero-stat">
+                <div class="label">Ventas indumentaria</div>
+                <div class="num large neg">−8,4%</div>
+                <div class="sub">Interanual · Crecer = robar share</div>
+                <svg class="spark" viewBox="0 0 100 24" preserveAspectRatio="none"><path d="M0,8 L20,10 L40,14 L60,16 L80,18 L100,20" stroke="#C44536" fill="none" stroke-width="1.5"/></svg>
+              </div>
+              <div class="hero-stat">
+                <div class="label">Producción textil</div>
+                <div class="num large neg">−33%</div>
+                <div class="sub">Capacidad ociosa industrial</div>
+                <svg class="spark" viewBox="0 0 100 24" preserveAspectRatio="none"><path d="M0,4 L20,6 L40,12 L60,17 L80,21 L100,22" stroke="#C44536" fill="none" stroke-width="1.5"/></svg>
+              </div>
+              <div class="hero-stat">
+                <div class="label">Importaciones 2025</div>
+                <div class="num large neg">+71%</div>
+                <div class="sub">Competencia barata creciendo</div>
+                <svg class="spark" viewBox="0 0 100 24" preserveAspectRatio="none"><path d="M0,20 L20,18 L40,14 L60,10 L80,6 L100,3" stroke="#C44536" fill="none" stroke-width="1.5"/></svg>
+              </div>
+              <div class="hero-stat">
+                <div class="label">E-commerce moda TN</div>
+                <div class="num large pos">+73%</div>
+                <div class="sub">Único canal en crecimiento</div>
+                <svg class="spark" viewBox="0 0 100 24" preserveAspectRatio="none"><path d="M0,20 L20,17 L40,13 L60,9 L80,6 L100,3" stroke="#2D7D5F" fill="none" stroke-width="1.5"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <div class="chart-head">
+              <div class="eyebrow">Visualización · indicadores clave</div>
+              <h4>Indumentaria AR 2026 · variación interanual</h4>
+            </div>
+            <div class="chart-canvas"><canvas id="macroChart"></canvas></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 DECISIONES MACRO -->
+    <section class="slide" data-slide="decisiones" data-name="Decisiones del macro">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <div class="section-eyebrow">Lectura del macro · 04</div>
+          <h2 class="slide-title">Cómo se traduce <em>en decisiones</em></h2>
+          <p class="slide-lead">Cuatro principios rectores derivados directamente del contexto Argentina 2026.</p>
+        </div>
+        <div class="slide-body">
+          <div class="grid-2" style="gap:16px">
+            <div class="sub-card">
+              <svg class="icon" viewBox="0 0 24 24"><g class="icn"><path d="M12 2L4 6v6c0 5.5 3.8 10.7 8 12 4.2-1.3 8-6.5 8-12V6l-8-4z"/></g></svg>
+              <div class="eyebrow">Principio · 01</div>
+              <h4>Defender margen, no perseguir volumen barato</h4>
+              <p>Bajar precios un 30% para igualar imports baratos en MercadoLibre destruye marca y caja. La defensa correcta es valor percibido y financiación, no descuento brutal. Cualquier acción que erosione margen sin construir percepción de valor está prohibida.</p>
+              <div class="footer-metric"><span class="label">Regla</span><span class="v">Margen &gt; volumen</span></div>
+            </div>
+            <div class="sub-card">
+              <svg class="icon" viewBox="0 0 24 24"><g class="icn"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></g></svg>
+              <div class="eyebrow">Principio · 02</div>
+              <h4>Apalancar la fábrica como diferencial</h4>
+              <p>En un sector donde 7 de 10 máquinas están paradas, ser fabricante con producción activa y reposición rápida es un argumento comercial real. Esta es la ventaja más rentable de Wainfi y debe vivir en sitio, redes, MELI y empaque.</p>
+              <div class="footer-metric"><span class="label">Reposición</span><span class="v">7 días</span></div>
+            </div>
+            <div class="sub-card">
+              <svg class="icon" viewBox="0 0 24 24"><g class="icn"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></g></svg>
+              <div class="eyebrow">Principio · 03</div>
+              <h4>Concentrar gasto en alta intención</h4>
+              <p>MercadoLibre + Google Shopping + Meta Ads de remarketing son el triángulo eficiente para 2026. Awareness puro (TV, OOH, branded sin tracking de conversión) no es viable a este presupuesto y momento.</p>
+              <div class="footer-metric"><span class="label">Triángulo</span><span class="v">ML · GS · Meta</span></div>
+            </div>
+            <div class="sub-card">
+              <svg class="icon" viewBox="0 0 24 24"><g class="icn"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></g></svg>
+              <div class="eyebrow">Principio · 04</div>
+              <h4>Cuotas y financiación: innegociables</h4>
+              <p>Tiendanube reporta que 80%+ de las marcas que crecen usan transferencia con descuento, free shipping y cuotas sin interés visibles desde el listado. No son extras: son condición de entrada al juego.</p>
+              <div class="footer-metric"><span class="label">Marcas que crecen lo usan</span><span class="v">80%+</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 AUDIT 1 -->
+    <section class="slide" data-slide="audit-1" data-name="Auditoría · Sitio + ML">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <div class="section-eyebrow">Auditoría por canal · 05 · 1/2</div>
+          <h2 class="slide-title">Sitio y <em>MercadoLibre</em></h2>
+        </div>
+        <div class="slide-body">
+          <div class="grid-2" style="gap:16px">
+            <div class="sub-card">
+              <svg class="icon" viewBox="0 0 24 24"><g class="icn"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></g></svg>
+              <div class="eyebrow">Canal · wainfi.com</div>
+              <h4>Arquitectura y propuesta</h4>
+              <p>Wainfi opera dos dominios sin separación clara: <strong>wainfi.com</strong> (B2C) y <strong>wainfimayorista.com</strong> (B2B con mínimo $150K). Tres consecuencias:</p>
+              <ul>
+                <li>Consumidores finales aterrizan en mayorista vía Google y ven precios mayoristas — erosión de margen percibido.</li>
+                <li>Buscadores reciben señales mezcladas: dos sitios casi idénticos compiten por las mismas keywords.</li>
+                <li>Equipo de fotos y copy se duplica innecesariamente.</li>
+                <li>Fichas con descripciones técnicas pero sin storytelling, sin tabla de talles, sin "cómo combinar", sin reseñas.</li>
+                <li>Descuento por transferencia debe ser visible desde el listado, no solo en checkout.</li>
+              </ul>
+              <div class="footer-metric"><span class="label">Dominios en colisión</span><span class="v">2</span></div>
+            </div>
+            <div class="sub-card">
+              <svg class="icon" viewBox="0 0 24 24"><g class="icn"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><circle cx="12" cy="13" r="3"/><path d="M9 21v-5h6v5"/></g></svg>
+              <div class="eyebrow">Canal · Tienda Oficial ML</div>
+              <h4>El activo subutilizado</h4>
+              <p>La condición de Tienda Oficial verificada es un activo. <strong>El problema no es el sello: es lo que está debajo.</strong> Hipótesis: campañas sin estrategia de portafolio.</p>
+              <ul>
+                <li><strong>≈ 1.300 seguidores</strong> · bajo para una marca con +200 SKUs y fábrica propia.</li>
+                <li><strong>≈ 225 publicaciones</strong> activas con catálogo declarado de 60+ camperas — subexposición crónica.</li>
+                <li>Reputación en <span class="tag tag-green">Verde</span> — activo a proteger; reclamos &lt;24h.</li>
+                <li>Variantes inconsistentes; falta unificación con catálogo del sitio.</li>
+                <li>Sin estrategia de combos (packs invierno) y sin Mercado Shop / Live Shopping en 2026.</li>
+              </ul>
+              <div class="footer-metric"><span class="label">Publicaciones activas</span><span class="v">225</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 AUDIT 2: REDES + REPUTACION (rediseñado completo) -->
+    <section class="slide" data-slide="audit-2" data-name="Auditoría · Redes + Reputación">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <div class="section-eyebrow">Auditoría por canal · 05 · 2/2</div>
+          <h2 class="slide-title">Redes sociales y <em>reputación digital</em></h2>
+          <p class="slide-lead">Cinco plataformas presentes. Métricas que sugieren actividad esporádica más que estrategia sostenida.</p>
+        </div>
+        <div class="slide-body" style="display:flex;flex-direction:column;gap:14px">
+          <div class="social-grid">
+            <div class="social-card">
+              <div class="platform">
+                <svg class="icon" viewBox="0 0 24 24"><g class="icn" stroke="#e87d6e"><path d="M9 12a4 4 0 104 4V4a5 5 0 005 5"/></g></svg>
+                <div class="name">TikTok</div>
+              </div>
+              <div class="metric-label">@wainfi.arg</div>
+              <div class="metric">87</div>
+              <div class="metric-label">fans · 307 likes</div>
+              <div class="action"><span class="tag tag-red">Abandonado</span> Reset estratégico: relanzar con grilla 3x/semana enfocada en fábrica + cliente.</div>
+            </div>
+            <div class="social-card">
+              <div class="platform">
+                <svg class="icon" viewBox="0 0 24 24"><g class="icn" stroke="#D4B37A"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></g></svg>
+                <div class="name">Instagram</div>
+              </div>
+              <div class="metric-label">Feed actual</div>
+              <div class="metric muted">Producto<br>céntrico</div>
+              <div class="metric-label">Engagement bajo</div>
+              <div class="action"><span class="tag tag-gold">Activo bajo</span> Pasar de feed-catálogo a feed-narrativa. 3 reels/sem: fábrica, cliente, producto.</div>
+            </div>
+            <div class="social-card">
+              <div class="platform">
+                <svg class="icon" viewBox="0 0 24 24"><g class="icn" stroke="#7A8699"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></g></svg>
+                <div class="name">Facebook</div>
+              </div>
+              <div class="metric-label">Estado</div>
+              <div class="metric muted">Espejo<br>de IG</div>
+              <div class="metric-label">Sin valor incremental</div>
+              <div class="action"><span class="tag tag-muted">Legacy</span> Mantener con automatización. Priorizar Marketplace y campañas pagas.</div>
+            </div>
+            <div class="social-card">
+              <div class="platform">
+                <svg class="icon" viewBox="0 0 24 24"><g class="icn" stroke="#7A8699"><path d="M22.5 6.4a2.8 2.8 0 00-2-2c-1.7-.5-8.5-.5-8.5-.5s-6.8 0-8.5.5a2.8 2.8 0 00-2 2A29 29 0 001 12a29 29 0 00.5 5.6 2.8 2.8 0 002 2c1.7.5 8.5.5 8.5.5s6.8 0 8.5-.5a2.8 2.8 0 002-2 29 29 0 00.5-5.6 29 29 0 00-.5-5.6z"/><polygon points="9.75,15.02 15.5,12 9.75,8.98"/></g></svg>
+                <div class="name">YouTube</div>
+              </div>
+              <div class="metric-label">Presencia</div>
+              <div class="metric muted">Mínima</div>
+              <div class="metric-label">Sin canal prioritario</div>
+              <div class="action"><span class="tag tag-muted">Mínima</span> Repositorio de Reels largos y video de fábrica para SEO de marca.</div>
+            </div>
+            <div class="social-card">
+              <div class="platform">
+                <svg class="icon" viewBox="0 0 24 24"><g class="icn" stroke="#D4B37A"><circle cx="12" cy="12" r="10"/><path d="M8 10c0-2 2-4 4-4s4 1 4 4-2 4-4 4M8 10c0 2 2 3 4 3l-1 7"/></g></svg>
+                <div class="name">Pinterest</div>
+              </div>
+              <div class="metric-label">Estado</div>
+              <div class="metric muted">Inicial</div>
+              <div class="metric-label">Subexplotado</div>
+              <div class="action"><span class="tag tag-gold">Inicial</span> 10 boards estacionales con shoppable pins linkeando a wainfi.com.</div>
+            </div>
+          </div>
+          <div class="tesis">
+            <div class="label">Principio rector + reputación digital</div>
+            <p class="text">La marca emergente que vende en 2026 no muestra producto: muestra el <em>oficio</em>, las personas, el origen, los clientes reales. Wainfi tiene fábrica propia en CABA — eso es contenido. <strong style="color:#fff">Reputación:</strong> sin crisis declarada (riesgo bajo) pero también sin huella positiva (riesgo de invisibilidad). No aparece en blogs de moda, listados curados ni recomendaciones.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07 PROPUESTA -->
+    <section class="slide" data-slide="valor" data-name="Propuesta de valor">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <div class="section-eyebrow">Propuesta de valor · 06</div>
+          <h2 class="slide-title">De marca genérica a <em>marca con anclaje</em></h2>
+          <p class="slide-lead">Cinco activos disponibles para construir una propuesta diferenciada y memorable.</p>
+        </div>
+        <div class="slide-body" style="display:flex;flex-direction:column;gap:18px">
+          <div class="assets-grid">
+            <div class="asset-card">
+              <svg class="icon" viewBox="0 0 24 24"><g class="icn"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></g></svg>
+              <div class="eyebrow">Activo · 01</div>
+              <h4>Fábrica propia en CABA</h4>
+              <p>"Hecho en Argentina, en nuestra fábrica." Reposición en 7 días vs 30+ de imports.</p>
+            </div>
+            <div class="asset-card">
+              <svg class="icon" viewBox="0 0 24 24"><g class="icn"><path d="M19 5H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2V7a2 2 0 00-2-2zM3 7l9 6 9-6"/></g></svg>
+              <div class="eyebrow">Activo · 02</div>
+              <h4>Catálogo profundo</h4>
+              <p>"Especialistas en abrigo argentino." Categorización por uso: urbano, outdoor, formal, deportivo.</p>
+            </div>
+            <div class="asset-card">
+              <svg class="icon" viewBox="0 0 24 24"><g class="icn"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></g></svg>
+              <div class="eyebrow">Activo · 03</div>
+              <h4>Naming geográfico</h4>
+              <p>"Cada campera tiene un lugar." Niza es la Riviera, Tokio el frío urbano, Pekín el invierno extremo.</p>
+            </div>
+            <div class="asset-card">
+              <svg class="icon" viewBox="0 0 24 24"><g class="icn"><path d="M12 2L4 6v6c0 5.5 3.8 10.7 8 12 4.2-1.3 8-6.5 8-12V6l-8-4z"/><polyline points="9 12 11 14 15 10"/></g></svg>
+              <div class="eyebrow">Activo · 04</div>
+              <h4>Tienda Oficial ML</h4>
+              <p>Sello de confianza verificada. Comunicar siempre el badge en sitio, redes y empaque.</p>
+            </div>
+            <div class="asset-card">
+              <svg class="icon" viewBox="0 0 24 24"><g class="icn"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/><path d="M16 3.13a4 4 0 010 7.75M21 21v-2a4 4 0 00-3-3.87"/></g></svg>
+              <div class="eyebrow">Activo · 05</div>
+              <h4>D2C + B2B</h4>
+              <p>Validación implícita: "vestimos a otras marcas". Diversifica riesgo y permite retail-as-service.</p>
+            </div>
+          </div>
+          <div class="pull-quote">
+            <p class="text">Especialistas argentinos en <em>abrigo</em>. Hecho en nuestra fábrica de Buenos Aires, pensado para todos los inviernos del país.</p>
+            <div class="author">Propuesta de valor · versión corta</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 08 COMPETITIVO -->
+    <section class="slide" data-slide="competitivo" data-name="Análisis competitivo">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <div class="section-eyebrow">Análisis competitivo · 07</div>
+          <h2 class="slide-title">Wainfi juega <em>en el medio</em> sin definir a quién le gana</h2>
+          <p class="slide-lead">Cuatro clústers, cada uno con dinámica distinta. Wainfi sin posición clara — sandwich incómodo.</p>
+        </div>
+        <div class="slide-body" style="display:flex;flex-direction:column;gap:14px">
+          <div class="grid-5">
+            <div class="cluster">
+              <div class="name">Premium AR</div>
+              <div class="price">$180K – $290K</div>
+              <div class="price-bar"><div class="price-bar-fill" style="left:62%;width:38%"></div></div>
+              <div class="brands">Bensimon · Markova · Rapsodia</div>
+              <div class="vector">Marca consolidada, retail físico, brand equity. Ganan en mind share.</div>
+            </div>
+            <div class="cluster">
+              <div class="name">Mid AR</div>
+              <div class="price">$100K – $180K</div>
+              <div class="price-bar"><div class="price-bar-fill" style="left:34%;width:28%"></div></div>
+              <div class="brands">Indy · Bolivia · Wanama · Korova · Equis</div>
+              <div class="vector">Producto sólido, presencia digital fuerte, comunidad activa. Donde Wainfi debería competir.</div>
+            </div>
+            <div class="cluster">
+              <div class="name">Funcional</div>
+              <div class="price">$130K – $250K</div>
+              <div class="price-bar"><div class="price-bar-fill" style="left:45%;width:41%"></div></div>
+              <div class="brands">Montagne · Topper · Patagonia · Columbia</div>
+              <div class="vector">Diferencial técnico. Wainfi puede tomar parte con Parka/Impermeable.</div>
+            </div>
+            <div class="cluster">
+              <div class="name">Imports masivos</div>
+              <div class="price">$30K – $90K</div>
+              <div class="price-bar"><div class="price-bar-fill" style="left:10%;width:21%"></div></div>
+              <div class="brands">Mujer Logo · Walk · Mauro Sergio · Fast fashion</div>
+              <div class="vector">Precio demoledor, calidad variable, sin marca. Wainfi NO debe pelear acá.</div>
+            </div>
+            <div class="cluster featured">
+              <div class="name">Wainfi · hoy</div>
+              <div class="price">$47K – $170K</div>
+              <div class="price-bar"><div class="price-bar-fill" style="left:16%;width:42%"></div></div>
+              <div class="brands">Sandwich incómodo</div>
+              <div class="vector">Costo de Mid AR pero precio cercano a imports. Sin posición clara.</div>
+            </div>
+          </div>
+          <div class="tesis">
+            <div class="label">Lectura estratégica</div>
+            <p class="text">Wainfi tiene producto y costo de Mid AR, pero precio y comunicación de Imports masivos. Hay un <em>upside de pricing real</em> si se logra mover percepción al cluster Mid AR. Ese movimiento se hace con narrativa, no con cambio de producto.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 09 PRECIOS -->
+    <section class="slide" data-slide="precios" data-name="Estrategia de precios">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <div class="section-eyebrow">Estrategia de precios · 08</div>
+          <h2 class="slide-title">Arquitectura de pricing <em>por segmento</em></h2>
+        </div>
+        <div class="slide-body" style="display:flex;flex-direction:column;gap:14px">
+          <div class="price-table">
+            <div class="price-row head"><span>Producto</span><span>Lista</span><span>Descuento</span><span>Transferencia</span><span>Comparable Mid AR</span></div>
+            <div class="price-row"><span class="product">Puffer Niza (M)</span><span class="price">$65.000</span><span class="price">$56.250</span><span class="price">$47.812</span><span class="gap">$130K – $160K</span></div>
+            <div class="price-row"><span class="product">Bomber Madrid (M)</span><span class="price">$76.000</span><span class="price">$68.400</span><span class="price">$58.140</span><span class="gap">$180K – $260K</span></div>
+            <div class="price-row"><span class="product">New Tokio (M)</span><span class="price">$65.000</span><span class="price">$55.250</span><span class="price">$46.962</span><span class="gap">$130K – $170K</span></div>
+            <div class="price-row"><span class="product">Niza Metalizada (M)</span><span class="price">$120.000</span><span class="price">—</span><span class="price">$102.000</span><span class="gap">$160K – $200K</span></div>
+            <div class="price-row"><span class="product">Parka Pekín (H)</span><span class="price">$170.000</span><span class="price">$136.000</span><span class="price">$115.600</span><span class="gap">$200K – $280K</span></div>
+          </div>
+          <div class="grid-3">
+            <div class="sub-card">
+              <svg class="icon" viewBox="0 0 24 24"><g class="icn"><path d="M3 3v18h18"/><rect x="7" y="13" width="3" height="5"/><rect x="12" y="9" width="3" height="9"/><rect x="17" y="5" width="3" height="13"/></g></svg>
+              <div class="eyebrow">Línea · volumen</div>
+              <h4>Wainfi Core</h4>
+              <p>Bomber/Puffer/Aviadora estándar a precio actual ($55K–$80K) pero con comunicación de valor elevada. Pelear con financiación, no con descuento brutal.</p>
+              <div class="footer-metric"><span class="label">Rango</span><span class="v">$55–80K</span></div>
+            </div>
+            <div class="sub-card highlight">
+              <svg class="icon" viewBox="0 0 24 24"><g class="icn"><polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9"/></g></svg>
+              <div class="eyebrow">Línea · margen</div>
+              <h4>Wainfi Premium</h4>
+              <p>5–8 SKUs con materiales superiores (puffer 700 fill, eco-cuero) a $130K–$200K. Compite por exclusividad, edición numerada, story behind.</p>
+              <div class="footer-metric"><span class="label">Rango</span><span class="v">$130–200K</span></div>
+            </div>
+            <div class="sub-card">
+              <svg class="icon" viewBox="0 0 24 24"><g class="icn"><path d="M20 7L9 18l-5-5"/><circle cx="20" cy="20" r="2"/></g></svg>
+              <div class="eyebrow">Línea · rotación</div>
+              <h4>Wainfi Outlet</h4>
+              <p>Sección dedicada: SKUs de temporadas pasadas, descuentos hasta 40%. Liquidar inventario muerto en 90 días para liberar caja.</p>
+              <div class="footer-metric"><span class="label">Descuento</span><span class="v">hasta 40%</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 PROBLEMAS -->
+    <section class="slide" data-slide="problemas" data-name="Top 10 problemas">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <div class="section-eyebrow">Top 10 problemas críticos · 09</div>
+          <h2 class="slide-title">Ordenados por <em>impacto y velocidad</em></h2>
+        </div>
+        <div class="slide-body">
+          <div class="problems-grid" id="problemsList"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11 PLAN -->
+    <section class="slide" data-slide="plan" data-name="Plan 180 días · 3 fases">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <div class="section-eyebrow">Plan de acción · 10</div>
+          <h2 class="slide-title">Tres fases, <em>una secuencia disciplinada</em></h2>
+        </div>
+        <div class="slide-body">
+          <div class="phases-grid">
+            <div class="phase-card">
+              <div class="phase-tag">Fase 1 · Días 1–30</div>
+              <div class="phase-title">Triage</div>
+              <div class="phase-objective">Detener la sangría. Asegurar caja en próximos 60 días. Eliminar problemas que destruyen valor por inacción.</div>
+              <div class="phase-block">
+                <h5>Sitio</h5>
+                <ul>
+                  <li>Banner home "Hecho en nuestra fábrica" + reescritura propuesta de valor</li>
+                  <li>Política de cambios visible en ficha + Schema markup</li>
+                  <li>Sección Outlet con 15 SKUs + pixels Meta/Google/GA4</li>
+                  <li>Email/CRM Klaviyo + welcome + abandoned cart</li>
+                </ul>
+              </div>
+              <div class="phase-block">
+                <h5>MELI + Redes</h5>
+                <ul>
+                  <li>Auditoría 50 publicaciones top + Mercado Ads ROAS 4:1</li>
+                  <li>30 publicaciones nuevas + combos como SKU independientes</li>
+                  <li>Reset TikTok + IG: 3 reels/sem fábrica + cliente</li>
+                </ul>
+              </div>
+            </div>
+            <div class="phase-card">
+              <div class="phase-tag">Fase 2 · Días 31–90</div>
+              <div class="phase-title">Reposicionamiento</div>
+              <div class="phase-objective">Construir narrativa de marca consistente, capturar invierno, lanzar Premium, mover percepción al cluster Mid AR.</div>
+              <div class="phase-block">
+                <h5>Marca &amp; contenido</h5>
+                <ul>
+                  <li>Producción audiovisual mensual: 30 piezas</li>
+                  <li>Campaña "Cada campera tiene un lugar"</li>
+                  <li>8–12 micro-influencers AR + PR a 5 medios</li>
+                </ul>
+              </div>
+              <div class="phase-block">
+                <h5>Producto &amp; performance</h5>
+                <ul>
+                  <li>Lanzamiento Wainfi Premium · 5–8 SKUs · $130K–$200K</li>
+                  <li>Google Shopping + Meta Ads x2 + 12 artículos blog</li>
+                  <li>Wainfi Club + WhatsApp Business API</li>
+                </ul>
+              </div>
+            </div>
+            <div class="phase-card">
+              <div class="phase-tag">Fase 3 · Días 91–180</div>
+              <div class="phase-title">Escala</div>
+              <div class="phase-objective">Consolidar lo construido, capturar liquidación con margen, preparar OI 2027, evaluar expansión.</div>
+              <div class="phase-block">
+                <h5>Expansión</h5>
+                <ul>
+                  <li>Test "sweater &amp; knitwear": 8–10 SKUs</li>
+                  <li>Wainfi Hombre: de 19 a 35 SKUs</li>
+                  <li>Pop-up CABA o showroom con turnos</li>
+                </ul>
+              </div>
+              <div class="phase-block">
+                <h5>B2B + Internacional + Equipo</h5>
+                <ul>
+                  <li>Mayorista detrás de login + 20 visitas interior</li>
+                  <li>Diagnóstico LATAM: Uruguay y Chile vía marketplaces</li>
+                  <li>Head of Digital + Manual de marca v1 + 5 SOPs</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12 CALCULADORA -->
+    <section class="slide" data-slide="presupuesto" data-name="Calculadora presupuesto">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <div class="section-eyebrow">Calculadora de presupuesto · 11</div>
+          <h2 class="slide-title">Tres escenarios, <em>una decisión</em></h2>
+        </div>
+        <div class="slide-body">
+          <div class="calc">
+            <div class="calc-header">
+              <h3>Inversión mensual y <em>proyección de retorno</em></h3>
+              <div class="scenario-toggle">
+                <button class="scenario-btn" data-scenario="bear">Bear</button>
+                <button class="scenario-btn active" data-scenario="base">Base</button>
+                <button class="scenario-btn" data-scenario="bull">Bull</button>
+              </div>
+            </div>
+            <div class="calc-logic" id="scenarioLogic"></div>
+            <div class="calc-body">
+              <div style="display:flex;flex-direction:column">
+                <div class="section-eyebrow" style="margin-bottom:8px">Detalle por partida · ARS / mes</div>
+                <div class="calc-table" id="calcTable"></div>
+              </div>
+              <div class="calc-summary">
+                <div class="head-eyebrow">Proyección · 6 meses</div>
+                <div class="summary-stat"><div class="label">Total invertido</div><div class="value large" id="sumTotal">ARS 33,5M</div><div class="desc" id="sumTotalDesc">Acumulado</div></div>
+                <div class="summary-stat"><div class="label">Crecimiento revenue</div><div class="value" id="sumGrowth">+40% a +70%</div></div>
+                <div class="summary-stat"><div class="label">ROAS blended</div><div class="value large" id="sumRoas">4x – 5x</div></div>
+                <div class="summary-stat"><div class="label">CAC blended</div><div class="value" id="sumCac">≤ $9.000</div></div>
+                <div class="summary-stat"><div class="label">Probabilidad</div><div class="value" id="sumProb">Alta</div><div class="desc" id="sumProbDesc">Equipo y disciplina</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13 KPIs -->
+    <section class="slide" data-slide="kpis" data-name="KPIs & métricas">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <div class="section-eyebrow">KPIs &amp; métricas · 12</div>
+          <h2 class="slide-title">Ocho KPIs <em>para no diluir el foco</em></h2>
+          <p class="slide-lead">Reporte semanal en war room · dashboard único · KPIs extendidos mensuales.</p>
+        </div>
+        <div class="slide-body">
+          <div class="kpi-grid">
+            <div class="kpi">
+              <div class="kpi-head">
+                <div><div class="name">Revenue total semanal</div><div class="def">Tiendanube + ML + mayorista</div></div>
+                <svg class="icon" viewBox="0 0 24 24"><g class="icn"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></g></svg>
+              </div>
+              <div class="kpi-foot"><span class="label">Meta</span><span class="target">+50% vs LY</span></div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-head">
+                <div><div class="name">ROAS blended</div><div class="def">Revenue paid / Inversión paid</div></div>
+                <svg class="icon" viewBox="0 0 24 24"><g class="icn"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></g></svg>
+              </div>
+              <div class="kpi-foot"><span class="label">Meta</span><span class="target">≥ 4x</span></div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-head">
+                <div><div class="name">Conversión sitio</div><div class="def">Pedidos / Sesiones únicas</div></div>
+                <svg class="icon" viewBox="0 0 24 24"><g class="icn"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></g></svg>
+              </div>
+              <div class="kpi-foot"><span class="label">Meta</span><span class="target">≥ 1,8%</span></div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-head">
+                <div><div class="name">Ticket promedio</div><div class="def">Revenue / Pedidos</div></div>
+                <svg class="icon" viewBox="0 0 24 24"><g class="icn"><path d="M9 11H1l8-8 8 8h-8v8h-8M21 13l2 2-2 2"/></g></svg>
+              </div>
+              <div class="kpi-foot"><span class="label">Meta</span><span class="target">+15%</span></div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-head">
+                <div><div class="name">Sesiones únicas</div><div class="def">Tráfico único al sitio</div></div>
+                <svg class="icon" viewBox="0 0 24 24"><g class="icn"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></g></svg>
+              </div>
+              <div class="kpi-foot"><span class="label">Meta</span><span class="target">+80%</span></div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-head">
+                <div><div class="name">Reputación ML</div><div class="def">Color + reclamos no resueltos</div></div>
+                <svg class="icon" viewBox="0 0 24 24"><g class="icn"><path d="M12 2L4 6v6c0 5.5 3.8 10.7 8 12 4.2-1.3 8-6.5 8-12V6l-8-4z"/></g></svg>
+              </div>
+              <div class="kpi-foot"><span class="label">Meta</span><span class="target">Verde · &lt;0,8%</span></div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-head">
+                <div><div class="name">Engagement IG</div><div class="def">(Likes+coments+saves)/followers</div></div>
+                <svg class="icon" viewBox="0 0 24 24"><g class="icn"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></g></svg>
+              </div>
+              <div class="kpi-foot"><span class="label">Meta</span><span class="target">≥ 3,5%</span></div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-head">
+                <div><div class="name">NPS post-compra</div><div class="def">Promotores − Detractores</div></div>
+                <svg class="icon" viewBox="0 0 24 24"><g class="icn"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></g></svg>
+              </div>
+              <div class="kpi-foot"><span class="label">Meta</span><span class="target">≥ 50</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 14 EQUIPO -->
+    <section class="slide" data-slide="equipo" data-name="Equipo & RACI">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <div class="section-eyebrow">Equipo &amp; RACI · 13</div>
+          <h2 class="slide-title">Tres modelos, <em>tres niveles de ambición</em></h2>
+        </div>
+        <div class="slide-body" style="display:flex;flex-direction:column;gap:14px">
+          <div class="grid-3">
+            <div class="sub-card">
+              <div class="eyebrow">Modelo · Bear</div>
+              <h4>Equipo mínimo</h4>
+              <ul><li>Dueño/CEO + supervisión semanal</li><li>CM freelance (20–30 hs/sem)</li><li>ML Specialist freelance (15 hs/sem)</li><li>Performance Marketer freelance (10 hs/sem)</li></ul>
+              <div class="footer-metric"><span class="label">Headcount</span><span class="v">3 freelance</span></div>
+            </div>
+            <div class="sub-card highlight">
+              <div class="eyebrow">Modelo · Base · recomendado</div>
+              <h4>Equipo balanceado</h4>
+              <ul><li>Head of Digital fractional (2 días/sem)</li><li>CM full-time o senior part-time</li><li>ML Specialist (20 hs/sem)</li><li>Performance Marketer senior (20 hs/sem)</li><li>Productor audiovisual mensual + diseñador</li></ul>
+              <div class="footer-metric"><span class="label">Headcount</span><span class="v">5–6 mixto</span></div>
+            </div>
+            <div class="sub-card">
+              <div class="eyebrow">Modelo · Bull</div>
+              <h4>Equipo agresivo</h4>
+              <ul><li>Head of Digital full-time in-house</li><li>Equipo in-house: CM + Content + ML + PM</li><li>Agencia partner para campañas de marca</li><li>Productora recurrente + estudio de diseño</li></ul>
+              <div class="footer-metric"><span class="label">Headcount</span><span class="v">5+ in-house</span></div>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Iniciativa</th><th>CEO</th><th>Head Digital</th><th>ML Spec.</th><th>Content/CM</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Reescritura propuesta de valor</strong></td><td><span class="tag tag-gold">A</span></td><td><span class="tag tag-red">R</span></td><td><span class="tag tag-muted">C</span></td><td><span class="tag tag-muted">C</span></td></tr>
+                <tr><td><strong>Optimización Mercado Libre</strong></td><td><span class="tag tag-muted">I</span></td><td><span class="tag tag-gold">A</span></td><td><span class="tag tag-red">R</span></td><td><span class="tag tag-muted">I</span></td></tr>
+                <tr><td><strong>Plan editorial redes sociales</strong></td><td><span class="tag tag-muted">I</span></td><td><span class="tag tag-gold">A</span></td><td><span class="tag tag-muted">I</span></td><td><span class="tag tag-red">R</span></td></tr>
+                <tr><td><strong>Lanzamiento línea Premium</strong></td><td><span class="tag tag-gold">A</span></td><td><span class="tag tag-red">R</span></td><td><span class="tag tag-muted">C</span></td><td><span class="tag tag-muted">C</span></td></tr>
+                <tr><td><strong>Embajadoras / influencers</strong></td><td><span class="tag tag-muted">I</span></td><td><span class="tag tag-gold">A</span></td><td><span class="tag tag-muted">I</span></td><td><span class="tag tag-red">R</span></td></tr>
+                <tr><td><strong>Performance ads</strong></td><td><span class="tag tag-muted">I</span></td><td><span class="tag tag-gold">A</span></td><td><span class="tag tag-muted">I</span></td><td><span class="tag tag-muted">I</span></td></tr>
+                <tr><td><strong>Programa Wainfi Club</strong></td><td><span class="tag tag-gold">A</span></td><td><span class="tag tag-red">R</span></td><td><span class="tag tag-muted">C</span></td><td><span class="tag tag-muted">C</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p style="font-size:10px;color:var(--muted);font-family:'JetBrains Mono';letter-spacing:1.5px;text-transform:uppercase">R = Responsable · A = Aprobador · C = Consultado · I = Informado</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 15 RIESGOS -->
+    <section class="slide" data-slide="riesgos" data-name="Riesgos & contingencias">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <div class="section-eyebrow">Riesgos &amp; contingencias · 14</div>
+          <h2 class="slide-title">Todo plan se ejecuta <em>en realidad</em></h2>
+          <p class="slide-lead">Y la realidad muerde. Seis riesgos materiales identificados con severidad, probabilidad y mitigación.</p>
+        </div>
+        <div class="slide-body">
+          <div class="risks-grid">
+            <div class="risk-card high"><div class="risk-tags"><span class="tag tag-red">SEV ALTA</span><span class="tag tag-gold">PROB MED</span></div><div class="risk-name">Caída de demanda mayor a la prevista</div><div class="risk-mit"><strong>Mitigación:</strong> Outlet agresivo, foco en MELI (tickets bajos), priorizar mayorista para flujo de caja, aumentar cuotas sin interés.</div></div>
+            <div class="risk-card med"><div class="risk-tags"><span class="tag tag-gold">SEV MED</span><span class="tag tag-red">PROB ALTA</span></div><div class="risk-name">Dependencia de un solo canal (ML &gt;60%)</div><div class="risk-mit"><strong>Mitigación:</strong> Mantener 30% piso de revenue propio (sitio + WhatsApp + retail). Diversificar paid lejos de Mercado Ads.</div></div>
+            <div class="risk-card med"><div class="risk-tags"><span class="tag tag-gold">SEV MED</span><span class="tag tag-gold">PROB MED</span></div><div class="risk-name">Competidor Mid copia campaña / Premium</div><div class="risk-mit"><strong>Mitigación:</strong> Velocidad de iteración como defensa. Comunidad (Wainfi Club) es el moat más sustentable.</div></div>
+            <div class="risk-card high"><div class="risk-tags"><span class="tag tag-red">SEV ALTA</span><span class="tag tag-green">PROB BAJA</span></div><div class="risk-name">Incumplimiento de fábrica en momento pico</div><div class="risk-mit"><strong>Mitigación:</strong> Stock con 2 meses de cobertura para top 20% SKUs. Acuerdo con 1–2 talleres satélite para sobreflujo.</div></div>
+            <div class="risk-card med"><div class="risk-tags"><span class="tag tag-gold">SEV MED</span><span class="tag tag-gold">PROB MED</span></div><div class="risk-name">Cambio regulatorio (impuestos / aduana)</div><div class="risk-mit"><strong>Mitigación:</strong> Monitoreo trimestral con asesor contable + CACE. Buffer de pricing del 5% para absorber shocks.</div></div>
+            <div class="risk-card high"><div class="risk-tags"><span class="tag tag-red">SEV ALTA</span><span class="tag tag-green">PROB BAJA</span></div><div class="risk-name">Crisis reputacional (reclamo viral)</div><div class="risk-mit"><strong>Mitigación:</strong> Protocolo de respuesta &lt;2hs en redes y MELI. SOP de manejo de crisis. Asesoría legal en retainer.</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 16 PROXIMOS -->
+    <section class="slide" data-slide="proximos" data-name="Próxima semana">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <div class="section-eyebrow">Próximos pasos · 15</div>
+          <h2 class="slide-title">Siete días <em>decisivos</em></h2>
+          <p class="slide-lead">No es necesario empezar todo el plan; sí es necesario tomar decisiones estructurales que liberan a las siguientes semanas.</p>
+        </div>
+        <div class="slide-body" style="display:flex;flex-direction:column;gap:18px">
+          <ol style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px 32px">
+            <li><strong>Día 1:</strong> Decisión de escenario (Bear/Base/Bull) y aprobación formal del plan.</li>
+            <li><strong>Día 2:</strong> Acceso de lectura: GA4, Tiendanube admin, ML Seller, Meta Ads, IG Insights, Search Console.</li>
+            <li><strong>Día 3:</strong> Decisión sobre wainfimayorista.com (noindex + login): aprobada e implementada.</li>
+            <li><strong>Día 4:</strong> Banner home wainfi.com con propuesta "Hecho en nuestra fábrica" en producción.</li>
+            <li><strong>Día 5:</strong> Reunión 1 del war room — KPIs baseline, primer sprint Fase 1.</li>
+            <li><strong>Día 6:</strong> Lista priorizada de 30 SKUs a auditar en MercadoLibre.</li>
+            <li><strong>Día 7:</strong> Primer reporte de baseline + presentación a dirección.</li>
+          </ol>
+          <div class="pull-quote">
+            <p class="text">Wainfi tiene producto, fábrica y un canal verificado. Lo que le falta es <em>articulación</em>. La crisis es real, pero es resoluble en 180 días si la decisión se toma con velocidad y disciplina.</p>
+            <div class="author">Cierre · HB Capital</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls">
+    <button class="nav-btn" id="prevBtn" title="Anterior (←)">‹</button>
+    <div class="slide-counter">
+      <span class="current" id="counterCurrent">01</span> / <span class="total" id="counterTotal">17</span>
+    </div>
+    <div class="slide-name" id="slideName">Portada</div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <button class="nav-btn" id="nextBtn" title="Siguiente (→)">›</button>
+  </div>
+
+</div>
+
+<!-- MENU -->
+<div class="menu-overlay" id="menuOverlay">
+  <button class="menu-close" id="menuClose" title="Cerrar (Esc)">✕</button>
+  <div class="menu-content">
+    <div class="menu-eyebrow">Diagnóstico Wainfi · Índice</div>
+    <h2 class="menu-title">Saltar a <em>cualquier sección</em></h2>
+    <div class="menu-grid" id="menuGrid"></div>
+  </div>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const slideNames = Array.from(slides).map(s => s.dataset.name);
+const totalSlides = slides.length;
+let currentSlide = 0;
+let chartsInitialized = { macro: false };
+
+const counterCurrent = document.getElementById('counterCurrent');
+const counterTotal = document.getElementById('counterTotal');
+const slideNameEl = document.getElementById('slideName');
+const progressFill = document.getElementById('progressFill');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+
+counterTotal.textContent = String(totalSlides).padStart(2,'0');
+
+function goToSlide(index) {
+  if (index < 0 || index >= totalSlides) return;
+  slides.forEach((s, i) => s.classList.toggle('active', i === index));
+  currentSlide = index;
+  counterCurrent.textContent = String(index + 1).padStart(2,'0');
+  slideNameEl.innerHTML = `<em>${slideNames[index]}</em>`;
+  progressFill.style.width = `${((index + 1) / totalSlides) * 100}%`;
+  prevBtn.disabled = index === 0;
+  nextBtn.disabled = index === totalSlides - 1;
+  document.querySelectorAll('.menu-item').forEach((it, i) => it.classList.toggle('current', i === index));
+  if (slides[index].dataset.slide === 'macro' && !chartsInitialized.macro) initMacroChart();
+}
+
+prevBtn.addEventListener('click', () => goToSlide(currentSlide - 1));
+nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1));
+
+document.addEventListener('keydown', (e) => {
+  if (document.getElementById('menuOverlay').classList.contains('open')) {
+    if (e.key === 'Escape') closeMenu();
+    return;
+  }
+  if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+  if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); goToSlide(currentSlide + 1); }
+  else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); goToSlide(currentSlide - 1); }
+  else if (e.key === 'Home') { e.preventDefault(); goToSlide(0); }
+  else if (e.key === 'End') { e.preventDefault(); goToSlide(totalSlides - 1); }
+  else if (e.key === 'Escape') openMenu();
+});
+
+const menuBtn = document.getElementById('menuBtn');
+const menuOverlay = document.getElementById('menuOverlay');
+const menuClose = document.getElementById('menuClose');
+const menuGrid = document.getElementById('menuGrid');
+
+slideNames.forEach((name, i) => {
+  const item = document.createElement('button');
+  item.className = 'menu-item' + (i === currentSlide ? ' current' : '');
+  item.innerHTML = `<span class="num">${String(i).padStart(2,'0')}</span><span class="name">${name}</span>`;
+  item.addEventListener('click', () => { goToSlide(i); closeMenu(); });
+  menuGrid.appendChild(item);
+});
+
+function openMenu() { menuOverlay.classList.add('open'); }
+function closeMenu() { menuOverlay.classList.remove('open'); }
+menuBtn.addEventListener('click', () => menuOverlay.classList.contains('open') ? closeMenu() : openMenu());
+menuClose.addEventListener('click', closeMenu);
+menuOverlay.addEventListener('click', (e) => { if (e.target === menuOverlay) closeMenu(); });
+
+// PROBLEMS
+const problems = [
+  { name: "Propuesta de valor invisible", impact: "ALTO", fix: "Banner home + módulo 'Made in Wainfi' + reels semanales de fábrica + sello en empaque." },
+  { name: "Canibalización wainfi.com vs mayorista", impact: "ALTO", fix: "noindex en mayorista, login obligatorio, robots.txt actualizado." },
+  { name: "MercadoLibre subexplotado · 225 publicaciones", impact: "ALTO", fix: "Auditoría SKU x SKU + plan Mercado Ads + variantes consolidadas." },
+  { name: "Redes sin estrategia · TikTok abandonado", impact: "ALTO", fix: "Plan editorial 90 días: 3 reels/sem (fábrica + cliente + producto)." },
+  { name: "Pricing sin segmentación", impact: "ALTO", fix: "Reorganizar 60 SKUs en 3 líneas + sección Outlet + 5 SKUs Premium." },
+  { name: "Falta de prueba social · pocas reseñas", impact: "MEDIO", fix: "Programa post-compra (cupón a cambio de reseña + foto). Embed reviews." },
+  { name: "UX checkout · política de cambios oculta", impact: "MEDIO", fix: "Reescribir política, exhibir en ficha, countdown stock, FAQ embebido." },
+  { name: "Ausencia de email/CRM y flujos", impact: "MEDIO", fix: "Klaviyo + 5 flujos (welcome, abandoned, post-purchase, win-back, VIP)." },
+  { name: "Sin estrategia de retención", impact: "MEDIO", fix: "Programa Wainfi Club (puntos, acceso anticipado). 90 días para lanzar." },
+  { name: "Datos · sin tablero unificado", impact: "MEDIO", fix: "Looker Studio + conexiones a Tiendanube, ML, GA4, Meta. Dashboard semanal." }
+];
+const problemsList = document.getElementById('problemsList');
+problems.forEach((p, i) => {
+  const num = String(i + 1).padStart(2, '0');
+  const cls = p.impact === 'ALTO' ? 'high' : 'med';
+  const tagCls = p.impact === 'ALTO' ? 'tag-red' : 'tag-gold';
+  const item = document.createElement('div');
+  item.className = `problem-item ${cls}`;
+  item.innerHTML = `
+    <div class="problem-head">
+      <div class="problem-num">${num}</div>
+      <div class="problem-name">${p.name}</div>
+      <span class="tag ${tagCls}">${p.impact}</span>
+    </div>
+    <div class="problem-fix"><strong>FIX:</strong> ${p.fix}</div>
+  `;
+  problemsList.appendChild(item);
+});
+
+// CALCULATOR
+const scenarios = {
+  bear: {
+    logic: 'Foco en orgánico, fixes UX, MercadoLibre operativo y mínimo paid de remarketing. Sin agencias ni headcount adicional. Recuperación lenta pero defensiva.',
+    rows: [['Mercado Ads', 400000],['Meta Ads', 300000],['Google Ads', 200000],['TikTok Ads', 0],['Producción contenido', 250000],['Embajadoras', 50000],['Email/CRM', 80000],['Apps & analytics', 60000],['Equipo / freelancers', 250000],['Buffer 10%', 160000]],
+    total: 1750000, total6m: 10500000, growth: '+15% a +25%', roas: '3,5x – 4,5x', cac: '≤ $12.000', prob: 'Alta · defensiva', probDesc: 'Bajo riesgo, techo bajo en upside.'
+  },
+  base: {
+    logic: 'Paid media moderado multi-canal, contenido propio mensual, optimizaciones técnicas, freelancers especializados. Retorno proyectado 3–4x.',
+    rows: [['Mercado Ads', 900000],['Meta Ads', 800000],['Google Ads', 500000],['TikTok Ads', 300000],['Producción contenido', 700000],['Embajadoras', 400000],['Email/CRM', 150000],['Apps & analytics', 120000],['Equipo / freelancers', 1200000],['Buffer 10%', 510000]],
+    total: 5580000, total6m: 33500000, growth: '+40% a +70%', roas: '4x – 5x', cac: '≤ $9.000', prob: 'Alta', probDesc: 'Recomendado · balance riesgo/ambición.'
+  },
+  bull: {
+    logic: 'Agencia o equipo in-house, paid media multicanal escalado, producción pro mensual, embajadoras pagas, parcial rebranding. Acelerar reposicionamiento.',
+    rows: [['Mercado Ads', 2000000],['Meta Ads', 2000000],['Google Ads', 1200000],['TikTok Ads', 800000],['Producción contenido', 1800000],['Embajadoras', 1500000],['Email/CRM', 250000],['Apps & analytics', 300000],['Equipo / freelancers', 2500000],['Buffer 10%', 1235000]],
+    total: 13585000, total6m: 81500000, growth: '+80% a +130%', roas: '3,5x – 4,5x', cac: '≤ $7.500', prob: 'Media-alta', probDesc: 'Mayor upside, requiere disciplina.'
+  }
+};
+const fmt = (n) => n.toLocaleString('es-AR');
+const fmtM = (n) => 'ARS ' + (n / 1000000).toLocaleString('es-AR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + 'M';
+function renderScenario(key) {
+  const s = scenarios[key];
+  document.getElementById('calcTable').innerHTML = s.rows.map(([item, amount]) => `
+    <div class="calc-row"><span class="item">${item}</span><span class="amount">${fmt(amount)}</span></div>
+  `).join('') + `<div class="calc-row total"><span class="item">TOTAL mensual</span><span class="amount">${fmt(s.total)}</span></div>`;
+  document.getElementById('scenarioLogic').textContent = s.logic;
+  document.getElementById('sumTotal').textContent = fmtM(s.total6m);
+  document.getElementById('sumTotalDesc').textContent = `${fmtM(s.total)} / mes · 6 meses`;
+  document.getElementById('sumGrowth').textContent = s.growth;
+  document.getElementById('sumRoas').textContent = s.roas;
+  document.getElementById('sumCac').textContent = s.cac;
+  document.getElementById('sumProb').textContent = s.prob;
+  document.getElementById('sumProbDesc').textContent = s.probDesc;
+}
+document.querySelectorAll('.scenario-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderScenario(btn.dataset.scenario);
+  });
+});
+renderScenario('base');
+
+// CHART
+Chart.defaults.font.family = "'Outfit', sans-serif";
+Chart.defaults.color = '#7A8699';
+Chart.defaults.borderColor = 'rgba(176,125,46,0.15)';
+
+function initMacroChart() {
+  const ctx = document.getElementById('macroChart');
+  if (!ctx) return;
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Ventas indumentaria', 'Producción textil', 'Salarios reales', 'Importaciones 2025', 'E-commerce moda'],
+      datasets: [{
+        data: [-8.4, -33, -1.1, 71, 73],
+        backgroundColor: (c) => c.raw < 0 ? 'rgba(196,69,54,0.75)' : 'rgba(176,125,46,0.85)',
+        borderColor: (c) => c.raw < 0 ? '#C44536' : '#B07D2E',
+        borderWidth: 1, borderRadius: 2
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#0B1F3A', borderColor: '#B07D2E', borderWidth: 1,
+          titleFont: { family: 'Playfair Display', size: 14, style: 'italic', weight: '700' },
+          bodyFont: { family: 'JetBrains Mono', size: 11 },
+          padding: 10, callbacks: { label: (c) => c.raw + '%' }
+        }
+      },
+      scales: {
+        y: { grid: { color: 'rgba(176,125,46,0.08)' }, ticks: { callback: v => v + '%', font: { family: 'JetBrains Mono', size: 10 } } },
+        x: { grid: { display: false }, ticks: { font: { family: 'Outfit', size: 10 } } }
+      }
+    }
+  });
+  chartsInitialized.macro = true;
+}
+
+goToSlide(0);
+
+let touchStartX = 0;
+const stage = document.getElementById('stage');
+stage.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+stage.addEventListener('touchend', (e) => {
+  const diff = touchStartX - e.changedTouches[0].screenX;
+  if (Math.abs(diff) > 60) goToSlide(currentSlide + (diff > 0 ? 1 : -1));
+}, { passive: true });
+</script>
+</body>
+</html>
